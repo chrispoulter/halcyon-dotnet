@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgresPassword = builder.AddParameter("PostgresPassword", secret: true);
+var postgresPassword = builder.AddParameter("PostgresPassword", value: "password");
 
 var postgres = builder
     .AddPostgres("postgres", password: postgresPassword, port: 5432)
