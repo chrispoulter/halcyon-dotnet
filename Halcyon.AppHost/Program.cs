@@ -28,9 +28,9 @@ var web = builder
     .WithEnvironment("BROWSER", "none")
     .WithHttpEndpoint(env: "VITE_PORT", port: 5173)
     .WithExternalHttpEndpoints()
-    .PublishAsDockerFile()
     .WithReference(api)
-    .WaitFor(api);
+    .WaitFor(api)
+    .PublishAsDockerFile();
 
 api.WithEnvironment("Email__SiteUrl", web.GetEndpoint("http"));
 
