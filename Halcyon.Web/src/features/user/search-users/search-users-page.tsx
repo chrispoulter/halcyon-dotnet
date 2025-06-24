@@ -14,7 +14,7 @@ import {
 } from '@/features/user/search-users/search-users-form';
 import { SortUsersDropdown } from '@/features/user/search-users/sort-users-dropdown';
 import { UserCard } from '@/features/user/search-users/user-card';
-import { UserSort } from '@/features/user/user-types';
+import type { UserSort } from '@/features/user/user-types';
 
 const PAGE_SIZE = 5;
 
@@ -26,10 +26,18 @@ const searchParamsSchema = z.object({
         .positive('Page must be a postive number')
         .catch(1),
     sort: z
-        .nativeEnum(UserSort, {
-            message: 'Sort must be a valid user sort',
-        })
-        .catch(UserSort.NAME_ASC),
+        .enum(
+            [
+                'EMAIL_ADDRESS_ASC',
+                'EMAIL_ADDRESS_DESC',
+                'NAME_ASC',
+                'NAME_DESC',
+            ],
+            {
+                message: 'Sort must be a valid user sort',
+            }
+        )
+        .catch('NAME_ASC'),
 });
 
 export function SearchUsersPage() {

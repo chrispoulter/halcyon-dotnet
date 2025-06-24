@@ -1,16 +1,11 @@
 export type Role = 'SYSTEM_ADMINISTRATOR' | 'USER_ADMINISTRATOR';
 
-export const Role = {
-    SYSTEM_ADMINISTRATOR: 'SYSTEM_ADMINISTRATOR' as Role,
-    USER_ADMINISTRATOR: 'USER_ADMINISTRATOR' as Role,
-};
-
-export const roles = {
-    [Role.SYSTEM_ADMINISTRATOR]: {
+export const roles: Record<Role, { title: string; description: string }> = {
+    SYSTEM_ADMINISTRATOR: {
         title: 'System Administrator',
         description: 'A system administrator has access to the entire system.',
     },
-    [Role.USER_ADMINISTRATOR]: {
+    USER_ADMINISTRATOR: {
         title: 'User Administrator',
         description: 'A user administrator can create / update / delete users.',
     },

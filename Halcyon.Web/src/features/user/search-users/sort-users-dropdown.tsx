@@ -1,5 +1,5 @@
 import { ArrowDownWideNarrow } from 'lucide-react';
-import { UserSort } from '@/features/user/user-types';
+import type { UserSort } from '@/features/user/user-types';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -8,21 +8,23 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const sortOptions = [
+type SortUsersDropdownOption = { value: UserSort; label: string };
+
+const sortOptions: SortUsersDropdownOption[] = [
     {
-        value: UserSort.NAME_ASC,
+        value: 'NAME_ASC',
         label: 'Name A-Z',
     },
     {
-        value: UserSort.NAME_DESC,
+        value: 'NAME_DESC',
         label: 'Name Z-A',
     },
     {
-        value: UserSort.EMAIL_ADDRESS_ASC,
+        value: 'EMAIL_ADDRESS_ASC',
         label: 'Email Address A-Z',
     },
     {
-        value: UserSort.EMAIL_ADDRESS_DESC,
+        value: 'EMAIL_ADDRESS_DESC',
         label: 'Email Address Z-A',
     },
 ];
