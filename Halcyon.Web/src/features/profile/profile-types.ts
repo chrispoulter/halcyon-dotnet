@@ -25,6 +25,6 @@ export type ChangePasswordRequest = {
 
 export type ChangePasswordResponse = { id: string };
 
-export type DeleteAccountRequst = { version?: number };
+export type DeleteAccountRequest = { version?: number };
 
 export type DeleteAccountResponse = { id: string };
