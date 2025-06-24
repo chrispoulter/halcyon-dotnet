@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import { GetUserResponse } from '@/features/user/user-types';
+import type { GetUserResponse } from '@/features/user/user-types';
 import { apiClient } from '@/lib/api-client';
 
 export const useGetUser = (id: string) => {

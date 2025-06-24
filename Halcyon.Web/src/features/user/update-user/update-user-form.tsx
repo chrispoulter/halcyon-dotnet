@@ -6,7 +6,7 @@ import { DateFormField } from '@/components/date-form-field';
 import { LoadingButton } from '@/components/loading-button';
 import { TextFormField } from '@/components/text-form-field';
 import { SwitchFormField } from '@/components/switch-form-field';
-import { GetUserResponse } from '@/features/user/user-types';
+import type { GetUserResponse } from '@/features/user/user-types';
 import { isInPast } from '@/lib/dates';
 import { Role, roles } from '@/lib/session-types';
 

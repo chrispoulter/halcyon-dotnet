@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import {
+import type {
     SearchUsersRequest,
     SearchUsersResponse,
 } from '@/features/user/user-types';

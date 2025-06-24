@@ -5,7 +5,7 @@ import { Form } from '@/components/ui/form';
 import { DateFormField } from '@/components/date-form-field';
 import { LoadingButton } from '@/components/loading-button';
 import { TextFormField } from '@/components/text-form-field';
-import { GetProfileResponse } from '@/features/profile/profile-types';
+import type { GetProfileResponse } from '@/features/profile/profile-types';
 import { isInPast } from '@/lib/dates';
 
 const schema = z.object({

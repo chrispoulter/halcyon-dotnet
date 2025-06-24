@@ -1,4 +1,4 @@
-import { Toaster as Sonner, ToasterProps } from 'sonner';
+import { Toaster as Sonner, type ToasterProps } from 'sonner';
 import { useTheme } from '@/components/theme-provider';
 
 const Toaster = ({ ...props }: ToasterProps) => {

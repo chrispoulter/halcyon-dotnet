@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router';
+import type { RouteObject } from 'react-router';
 import { ProtectedRoute } from '@/components/protected-route';
 import { CreateUserPage } from '@/features/user/create-user/create-user-page';
 import { SearchUsersPage } from '@/features/user/search-users/search-users-page';
