@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/components/auth-provider';
-import { roles } from '@/lib/session-types';
+import { roleOptions } from '@/lib/session-types';
 
 export function UserNav() {
     const navigate = useNavigate();
@@ -61,7 +61,7 @@ export function UserNav() {
                                 variant="secondary"
                                 className="w-full"
                             >
-                                {roles[role].title}
+                                {roleOptions[role].title}
                             </Badge>
                         ))}
                     </div>

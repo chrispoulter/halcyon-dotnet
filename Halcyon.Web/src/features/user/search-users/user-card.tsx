@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import type { SearchUsersResponse } from '@/features/user/user-types';
-import { roles } from '@/lib/session-types';
+import { roleOptions } from '@/lib/session-types';
 
 type UserCardProps = {
     user: SearchUsersResponse['items'][number];
@@ -33,7 +33,7 @@ export function UserCard({ user }: UserCardProps) {
                         variant="secondary"
                         className="w-full sm:w-auto"
                     >
-                        {roles[role].title}
+                        {roleOptions[role].title}
                     </Badge>
                 ))}
             </div>
