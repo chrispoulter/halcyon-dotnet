@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router';
+import type { RouteObject } from 'react-router';
 import { ProtectedRoute } from '@/components/protected-route';
 import { ProfilePage } from '@/features/profile/profile/profile-page';
 import { UpdateProfilePage } from '@/features/profile/update-profile/update-profile-page';

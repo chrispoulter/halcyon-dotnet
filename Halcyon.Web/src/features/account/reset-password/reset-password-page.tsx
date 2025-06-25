@@ -4,7 +4,7 @@ import { Metadata } from '@/components/metadata';
 import { useResetPassword } from '@/features/account/hooks/use-reset-password';
 import {
     ResetPasswordForm,
-    ResetPasswordFormValues,
+    type ResetPasswordFormValues,
 } from '@/features/account/reset-password/reset-password-form';
 
 type ResetPasswordPageParams = { token: string };

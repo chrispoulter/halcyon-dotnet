@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
+import type {
     RegisterRequest,
     RegisterResponse,
 } from '@/features/account/account-types';

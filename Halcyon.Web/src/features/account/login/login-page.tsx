@@ -5,7 +5,7 @@ import { Metadata } from '@/components/metadata';
 import { useLogin } from '@/features/account/hooks/use-login';
 import {
     LoginForm,
-    LoginFormValues,
+    type LoginFormValues,
 } from '@/features/account/login/login-form';
 
 export function LoginPage() {

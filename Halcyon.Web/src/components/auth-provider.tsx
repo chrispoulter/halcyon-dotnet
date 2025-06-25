@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { decodeJwt } from 'jose';
-import { SessionPayload } from '@/lib/session-types';
+import type { SessionPayload } from '@/lib/session-types';
 
 type AuthProviderProps = {
     children: React.ReactNode;

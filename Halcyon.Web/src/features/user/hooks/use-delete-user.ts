@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import {
+import type {
     DeleteUserRequest,
     DeleteUserResponse,
 } from '@/features/user/user-types';

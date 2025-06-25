@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router';
+import type { RouteObject } from 'react-router';
 import { Layout } from '@/components/layout';
 import { HomePage } from '@/home-page';
 import { NotFoundPage } from '@/not-found-page';

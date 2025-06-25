@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import {
+import type {
     ChangePasswordRequest,
     ChangePasswordResponse,
 } from '@/features/profile/profile-types';

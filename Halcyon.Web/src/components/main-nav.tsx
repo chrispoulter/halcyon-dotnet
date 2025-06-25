@@ -11,15 +11,17 @@ import {
     DrawerTrigger,
 } from '@/components/ui/drawer';
 import { useAuth } from '@/components/auth-provider';
-import { Role } from '@/lib/session-types';
+import { type Role, isUserAdministrator } from '@/lib/session-types';
 
-const routes = [
+type MainNavRoute = { href: string; label: string; roles?: Role[] };
+
+const routes: MainNavRoute[] = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     {
         href: '/user',
         label: 'Users',
-        roles: [Role.SYSTEM_ADMINISTRATOR, Role.USER_ADMINISTRATOR],
+        roles: isUserAdministrator,
     },
 ];
 
