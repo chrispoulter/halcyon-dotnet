@@ -10,9 +10,7 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [react(), tailwindcss()],
         define: {
-            'import.meta.env.npm_package_version': JSON.stringify(
-                env.npm_package_version
-            ),
+            'import.meta.env.VERSION': JSON.stringify(env.npm_package_version),
         },
         resolve: {
             alias: {
