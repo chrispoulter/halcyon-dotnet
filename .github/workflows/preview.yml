@@ -65,7 +65,6 @@ jobs:
           file: ./Halcyon.Api/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-api:preview
           context: .
           push: true
           provenance: false
@@ -76,7 +75,6 @@ jobs:
           file: ./Halcyon.Web/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-web:preview
           context: ./Halcyon.Web
           push: true
           provenance: false
