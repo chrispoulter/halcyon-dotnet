@@ -7,7 +7,7 @@ import { LoadingButton } from '@/components/loading-button';
 import { TextFormField } from '@/components/text-form-field';
 import { SwitchFormField } from '@/components/switch-form-field';
 import { isInPast } from '@/lib/dates';
-import { type Role, roles, roleOptions } from '@/lib/session-types';
+import { roleOptions, roles } from '@/lib/session-types';
 
 const schema = z
     .object({
@@ -39,7 +39,7 @@ const schema = z
             .refine(isInPast, { message: 'Date Of Birth must be in the past' }),
         roles: z
             .array(
-                z.enum<Role, [Role, ...Role[]]>(roles, {
+                z.enum(roles, {
                     message: 'Role must be a valid user role',
                 }),
                 { message: 'Role must be a valid array' }
