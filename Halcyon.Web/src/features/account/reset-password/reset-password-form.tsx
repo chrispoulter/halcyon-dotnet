@@ -7,9 +7,7 @@ import { LoadingButton } from '@/components/loading-button';
 
 const schema = z
     .object({
-        emailAddress: z
-            .string({ message: 'Email Address must be a valid string' })
-            .email('Email Address must be a valid email'),
+        emailAddress: z.email('Email Address must be a valid email'),
         newPassword: z
             .string({ message: 'New Password must be a valid string' })
             .min(8, 'New Password must be at least 8 characters')

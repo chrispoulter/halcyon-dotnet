@@ -61,7 +61,7 @@ export function DateFormField({
                                     disabled={disabled}
                                     autoComplete={dayAuto}
                                 >
-                                    <FormControl>
+                                    <FormControl className="w-full">
                                         <SelectTrigger>
                                             <SelectValue placeholder="Day..." />
                                         </SelectTrigger>
@@ -92,7 +92,10 @@ export function DateFormField({
                                     disabled={disabled}
                                     autoComplete={monthAuto}
                                 >
-                                    <FormControl id={`${name}-month`}>
+                                    <FormControl
+                                        id={`${name}-month`}
+                                        className="w-full"
+                                    >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Month..." />
                                         </SelectTrigger>
@@ -119,7 +122,10 @@ export function DateFormField({
                                     disabled={disabled}
                                     autoComplete={yearAuto}
                                 >
-                                    <FormControl id={`${name}-year`}>
+                                    <FormControl
+                                        id={`${name}-year`}
+                                        className="w-full"
+                                    >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Year..." />
                                         </SelectTrigger>

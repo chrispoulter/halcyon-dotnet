@@ -9,9 +9,7 @@ import type { GetProfileResponse } from '@/features/profile/profile-types';
 import { isInPast } from '@/lib/dates';
 
 const schema = z.object({
-    emailAddress: z
-        .string({ message: 'Email Address must be a valid string' })
-        .email('Email Address must be a valid email'),
+    emailAddress: z.email('Email Address must be a valid email'),
     firstName: z
         .string({ message: 'Last Name must be a valid string' })
         .min(1, 'First Name is a required field')
@@ -20,10 +18,7 @@ const schema = z.object({
         .string({ message: 'Last Name must be a valid string' })
         .min(1, 'Last Name is a required field')
         .max(50, 'Last Name must be no more than 50 characters'),
-    dateOfBirth: z
-        .string({
-            message: 'Date of Birth must be a valid string',
-        })
+    dateOfBirth: z.iso
         .date('Date Of Birth must be a valid date')
         .refine(isInPast, { message: 'Date Of Birth must be in the past' }),
 });
