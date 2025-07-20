@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,26 +12,45 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
+import { useDeleteUser } from '@/features/user/hooks/use-delete-user';
+import type { GetUserResponse } from '@/features/user/user-types';
 
 type DeleteUserButtonProps = {
-    onClick: () => void;
+    user: GetUserResponse;
     disabled?: boolean;
-    loading?: boolean;
     className?: string;
 };
 
 export function DeleteUserButton({
-    onClick,
+   user,
     disabled,
-    loading,
     className,
 }: DeleteUserButtonProps) {
+    const navigate = useNavigate();
+
+    const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser(user.id);
+
+    function onDelete() {
+        deleteUser(
+            {
+                version: user.version,
+            },
+            {
+                onSuccess: () => {
+                    toast.success('User successfully deleted.');
+                    navigate('/user');
+                },
+                onError: (error) => toast.error(error.message),
+            }
+        );
+    }
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <LoadingButton
                     variant="destructive"
-                    loading={loading}
+                    loading={isDeleting}
                     disabled={disabled}
                     className={className}
                 >
@@ -48,8 +69,8 @@ export function DeleteUserButton({
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        disabled={disabled || loading}
-                        onClick={onClick}
+                        disabled={disabled || isDeleting}
+                        onClick={onDelete}
                     >
                         Continue
                     </AlertDialogAction>

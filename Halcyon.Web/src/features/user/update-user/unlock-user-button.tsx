@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,26 +11,40 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
+import { useUnlockUser } from '@/features/user/hooks/use-unlock-user';
+import type { GetUserResponse } from '@/features/user/user-types';
 
 type UnlockUserButtonProps = {
-    onClick: () => void;
+    user: GetUserResponse;
     disabled?: boolean;
-    loading?: boolean;
     className?: string;
 };
 
 export function UnlockUserButton({
-    onClick,
+    user,
     disabled,
-    loading,
     className,
 }: UnlockUserButtonProps) {
+    const { mutate: unlockUser, isPending: isUnlocking } = useUnlockUser(user.id);
+
+    function onUnlock() {
+        unlockUser(
+            {
+                version: user.version,
+            },
+            {
+                onSuccess: () => toast.success('User successfully unlocked.'),
+                onError: (error) => toast.error(error.message),
+            }
+        );
+    }
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <LoadingButton
                     variant="secondary"
-                    loading={loading}
+                    loading={isUnlocking}
                     disabled={disabled}
                     className={className}
                 >
@@ -47,8 +62,8 @@ export function UnlockUserButton({
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        disabled={disabled || loading}
-                        onClick={onClick}
+                        disabled={disabled || isUnlocking}
+                        onClick={onUnlock}
                     >
                         Continue
                     </AlertDialogAction>

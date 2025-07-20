@@ -5,9 +5,6 @@ import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
 import { useGetUser } from '@/features/user/hooks/use-get-user';
 import { useUpdateUser } from '@/features/user/hooks/use-update-user';
-import { useLockUser } from '@/features/user/hooks/use-lock-user';
-import { useUnlockUser } from '@/features/user/hooks/use-unlock-user';
-import { useDeleteUser } from '@/features/user/hooks/use-delete-user';
 import {
     UpdateUserForm,
     type UpdateUserFormValues,
@@ -34,12 +31,6 @@ export function UpdateUserPage() {
 
     const { mutate: updateUser, isPending: isSaving } = useUpdateUser(id);
 
-    const { mutate: lockUser, isPending: isLocking } = useLockUser(id);
-
-    const { mutate: unlockUser, isPending: isUnlocking } = useUnlockUser(id);
-
-    const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser(id);
-
     if (isPending) {
         return <UpdateUserLoading />;
     }
@@ -48,56 +39,15 @@ export function UpdateUserPage() {
         return <QueryError error={error} />;
     }
 
-    const { version } = user;
-
     function onSubmit(data: UpdateUserFormValues) {
         updateUser(
             {
                 ...data,
-                version,
+                version: user?.version,
             },
             {
                 onSuccess: () => {
                     toast.success('User successfully updated.');
-                    navigate('/user');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
-    }
-
-    function onLock() {
-        lockUser(
-            {
-                version,
-            },
-            {
-                onSuccess: () => toast.success('User successfully locked.'),
-                onError: (error) => toast.error(error.message),
-            }
-        );
-    }
-
-    function onUnlock() {
-        unlockUser(
-            {
-                version,
-            },
-            {
-                onSuccess: () => toast.success('User successfully unlocked.'),
-                onError: (error) => toast.error(error.message),
-            }
-        );
-    }
-
-    function onDelete() {
-        deleteUser(
-            {
-                version,
-            },
-            {
-                onSuccess: () => {
-                    toast.success('User successfully deleted.');
                     navigate('/user');
                 },
                 onError: (error) => toast.error(error.message),
@@ -124,13 +74,7 @@ export function UpdateUserPage() {
             <UpdateUserForm
                 user={user}
                 onSubmit={onSubmit}
-                disabled={
-                    isFetching ||
-                    isSaving ||
-                    isLocking ||
-                    isUnlocking ||
-                    isDeleting
-                }
+                disabled={isFetching}
                 loading={isSaving}
             >
                 <Button asChild variant="outline">
@@ -138,30 +82,12 @@ export function UpdateUserPage() {
                 </Button>
 
                 {user.isLockedOut ? (
-                    <UnlockUserButton
-                        onClick={onUnlock}
-                        loading={isUnlocking}
-                        disabled={
-                            isFetching || isSaving || isLocking || isDeleting
-                        }
-                    />
+                    <UnlockUserButton user={user} disabled={isFetching} />
                 ) : (
-                    <LockUserButton
-                        onClick={onLock}
-                        loading={isLocking}
-                        disabled={
-                            isFetching || isSaving || isUnlocking || isDeleting
-                        }
-                    />
+                    <LockUserButton user={user} disabled={isFetching} />
                 )}
 
-                <DeleteUserButton
-                    onClick={onDelete}
-                    loading={isDeleting}
-                    disabled={
-                        isFetching || isSaving || isLocking || isUnlocking
-                    }
-                />
+                <DeleteUserButton user={user} disabled={isFetching} />
             </UpdateUserForm>
         </main>
     );
