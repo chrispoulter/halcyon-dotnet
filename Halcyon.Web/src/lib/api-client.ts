@@ -1,5 +1,14 @@
 import { config } from '@/lib/config';
 
+type ApiClientRequest = {
+    path: string;
+    method: string;
+    signal?: AbortSignal;
+    params?: Record<string, string | number | boolean>;
+    body?: Record<string, unknown>;
+    headers?: Record<string, string>;
+};
+
 export class ApiClientError extends Error {
     status?: number;
 
@@ -17,14 +26,14 @@ class ApiClient {
         this.baseUrl = baseUrl;
     }
 
-    private async fetch<Data>(
-        path: string,
-        method: string,
-        signal?: AbortSignal,
-        params?: Record<string, string | number | boolean>,
-        body?: Record<string, unknown>,
-        headers: Record<string, string> = {}
-    ): Promise<Data> {
+    private async fetch<Data>({
+        path,
+        method,
+        signal,
+        params,
+        body,
+        headers,
+    }: ApiClientRequest): Promise<Data> {
         const url = new URL(`${this.baseUrl}${path}`);
 
         if (params) {
@@ -70,62 +79,55 @@ class ApiClient {
     get<Data>(
         path: string,
         signal?: AbortSignal,
-        params: Record<string, string | number | boolean> = {},
-        headers: Record<string, string> = {}
+        params?: Record<string, string | number | boolean>,
+        headers?: Record<string, string>
     ): Promise<Data> {
-        return this.fetch<Data>(
+        return this.fetch<Data>({
             path,
-            'GET',
+            method: 'GET',
             signal,
             params,
-            undefined,
-            headers
-        );
+            headers,
+        });
     }
 
     post<Data>(
         path: string,
-        body: Record<string, unknown>,
-        headers: Record<string, string> = {}
+        body?: Record<string, unknown>,
+        headers?: Record<string, string>
     ): Promise<Data> {
-        return this.fetch<Data>(
+        return this.fetch<Data>({
             path,
-            'POST',
-            undefined,
-            undefined,
+            method: 'POST',
             body,
-            headers
-        );
+            headers,
+        });
     }
 
     put<Data>(
         path: string,
-        body: Record<string, unknown>,
-        headers: Record<string, string> = {}
+        body?: Record<string, unknown>,
+        headers?: Record<string, string>
     ): Promise<Data> {
-        return this.fetch<Data>(
+        return this.fetch<Data>({
             path,
-            'PUT',
-            undefined,
-            undefined,
+            method: 'PUT',
             body,
-            headers
-        );
+            headers,
+        });
     }
 
     delete<Data>(
         path: string,
-        body: Record<string, unknown>,
-        headers: Record<string, string> = {}
+        body?: Record<string, unknown>,
+        headers?: Record<string, string>
     ): Promise<Data> {
-        return this.fetch<Data>(
+        return this.fetch<Data>({
             path,
-            'DELETE',
-            undefined,
-            undefined,
+            method: 'DELETE',
             body,
-            headers
-        );
+            headers,
+        });
     }
 }
 

@@ -25,7 +25,9 @@ export function UnlockUserButton({
     disabled,
     className,
 }: UnlockUserButtonProps) {
-    const { mutate: unlockUser, isPending: isUnlocking } = useUnlockUser(user.id);
+    const { mutate: unlockUser, isPending: isUnlocking } = useUnlockUser(
+        user.id
+    );
 
     function onUnlock() {
         unlockUser(

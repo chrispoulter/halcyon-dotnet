@@ -22,13 +22,15 @@ type DeleteUserButtonProps = {
 };
 
 export function DeleteUserButton({
-   user,
+    user,
     disabled,
     className,
 }: DeleteUserButtonProps) {
     const navigate = useNavigate();
 
-    const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser(user.id);
+    const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser(
+        user.id
+    );
 
     function onDelete() {
         deleteUser(

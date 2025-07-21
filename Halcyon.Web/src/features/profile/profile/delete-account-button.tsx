@@ -33,7 +33,7 @@ export function DeleteAccountButton({
 
     const { mutate: deleteAccount, isPending: isDeleting } = useDeleteAccount();
 
-        function onDelete() {
+    function onDelete() {
         deleteAccount(
             {
                 version: profile.version,
