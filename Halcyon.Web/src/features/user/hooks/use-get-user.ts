@@ -8,8 +8,8 @@ export const useGetUser = (id: string) => {
 
     return useQuery({
         queryKey: ['user', id],
-        queryFn: () =>
-            apiClient.get<GetUserResponse>(`/user/${id}`, undefined, {
+        queryFn: ({ signal }) =>
+            apiClient.get<GetUserResponse>(`/user/${id}`, signal, undefined, {
                 Authorization: `Bearer ${accessToken}`,
             }),
     });

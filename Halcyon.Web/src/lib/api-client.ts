@@ -20,6 +20,7 @@ class ApiClient {
     private async fetch<Data>(
         path: string,
         method: string,
+        signal?: AbortSignal,
         params?: Record<string, string | number | boolean>,
         body?: Record<string, unknown>,
         headers: Record<string, string> = {}
@@ -34,6 +35,7 @@ class ApiClient {
 
         const response = await fetch(url, {
             method,
+            signal,
             headers: {
                 'Content-Type': 'application/json',
                 ...headers,
@@ -67,10 +69,18 @@ class ApiClient {
 
     get<Data>(
         path: string,
+        signal?: AbortSignal,
         params: Record<string, string | number | boolean> = {},
         headers: Record<string, string> = {}
     ): Promise<Data> {
-        return this.fetch<Data>(path, 'GET', params, undefined, headers);
+        return this.fetch<Data>(
+            path,
+            'GET',
+            signal,
+            params,
+            undefined,
+            headers
+        );
     }
 
     post<Data>(
@@ -78,7 +88,14 @@ class ApiClient {
         body: Record<string, unknown>,
         headers: Record<string, string> = {}
     ): Promise<Data> {
-        return this.fetch<Data>(path, 'POST', undefined, body, headers);
+        return this.fetch<Data>(
+            path,
+            'POST',
+            undefined,
+            undefined,
+            body,
+            headers
+        );
     }
 
     put<Data>(
@@ -86,7 +103,14 @@ class ApiClient {
         body: Record<string, unknown>,
         headers: Record<string, string> = {}
     ): Promise<Data> {
-        return this.fetch<Data>(path, 'PUT', undefined, body, headers);
+        return this.fetch<Data>(
+            path,
+            'PUT',
+            undefined,
+            undefined,
+            body,
+            headers
+        );
     }
 
     delete<Data>(
@@ -94,7 +118,14 @@ class ApiClient {
         body: Record<string, unknown>,
         headers: Record<string, string> = {}
     ): Promise<Data> {
-        return this.fetch<Data>(path, 'DELETE', undefined, body, headers);
+        return this.fetch<Data>(
+            path,
+            'DELETE',
+            undefined,
+            undefined,
+            body,
+            headers
+        );
     }
 }
 
