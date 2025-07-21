@@ -32,13 +32,11 @@ export function UpdateProfilePage() {
         return <QueryError error={error} />;
     }
 
-    const { version } = profile;
-
     function onSubmit(data: UpdateProfileFormValues) {
         updateProfile(
             {
                 ...data,
-                version,
+                version: profile?.version,
             },
             {
                 onSuccess: () => {

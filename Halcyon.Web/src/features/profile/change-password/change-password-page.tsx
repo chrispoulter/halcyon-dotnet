@@ -32,13 +32,11 @@ export function ChangePasswordPage() {
         return <QueryError error={error} />;
     }
 
-    const { version } = profile;
-
     function onSubmit(data: ChangePasswordFormValues) {
         changePassword(
             {
                 ...data,
-                version,
+                version: profile?.version,
             },
             {
                 onSuccess: () => {

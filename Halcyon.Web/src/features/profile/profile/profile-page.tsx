@@ -1,20 +1,13 @@
-import { Link, useNavigate } from 'react-router';
-import { toast } from 'sonner';
+import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/components/auth-provider';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
 import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
-import { useDeleteAccount } from '@/features/profile/hooks/use-delete-account';
 import { DeleteAccountButton } from '@/features/profile/profile/delete-account-button';
 import { ProfileLoading } from '@/features/profile/profile/profile-loading';
 import { toLocaleString } from '@/lib/dates';
 
 export function ProfilePage() {
-    const navigate = useNavigate();
-
-    const { clearAuth } = useAuth();
-
     const {
         data: profile,
         isPending,
@@ -23,32 +16,12 @@ export function ProfilePage() {
         error,
     } = useGetProfile();
 
-    const { mutate: deleteAccount, isPending: isDeleting } = useDeleteAccount();
-
     if (isPending) {
         return <ProfileLoading />;
     }
 
     if (!isSuccess) {
         return <QueryError error={error} />;
-    }
-
-    const { version } = profile;
-
-    function onDelete() {
-        deleteAccount(
-            {
-                version,
-            },
-            {
-                onSuccess: () => {
-                    toast.success('Your account has been deleted.');
-                    clearAuth();
-                    navigate('/');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
     }
 
     return (
@@ -110,8 +83,7 @@ export function ProfilePage() {
             </p>
 
             <DeleteAccountButton
-                onClick={onDelete}
-                loading={isDeleting}
+                profile={profile}
                 disabled={isFetching}
                 className="w-full sm:w-auto"
             />

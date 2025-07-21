@@ -8,8 +8,8 @@ export const useGetProfile = () => {
 
     return useQuery({
         queryKey: ['profile'],
-        queryFn: () =>
-            apiClient.get<GetProfileResponse>('/profile', undefined, {
+        queryFn: ({ signal }) =>
+            apiClient.get<GetProfileResponse>('/profile', signal, undefined, {
                 Authorization: `Bearer ${accessToken}`,
             }),
     });

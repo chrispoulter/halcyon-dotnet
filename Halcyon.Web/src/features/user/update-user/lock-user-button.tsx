@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,26 +11,40 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
+import { useLockUser } from '@/features/user/hooks/use-lock-user';
+import type { GetUserResponse } from '@/features/user/user-types';
 
 type LockUserButtonProps = {
-    onClick: () => void;
+    user: GetUserResponse;
     disabled?: boolean;
-    loading?: boolean;
     className?: string;
 };
 
 export function LockUserButton({
-    onClick,
+    user,
     disabled,
-    loading,
     className,
 }: LockUserButtonProps) {
+    const { mutate: lockUser, isPending: isLocking } = useLockUser(user.id);
+
+    function onLock() {
+        lockUser(
+            {
+                version: user.version,
+            },
+            {
+                onSuccess: () => toast.success('User successfully locked.'),
+                onError: (error) => toast.error(error.message),
+            }
+        );
+    }
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <LoadingButton
                     variant="secondary"
-                    loading={loading}
+                    loading={isLocking}
                     disabled={disabled}
                     className={className}
                 >
@@ -47,8 +62,8 @@ export function LockUserButton({
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        disabled={disabled || loading}
-                        onClick={onClick}
+                        disabled={disabled || isLocking}
+                        onClick={onLock}
                     >
                         Continue
                     </AlertDialogAction>
