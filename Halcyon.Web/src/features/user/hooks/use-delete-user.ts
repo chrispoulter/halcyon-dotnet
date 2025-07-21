@@ -17,8 +17,12 @@ export const useDeleteUser = (id: string) => {
                 Authorization: `Bearer ${accessToken}`,
             }),
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
+
+            queryClient.invalidateQueries({
+                queryKey: ['profile'],
+                refetchType: 'none',
+            });
 
             queryClient.invalidateQueries({
                 queryKey: ['user', data.id],
