@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/components/auth-provider';
-import { roleOptions } from '@/lib/session-types';
+import { roleOptions } from '@/lib/session';
 
 export function UserNav() {
     const navigate = useNavigate();

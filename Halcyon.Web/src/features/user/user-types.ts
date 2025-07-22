@@ -1,4 +1,4 @@
-import type { Role } from '@/lib/session-types';
+import type { Role } from '@/lib/session';
 
 export type UserSort =
     | 'EMAIL_ADDRESS_ASC'

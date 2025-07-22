@@ -8,7 +8,7 @@ import { TextFormField } from '@/components/text-form-field';
 import { SwitchFormField } from '@/components/switch-form-field';
 import type { GetUserResponse } from '@/features/user/user-types';
 import { isInPast } from '@/lib/dates';
-import { roleOptions, roles } from '@/lib/session-types';
+import { roleOptions, roles } from '@/lib/session';
 
 const schema = z.object({
     emailAddress: z.email('Email Address must be a valid email'),

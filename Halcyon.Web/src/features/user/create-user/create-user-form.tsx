@@ -7,7 +7,7 @@ import { LoadingButton } from '@/components/loading-button';
 import { TextFormField } from '@/components/text-form-field';
 import { SwitchFormField } from '@/components/switch-form-field';
 import { isInPast } from '@/lib/dates';
-import { roleOptions, roles } from '@/lib/session-types';
+import { roleOptions, roles } from '@/lib/session';
 
 const schema = z
     .object({

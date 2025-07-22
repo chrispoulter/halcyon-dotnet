@@ -2,6 +2,6 @@ type MetadataProps = {
     title: string;
 };
 
-export const Metadata = ({ title }: MetadataProps) => {
+export function Metadata({ title }: MetadataProps) {
     return <title>{`${title} // Halcyon`}</title>;
-};
+}

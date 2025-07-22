@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { decodeJwt } from 'jose';
-import type { SessionPayload } from '@/lib/session-types';
+import type { SessionPayload } from '@/lib/session';
 
 type AuthProviderProps = {
     children: React.ReactNode;
@@ -25,7 +25,7 @@ const initialState: AuthProviderState = {
 
 const AuthProviderContext = createContext<AuthProviderState>(initialState);
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export function AuthProvider({ children }: AuthProviderProps) {
     const [accessToken, setAccessToken] = useState<string | null>(
         localStorage.getItem(STORAGE_KEY)
     );
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     return <AuthProviderContext value={value}>{children}</AuthProviderContext>;
-};
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {

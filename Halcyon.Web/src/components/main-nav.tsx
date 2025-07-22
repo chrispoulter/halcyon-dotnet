@@ -11,7 +11,7 @@ import {
     DrawerTrigger,
 } from '@/components/ui/drawer';
 import { useAuth } from '@/components/auth-provider';
-import { type Role, isUserAdministrator } from '@/lib/session-types';
+import { type Role, isUserAdministrator } from '@/lib/session';
 
 type MainNavRoute = { href: string; label: string; roles?: Role[] };
 
