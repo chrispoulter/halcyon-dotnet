@@ -52,7 +52,7 @@ export function ChangePasswordPage() {
         <main className="mx-auto max-w-screen-sm space-y-6 p-6">
             <Metadata title="Change Password" />
 
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
                 Change Password
             </h1>
 
