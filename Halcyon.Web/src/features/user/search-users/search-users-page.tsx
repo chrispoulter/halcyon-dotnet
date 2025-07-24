@@ -1,6 +1,6 @@
 import { useSearchParams, Link } from 'react-router';
 import { z } from 'zod';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircleIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
@@ -127,7 +127,7 @@ export function SearchUsersPage() {
                 </div>
             ) : (
                 <Alert>
-                    <AlertCircle className="h-4 w-4" />
+                    <AlertCircleIcon />
                     <AlertTitle>No Results</AlertTitle>
                     <AlertDescription>
                         No users could be found.
