@@ -7,7 +7,7 @@ export function NotFoundPage() {
         <main className="mx-auto max-w-screen-sm space-y-6 p-6">
             <Metadata title="Not Found" />
 
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
                 Not Found
             </h1>
 
