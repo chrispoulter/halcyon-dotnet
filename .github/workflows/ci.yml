@@ -46,7 +46,7 @@ jobs:
       - name: Build and lint (npm)
         working-directory: ./Halcyon.Web
         run: |
-          npm version "${{ steps.version_step.outputs.semVer }}" --no-git-tag-version
+          npm version "${{ env.GitVersion_SemVer }}" --no-git-tag-version
           npm ci
           npm run lint
           npm run build
@@ -69,8 +69,8 @@ jobs:
         with:
           file: ./Halcyon.Api/Dockerfile
           tags: |
-            ghcr.io/${{ env.REPO }}-api:${{ steps.version_step.outputs.semVer }}
-            ghcr.io/${{ env.REPO }}-api:${{ github.ref == 'refs/heads/main' && 'latest' || steps.version_step.outputs.escapedBranchName }}
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-api:${{ github.ref == 'refs/heads/main' && 'latest' || env.GitVersion_EscapedBranchName }}
           context: .
           push: true
           provenance: false
@@ -80,8 +80,8 @@ jobs:
         with:
           file: ./Halcyon.Web/Dockerfile
           tags: |
-            ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.semVer }}
-            ghcr.io/${{ env.REPO }}-web:${{ github.ref == 'refs/heads/main' && 'latest' || steps.version_step.outputs.escapedBranchName }}
+            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-web:${{ github.ref == 'refs/heads/main' && 'latest' || env.GitVersion_EscapedBranchName }}
           context: ./Halcyon.Web
           push: true
           provenance: false
