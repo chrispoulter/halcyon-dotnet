@@ -1,6 +1,8 @@
-name: Preview Build and Publish
+name: CI Build and Publish
 
 on:
+  push:
+    branches: ["main"]
   pull_request:
     branches: ["main"]
   workflow_dispatch:
@@ -22,6 +24,7 @@ jobs:
         uses: actions/setup-dotnet@v4
 
       - name: Determine Version
+        id: version_step
         run: |
           dotnet tool restore
           dotnet gitversion /output buildserver /updateprojectfiles
@@ -34,9 +37,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-            node-version: 22
-            cache: 'npm'
-            cache-dependency-path: ./Halcyon.Web
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: ./Halcyon.Web
 
       - name: Build and lint (npm)
         working-directory: ./Halcyon.Web
@@ -59,22 +62,50 @@ jobs:
       - name: Lowercase the repo name and username
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
-      - name: Build and push container image to registry (api)
+      - name: Build and push api container image to registry (main)
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           file: ./Halcyon.Api/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-api:latest
           context: .
           push: true
           provenance: false
 
-      - name: Build and push web container image to registry (web)
+      - name: Build and push api container image to registry (preview)
+        if: github.ref != 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          file: ./Halcyon.Api/Dockerfile
+          tags: |
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-api:${{ steps.version_step.outputs.escapedBranchName }}
+          context: .
+          push: true
+          provenance: false
+
+      - name: Build and push web container image to registry (main)
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           file: ./Halcyon.Web/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-web:latest
+          context: ./Halcyon.Web
+          push: true
+          provenance: false
+
+      - name: Build and push web container image to registry (preview)
+        if: github.ref != 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          file: ./Halcyon.Web/Dockerfile
+          tags: |
+            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.escapedBranchName }}
           context: ./Halcyon.Web
           push: true
           provenance: false
