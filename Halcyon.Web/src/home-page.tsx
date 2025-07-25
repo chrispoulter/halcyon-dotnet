@@ -6,42 +6,37 @@ export function HomePage() {
             </h1>
 
             <p className="text-muted-foreground text-xl">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-                semper diam at erat pulvinar, at pulvinar felis blandit.
-                Vestibulum volutpat tellus diam, consequat gravida libero
-                rhoncus ut. Morbi maximus, leo sit amet vehicula eleifend, nunc
-                dui porta orci, quis semper odio felis ut quam.
+                Welcome to Halcyon, a modern React web project template built
+                with a sense of peace and tranquillity. This template provides a
+                solid foundation for building scalable web applications with the
+                latest technologies and best practices.
             </p>
 
             <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
-                Fusce condimentum
+                Built with Modern Tools
             </h2>
 
             <p className="text-muted-foreground text-sm">
-                Fusce vitae commodo metus. Pellentesque a eleifend dolor. Morbi
-                et finibus elit, accumsan sodales turpis. Nulla bibendum
-                pulvinar enim vitae malesuada. Nullam nulla justo, ullamcorper
-                et dui vel, pulvinar mattis enim. Ut dignissim laoreet neque,
-                eget placerat nisl auctor ac. Quisque id quam sollicitudin,
-                suscipit dui a, tempus justo. Aliquam iaculis nisl lacus, non
-                accumsan velit facilisis sed. Nulla commodo sapien sit amet
-                mauris sollicitudin, in lobortis quam lacinia. Donec at pharetra
-                neque, in accumsan dolor.
+                Halcyon leverages cutting-edge technologies including React
+                Router, TypeScript for type safety, React Query for server state
+                management, and Tailwind CSS with shadcn/ui components for
+                beautiful, accessible user interfaces. The template includes
+                authentication, form handling with React Hook Form and Zod
+                validation, and a comprehensive development setup with ESLint
+                and Prettier.
             </p>
 
             <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
-                Morbi venenatis
+                Ready for Production
             </h2>
 
             <p className="text-muted-foreground text-sm">
-                Morbi venenatis, felis ut cursus volutpat, dolor tortor pulvinar
-                nisl, ac scelerisque quam tortor sit amet ante. Aliquam feugiat
-                nisl arcu, sit amet tincidunt erat tempus ut. Quisque laoreet
-                purus et tempor dignissim. Phasellus vehicula dapibus quam eget
-                faucibus. Sed non posuere lorem. Mauris sit amet risus
-                imperdiet, scelerisque velit at, condimentum nisl. Integer at
-                ligula nisl. Donec sodales justo mi, et bibendum enim bibendum
-                quis. Vestibulum non magna auctor massa efficitur maximus.
+                This template comes with Docker configuration, comprehensive
+                routing, user management features, and a modern build pipeline.
+                Whether you&apos;re building a small application or a
+                large-scale project, Halcyon provides the structure and tools
+                you need to get started quickly and maintain code quality as you
+                grow.
             </p>
         </main>
     );
