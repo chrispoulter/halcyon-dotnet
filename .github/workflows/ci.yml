@@ -3,6 +3,8 @@ name: CI Build and Publish
 on:
   push:
     branches: ["main"]
+  # push:
+  #     branches: ['main', 'develop', 'feature/**', 'release/**', 'hotfix/**']
   pull_request:
     branches: ["main"]
   workflow_dispatch:
