@@ -62,50 +62,26 @@ jobs:
       - name: Lowercase the repo name and username
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
-      - name: Build and push api container image to registry (main)
+      - name: Build and push container image to registry (api)
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           file: ./Halcyon.Api/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-api:latest
+            ghcr.io/${{ env.REPO }}-api:${{ github.ref == 'refs/heads/main' && 'latest' || steps.version_step.outputs.escapedBranchName }}
           context: .
           push: true
           provenance: false
 
-      - name: Build and push api container image to registry (preview)
-        if: github.ref != 'refs/heads/main'
-        uses: docker/build-push-action@v5
-        with:
-          file: ./Halcyon.Api/Dockerfile
-          tags: |
-            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-api:${{ steps.version_step.outputs.escapedBranchName }}
-          context: .
-          push: true
-          provenance: false
-
-      - name: Build and push web container image to registry (main)
+      - name: Build and push container image to registry (web)
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           file: ./Halcyon.Web/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-web:latest
-          context: ./Halcyon.Web
-          push: true
-          provenance: false
-
-      - name: Build and push web container image to registry (preview)
-        if: github.ref != 'refs/heads/main'
-        uses: docker/build-push-action@v5
-        with:
-          file: ./Halcyon.Web/Dockerfile
-          tags: |
-            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.escapedBranchName }}
+            ghcr.io/${{ env.REPO }}-web:${{ github.ref == 'refs/heads/main' && 'latest' || steps.version_step.outputs.escapedBranchName }}
           context: ./Halcyon.Web
           push: true
           provenance: false
