@@ -65,6 +65,7 @@ jobs:
         with:
           file: ./Halcyon.Api/Dockerfile
           tags: |
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
             ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
             ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_PreReleaseLabel || 'latest' }}
           context: .
@@ -76,6 +77,7 @@ jobs:
         with:
           file: ./Halcyon.Web/Dockerfile
           tags: |
+            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
             ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
             ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_PreReleaseLabel || 'latest' }}
           context: ./Halcyon.Web
