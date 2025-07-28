@@ -42,7 +42,7 @@ jobs:
       - name: Build and lint (npm)
         working-directory: ./Halcyon.Web
         run: |
-          npm version "${{ env.GitVersion_FullSemVer }}" --no-git-tag-version
+          npm version "${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}" --no-git-tag-version
           npm ci
           npm run lint
           npm run build
@@ -65,8 +65,8 @@ jobs:
         with:
           file: ./Halcyon.Api/Dockerfile
           tags: |
-            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_FullSemVer }}
-            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_PreReleaseTag || 'latest' }}
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_PreReleaseLabel || 'latest' }}
           context: .
           push: true
           provenance: false
@@ -76,8 +76,8 @@ jobs:
         with:
           file: ./Halcyon.Web/Dockerfile
           tags: |
-            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_FullSemVer }}
-            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_PreReleaseTag || 'latest' }}
+            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
+            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_PreReleaseLabel || 'latest' }}
           context: ./Halcyon.Web
           push: true
           provenance: false
