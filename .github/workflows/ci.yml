@@ -68,7 +68,7 @@ jobs:
           file: ./Halcyon.Api/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-api:${{ github.ref == 'refs/heads/main' && 'latest' || env.GitVersion_EscapedBranchName }}
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_PreReleaseTag || 'latest' }}
           context: .
           push: true
           provenance: false
@@ -79,7 +79,7 @@ jobs:
           file: ./Halcyon.Web/Dockerfile
           tags: |
             ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-web:${{ github.ref == 'refs/heads/main' && 'latest' || env.GitVersion_EscapedBranchName }}
+            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_PreReleaseTag || 'latest' }}
           context: ./Halcyon.Web
           push: true
           provenance: false
