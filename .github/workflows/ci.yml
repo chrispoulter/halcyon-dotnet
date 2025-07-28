@@ -2,7 +2,7 @@ name: CI Build and Publish
 
 on:
   push:
-      branches: ['main', 'develop', 'feature/**', 'release/**', 'hotfix/**']
+    branches: ["main", "develop", "feature/**", "release/**", "hotfix/**"]
   workflow_dispatch:
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
       - name: Build and lint (npm)
         working-directory: ./Halcyon.Web
         run: |
-          npm version "${{ env.GitVersion_SemVer }}" --no-git-tag-version
+          npm version "${{ env.GitVersion_FullSemVer }}" --no-git-tag-version
           npm ci
           npm run lint
           npm run build
@@ -65,7 +65,7 @@ jobs:
         with:
           file: ./Halcyon.Api/Dockerfile
           tags: |
-            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_FullSemVer }}
             ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_PreReleaseTag || 'latest' }}
           context: .
           push: true
@@ -76,7 +76,7 @@ jobs:
         with:
           file: ./Halcyon.Web/Dockerfile
           tags: |
-            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_FullSemVer }}
             ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_PreReleaseTag || 'latest' }}
           context: ./Halcyon.Web
           push: true
