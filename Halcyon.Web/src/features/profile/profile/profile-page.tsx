@@ -5,7 +5,7 @@ import { QueryError } from '@/components/query-error';
 import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
 import { DeleteAccountButton } from '@/features/profile/profile/delete-account-button';
 import { ProfileLoading } from '@/features/profile/profile/profile-loading';
-import { toLocaleString } from '@/lib/dates';
+import { toDisplay } from '@/lib/dates';
 
 export function ProfilePage() {
     const {
@@ -51,7 +51,7 @@ export function ProfilePage() {
                     Date Of Birth
                 </dt>
                 <dd className="text-muted-foreground truncate text-sm">
-                    {toLocaleString(profile.dateOfBirth)}
+                    {toDisplay(profile.dateOfBirth)}
                 </dd>
             </dl>
 

@@ -1,3 +1,4 @@
+import { CalendarIcon } from 'lucide-react';
 import {
     FormControl,
     FormField,
@@ -5,21 +6,21 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { currentYear, monthNames } from '@/lib/dates';
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import { isInPast, toDateOnly, toDisplay } from '@/lib/dates';
+import { cn } from '@/lib/utils';
 
 type DateFormFieldProps = {
     name: string;
     label: string;
     required?: boolean;
     disabled?: boolean;
-    autoComplete?: [string, string, string];
 };
 
 export function DateFormField({
@@ -27,126 +28,59 @@ export function DateFormField({
     label,
     required,
     disabled,
-    autoComplete,
 }: DateFormFieldProps) {
-    const [dayAuto, monthAuto, yearAuto] = autoComplete || [];
-
     return (
         <FormField
             name={name}
-            render={({ field: { name, value = '--', onChange } }) => {
-                const [year, month, day] = value.split('-');
-
-                function onDayChange(value: string) {
-                    onChange(`${year}-${month}-${value}`);
+            render={({ field }) => {
+                function onSelect(date?: Date) {
+                    const value = toDateOnly(date);
+                    field.onChange(value);
                 }
 
-                function onMonthChange(value: string) {
-                    onChange(`${year}-${value}-${day}`);
-                }
-
-                function onYearChange(value: string) {
-                    onChange(`${value}-${month}-${day}`);
+                function isDisabled(date: Date) {
+                    return !isInPast(date);
                 }
 
                 return (
-                    <FormItem>
+                    <FormItem className="flex flex-col">
                         <FormLabel>{label}</FormLabel>
-                        <div className="flex gap-2">
-                            <div className="flex-1">
-                                <Select
-                                    onValueChange={onDayChange}
-                                    defaultValue={day}
-                                    required={required}
-                                    disabled={disabled}
-                                    autoComplete={dayAuto}
-                                >
-                                    <FormControl className="w-full">
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Day..." />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {Array.from({ length: 31 }).map(
-                                            (_, index) => (
-                                                <SelectItem
-                                                    key={index}
-                                                    value={(index + 1)
-                                                        .toString()
-                                                        .padStart(2, '0')}
-                                                >
-                                                    {(index + 1)
-                                                        .toString()
-                                                        .padStart(2, '0')}
-                                                </SelectItem>
-                                            )
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <FormControl>
+                                    <Button
+                                        variant={'outline'}
+                                        disabled={disabled}
+                                        className={cn(
+                                            'w-full pl-3 text-left font-normal',
+                                            !field.value &&
+                                                'text-muted-foreground'
                                         )}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex-1">
-                                <Select
-                                    onValueChange={onMonthChange}
-                                    defaultValue={month}
-                                    required={required}
-                                    disabled={disabled}
-                                    autoComplete={monthAuto}
-                                >
-                                    <FormControl
-                                        id={`${name}-month`}
-                                        className="w-full"
                                     >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Month..." />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {monthNames.map((_, index) => (
-                                            <SelectItem
-                                                key={index}
-                                                value={(index + 1)
-                                                    .toString()
-                                                    .padStart(2, '0')}
-                                            >
-                                                {monthNames[index]}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex-1">
-                                <Select
-                                    onValueChange={onYearChange}
-                                    defaultValue={year}
-                                    required={required}
-                                    disabled={disabled}
-                                    autoComplete={yearAuto}
-                                >
-                                    <FormControl
-                                        id={`${name}-year`}
-                                        className="w-full"
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Year..." />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {Array.from({ length: 120 }).map(
-                                            (_, index) => (
-                                                <SelectItem
-                                                    key={index}
-                                                    value={(
-                                                        currentYear - index
-                                                    ).toString()}
-                                                >
-                                                    {currentYear - index}
-                                                </SelectItem>
-                                            )
+                                        {field.value ? (
+                                            toDisplay(field.value)
+                                        ) : (
+                                            <span>Select...</span>
                                         )}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                            >
+                                <Calendar
+                                    mode="single"
+                                    selected={field.value}
+                                    defaultMonth={field.value}
+                                    required={required}
+                                    onSelect={onSelect}
+                                    disabled={isDisabled}
+                                    captionLayout="dropdown"
+                                />
+                            </PopoverContent>
+                        </Popover>
                         <FormMessage />
                     </FormItem>
                 );
