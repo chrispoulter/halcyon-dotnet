@@ -71,6 +71,7 @@ export function DateFormField({
                                 align="start"
                             >
                                 <Calendar
+                                    timeZone="UTC"
                                     mode="single"
                                     selected={field.value}
                                     defaultMonth={field.value}
