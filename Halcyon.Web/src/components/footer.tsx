@@ -16,7 +16,7 @@ export function Footer() {
                     {currentYear}
                 </div>
                 <div className="text-sm leading-none font-medium">
-                    v{config.VERSION}
+                    v{config.VERSION} | {new Date().toString()}
                 </div>
             </div>
         </footer>
