@@ -8,10 +8,10 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -83,3 +83,11 @@ jobs:
           context: ./Halcyon.Web
           push: true
           provenance: false
+
+      - name: Trigger deployment (api)
+        run: |
+          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_API }}&imgURL=ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}"
+
+      - name: Trigger deployment (web)
+        run: |
+          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_WEB }}&imgURL=ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}"
