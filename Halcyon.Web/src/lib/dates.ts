@@ -1,7 +1,7 @@
 import { format, isBefore, startOfDay } from 'date-fns';
 import { UTCDate, utc } from '@date-fns/utc';
 
-export const currentYear = new Date().getFullYear();
+export const currentYear = new Date().getUTCFullYear();
 
 export function toDisplay(value: string | Date) {
     return format(value, 'PPP', { in: utc });
