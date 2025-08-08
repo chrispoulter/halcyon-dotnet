@@ -8,12 +8,10 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
     permissions:
       contents: read
       packages: write
-    outputs:
-      imageUrlApi: ghcr.io/${{ env.REPO }}-api:${{ steps.version_step.outputs.semVer }}-${{ steps.version_step.outputs.shortSha }}
-      imageUrlWeb: ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.semVer }}-${{ steps.version_step.outputs.shortSha }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -87,13 +85,9 @@ jobs:
           provenance: false
 
       - name: Trigger deployment (api)
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_API }}&imgURL=${{ needs.build-and-publish.outputs.imageUrlApi }}
         run: |
-          curl "$deploy_url"
+          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_API }}&imgURL=ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}"
 
       - name: Trigger deployment (web)
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_WEB }}&imgURL=${{ needs.build-and-publish.outputs.imageUrlWeb }}
         run: |
-          curl "$deploy_url"
+          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_WEB }}&imgURL=ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}"
