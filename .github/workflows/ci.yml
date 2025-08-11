@@ -86,8 +86,16 @@ jobs:
 
       - name: Trigger deployment (api)
         run: |
-          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_API }}&imgURL=ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}"
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}\"}" \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_API }}/deploys
 
       - name: Trigger deployment (web)
         run: |
-          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_WEB }}&imgURL=ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}"
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}\"}" \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_WEB }}/deploys
