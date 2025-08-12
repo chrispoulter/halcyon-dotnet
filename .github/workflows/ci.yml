@@ -6,12 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-publish:
+  version:
+    name: Determine Version
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
-    permissions:
-      contents: read
-      packages: write
+    outputs:
+      GitVersion_SemVer: ${{ fromJSON(steps.gitversion.outputs.json).SemVer }}
+      GitVersion_ShortSha: ${{ fromJSON(steps.gitversion.outputs.json).ShortSha }}
+      GitVersion_PreReleaseLabel: ${{ fromJSON(steps.gitversion.outputs.json).PreReleaseLabel }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,16 +22,95 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
 
-      - name: Determine Version
-        id: version_step
+      - name: Compute GitVersion (JSON)
+        id: gitversion
+        shell: bash
         run: |
           dotnet tool restore
-          dotnet gitversion /output buildserver /updateprojectfiles
+          JSON=$(dotnet gitversion /output json)
+          {
+            echo 'json<<EOF'
+            echo "$JSON"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+  build-and-publish-api:
+    name: Build and Publish API
+    runs-on: ubuntu-latest
+    needs: version
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+    permissions:
+      contents: read
+      packages: write
+    env:
+      GitVersion_SemVer: ${{ needs.version.outputs.GitVersion_SemVer }}
+      GitVersion_ShortSha: ${{ needs.version.outputs.GitVersion_ShortSha }}
+      GitVersion_PreReleaseLabel: ${{ needs.version.outputs.GitVersion_PreReleaseLabel }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
 
       - name: Build and test (dotnet)
         run: |
           dotnet build "halcyon.sln"
           dotnet test "halcyon.sln"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Lowercase repo name for GHCR
+        shell: bash
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>"${GITHUB_ENV}"
+
+      - name: Build and push container image to registry (api)
+        uses: docker/build-push-action@v5
+        with:
+          file: ./Halcyon.Api/Dockerfile
+          tags: |
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
+            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_PreReleaseLabel || 'latest' }}
+          context: .
+          push: true
+          provenance: false
+
+      - name: Trigger deployment (api)
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}\"}" \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_API }}/deploys
+
+  build-and-publish-web:
+    name: Build and Publish Web
+    runs-on: ubuntu-latest
+    needs: version
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+    permissions:
+      contents: read
+      packages: write
+    env:
+      GitVersion_SemVer: ${{ needs.version.outputs.GitVersion_SemVer }}
+      GitVersion_ShortSha: ${{ needs.version.outputs.GitVersion_ShortSha }}
+      GitVersion_PreReleaseLabel: ${{ needs.version.outputs.GitVersion_PreReleaseLabel }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -57,20 +137,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Lowercase the repo name
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-
-      - name: Build and push container image to registry (api)
-        uses: docker/build-push-action@v5
-        with:
-          file: ./Halcyon.Api/Dockerfile
-          tags: |
-            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
-            ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_PreReleaseLabel || 'latest' }}
-          context: .
-          push: true
-          provenance: false
+      - name: Lowercase repo name for GHCR
+        shell: bash
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>"${GITHUB_ENV}"
 
       - name: Build and push container image to registry (web)
         uses: docker/build-push-action@v5
@@ -83,14 +152,6 @@ jobs:
           context: ./Halcyon.Web
           push: true
           provenance: false
-
-      - name: Trigger deployment (api)
-        run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}\"}" \
-            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_API }}/deploys
 
       - name: Trigger deployment (web)
         run: |
