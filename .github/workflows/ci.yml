@@ -78,6 +78,22 @@ jobs:
           push: true
           provenance: false
 
+  deploy-api:
+    runs-on: ubuntu-latest
+    needs: 
+      - publish-api
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+    permissions:
+      contents: read
+    steps:
+      - name: Trigger deployment
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            --data "{\"imageUrl\":\"${{ needs.build-and-publish-api.outputs.ImageUrl }}\"}" \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_API }}/deploys
+
   build-web:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
@@ -162,24 +178,15 @@ jobs:
           push: true
           provenance: false
 
-  deploy-all:
+  deploy-web:
     runs-on: ubuntu-latest
     needs: 
-      - publish-api
       - publish-web
     environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
     permissions:
       contents: read
     steps:
-      - name: Trigger deployment (api)
-        run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            --data "{\"imageUrl\":\"${{ needs.build-and-publish-api.outputs.ImageUrl }}\"}" \
-            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_API }}/deploys
-
-      - name: Trigger deployment (web)
+      - name: Trigger deployment
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
