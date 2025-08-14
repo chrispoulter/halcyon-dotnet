@@ -6,8 +6,32 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-publish-api:
+  build-api:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      - name: Determine Version
+        id: version_step
+        run: |
+          dotnet tool restore
+          dotnet gitversion /output buildserver /updateprojectfiles
+
+      - name: Build and test
+        run: |
+          dotnet build "halcyon.sln"
+          dotnet test "halcyon.sln"
+
+  publish-api:
+    runs-on: ubuntu-latest
+    needs: build-api
     environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
     permissions:
       contents: read
@@ -28,11 +52,6 @@ jobs:
         run: |
           dotnet tool restore
           dotnet gitversion /output buildserver /updateprojectfiles
-
-      - name: Build and test
-        run: |
-          dotnet build "halcyon.sln"
-          dotnet test "halcyon.sln"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -59,8 +78,32 @@ jobs:
           push: true
           provenance: false
 
-  build-and-publish-web:
+  build-web:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: ./Halcyon.Web
+
+      - name: Build and lint
+        working-directory: ./Halcyon.Web
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+
+  publish-web:
+    runs-on: ubuntu-latest
+    needs: build-web
     environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
     permissions:
       contents: read
@@ -89,13 +132,10 @@ jobs:
           cache: "npm"
           cache-dependency-path: ./Halcyon.Web
 
-      - name: Build and lint
+      - name: Set version
         working-directory: ./Halcyon.Web
         run: |
           npm version "${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}" --no-git-tag-version
-          npm ci
-          npm run lint
-          npm run build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -122,11 +162,11 @@ jobs:
           push: true
           provenance: false
 
-  deploy:
+  deploy-all:
     runs-on: ubuntu-latest
     needs: 
-      - build-and-publish-api
-      - build-and-publish-web
+      - publish-api
+      - publish-web
     environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
     permissions:
       contents: read
