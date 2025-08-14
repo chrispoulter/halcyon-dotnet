@@ -8,10 +8,10 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Lowercase the repo name and username
+      - name: Lowercase the repo name
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
       - name: Build and push container image to registry (api)
@@ -83,3 +83,19 @@ jobs:
           context: ./Halcyon.Web
           push: true
           provenance: false
+
+      - name: Trigger deployment (api)
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}\"}" \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_API }}/deploys
+
+      - name: Trigger deployment (web)
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}\"}" \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_WEB }}/deploys
