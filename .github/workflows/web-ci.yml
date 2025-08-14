@@ -18,14 +18,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.1.1
+        with:
+            versionSpec: '6.0.x'
 
       - name: Determine Version
         id: version_step
-        run: |
-          dotnet tool restore
-          dotnet gitversion /output buildserver /updateprojectfiles
+        uses: gittools/actions/gitversion/execute@v3.1.1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,7 +37,7 @@ jobs:
       - name: Build and lint
         working-directory: ./Halcyon.Web
         run: |
-          npm version "${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}" --no-git-tag-version
+          npm version "${{ steps.version_step.outputs.semVer }}-${{ steps.version_step.outputs.shortSha }}" --no-git-tag-version
           npm ci
           npm run lint
           npm run build
@@ -60,9 +60,9 @@ jobs:
         with:
           file: ./Halcyon.Web/Dockerfile
           tags: |
-            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}
-            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
-            ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_PreReleaseLabel || 'latest' }}
+            ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.semVer }}
+            ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.semVer }}-${{ steps.version_step.outputs.shortSha }}
+            ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.preReleaseLabel || 'latest' }}
           context: ./Halcyon.Web
           push: true
           provenance: false
@@ -72,5 +72,5 @@ jobs:
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}\"}" \
+            --data "{\"imageUrl\":\"ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.semVer }}-${{ steps.version_step.outputs.shortSha }}\"}" \
             https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID_WEB }}/deploys
