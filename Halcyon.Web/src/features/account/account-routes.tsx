@@ -8,10 +8,10 @@ export const accountRoutes: RouteObject[] = [
     {
         path: 'account',
         children: [
-            { path: 'login', element: <LoginPage /> },
-            { path: 'register', element: <RegisterPage /> },
-            { path: 'forgot-password', element: <ForgotPasswordPage /> },
-            { path: 'reset-password/:token', element: <ResetPasswordPage /> },
+            { path: 'login', Component: LoginPage },
+            { path: 'register', Component: RegisterPage },
+            { path: 'forgot-password', Component: ForgotPasswordPage },
+            { path: 'reset-password/:token', Component: ResetPasswordPage },
         ],
     },
 ];

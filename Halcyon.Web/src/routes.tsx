@@ -10,22 +10,21 @@ import { userRoutes } from '@/features/user/user-routes';
 
 export const routes: RouteObject[] = [
     {
-        path: '/',
-        element: <Layout />,
+        Component: Layout,
         children: [
             {
-                errorElement: <ErrorPage />,
+                ErrorBoundary: ErrorPage,
                 children: [
                     {
                         index: true,
-                        element: <HomePage />,
+                        Component: HomePage,
                     },
                     ...accountRoutes,
                     ...profileRoutes,
                     ...userRoutes,
                     {
                         path: '*',
-                        element: <NotFoundPage />,
+                        Component: NotFoundPage,
                     },
                 ],
             },

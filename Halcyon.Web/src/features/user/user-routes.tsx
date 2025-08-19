@@ -8,11 +8,11 @@ import { isUserAdministrator } from '@/lib/session';
 export const userRoutes: RouteObject[] = [
     {
         path: 'user',
-        element: <ProtectedRoute roles={isUserAdministrator} />,
+        Component: () => <ProtectedRoute roles={isUserAdministrator} />,
         children: [
-            { index: true, element: <SearchUsersPage /> },
-            { path: 'create', element: <CreateUserPage /> },
-            { path: ':id', element: <UpdateUserPage /> },
+            { index: true, Component: SearchUsersPage },
+            { path: 'create', Component: CreateUserPage },
+            { path: ':id', Component: UpdateUserPage },
         ],
     },
 ];

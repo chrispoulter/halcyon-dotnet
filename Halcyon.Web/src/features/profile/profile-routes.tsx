@@ -7,11 +7,11 @@ import { ChangePasswordPage } from '@/features/profile/change-password/change-pa
 export const profileRoutes: RouteObject[] = [
     {
         path: 'profile',
-        element: <ProtectedRoute />,
+        Component: ProtectedRoute,
         children: [
-            { index: true, element: <ProfilePage /> },
-            { path: 'update-profile', element: <UpdateProfilePage /> },
-            { path: 'change-password', element: <ChangePasswordPage /> },
+            { index: true, Component: ProfilePage },
+            { path: 'update-profile', Component: UpdateProfilePage },
+            { path: 'change-password', Component: ChangePasswordPage },
         ],
     },
 ];
