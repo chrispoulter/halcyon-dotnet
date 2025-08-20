@@ -1,5 +1,5 @@
-﻿using System.Net;
-using System.Net.Mail;
+﻿using FluentEmail.MailKitSmtp;
+using MailKit.Security;
 
 namespace Halcyon.Api.Common.Email;
 
@@ -30,16 +30,19 @@ public static class FluentEmailExtensions
                     context.SetValue("SiteUrl", emailSettings.SiteUrl);
                 };
             })
-            .AddSmtpSender(
-                new SmtpClient
+            .AddMailKitSender(
+                new SmtpClientOptions
                 {
-                    Host = emailSettings.SmtpServer,
+                    Server = emailSettings.SmtpServer,
                     Port = emailSettings.SmtpPort,
-                    EnableSsl = emailSettings.SmtpSsl,
-                    Credentials = new NetworkCredential(
-                        emailSettings.SmtpUserName,
-                        emailSettings.SmtpPassword
-                    ),
+                    SocketOptions = emailSettings.SmtpSsl
+                        ? SecureSocketOptions.StartTls
+                        : SecureSocketOptions.None,
+                    RequiresAuthentication =
+                        !string.IsNullOrEmpty(emailSettings.SmtpUserName)
+                        && !string.IsNullOrEmpty(emailSettings.SmtpPassword),
+                    User = emailSettings.SmtpUserName,
+                    Password = emailSettings.SmtpPassword,
                 }
             );
 
