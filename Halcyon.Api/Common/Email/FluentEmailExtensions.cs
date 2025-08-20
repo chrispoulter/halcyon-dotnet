@@ -1,4 +1,5 @@
 ﻿using FluentEmail.MailKitSmtp;
+using MailKit.Security;
 
 namespace Halcyon.Api.Common.Email;
 
@@ -20,14 +21,6 @@ public static class FluentEmailExtensions
             emailSettings.ParseConnectionString(connectionString);
         }
 
-        var socketOptions = emailSettings.SmtpSsl
-            ? MailKit.Security.SecureSocketOptions.StartTls
-            : MailKit.Security.SecureSocketOptions.None;
-
-        var requiresAuthentication =
-            !string.IsNullOrEmpty(emailSettings.SmtpUserName)
-            && !string.IsNullOrEmpty(emailSettings.SmtpPassword);
-
         builder
             .Services.AddFluentEmail(emailSettings.NoReplyAddress)
             .AddLiquidRenderer(configure =>
@@ -42,8 +35,12 @@ public static class FluentEmailExtensions
                 {
                     Server = emailSettings.SmtpServer,
                     Port = emailSettings.SmtpPort,
-                    SocketOptions = socketOptions,
-                    RequiresAuthentication = requiresAuthentication,
+                    SocketOptions = emailSettings.SmtpSsl
+                        ? SecureSocketOptions.StartTls
+                        : SecureSocketOptions.None,
+                    RequiresAuthentication =
+                        !string.IsNullOrEmpty(emailSettings.SmtpUserName)
+                        && !string.IsNullOrEmpty(emailSettings.SmtpPassword),
                     User = emailSettings.SmtpUserName,
                     Password = emailSettings.SmtpPassword,
                 }
