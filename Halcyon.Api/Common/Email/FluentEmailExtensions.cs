@@ -20,6 +20,14 @@ public static class FluentEmailExtensions
             emailSettings.ParseConnectionString(connectionString);
         }
 
+        var socketOptions = emailSettings.SmtpSsl
+            ? MailKit.Security.SecureSocketOptions.StartTls
+            : MailKit.Security.SecureSocketOptions.None;
+
+        var requiresAuthentication =
+            !string.IsNullOrEmpty(emailSettings.SmtpUserName)
+            && !string.IsNullOrEmpty(emailSettings.SmtpPassword);
+
         builder
             .Services.AddFluentEmail(emailSettings.NoReplyAddress)
             .AddLiquidRenderer(configure =>
@@ -34,7 +42,8 @@ public static class FluentEmailExtensions
                 {
                     Server = emailSettings.SmtpServer,
                     Port = emailSettings.SmtpPort,
-                    UseSsl = emailSettings.SmtpSsl,
+                    SocketOptions = socketOptions,
+                    RequiresAuthentication = requiresAuthentication,
                     User = emailSettings.SmtpUserName,
                     Password = emailSettings.SmtpPassword,
                 }
