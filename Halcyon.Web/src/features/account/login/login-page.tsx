@@ -24,6 +24,7 @@ export function LoginPage() {
             onError: (error) => toast.error(error.message),
         });
     }
+
     return (
         <main className="mx-auto max-w-screen-sm space-y-6 p-6">
             <Metadata title="Login" />
