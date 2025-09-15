@@ -29,8 +29,8 @@ jobs:
 
       - name: Build and test (dotnet)
         run: |
-          dotnet build "halcyon.sln"
-          dotnet test "halcyon.sln"
+          dotnet build "halcyon.slnx"
+          dotnet test "halcyon.slnx"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
