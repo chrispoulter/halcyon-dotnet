@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
 
       - name: Determine Version
         id: version_step
@@ -29,8 +29,8 @@ jobs:
 
       - name: Build and test (dotnet)
         run: |
-          dotnet build "halcyon.sln"
-          dotnet test "halcyon.sln"
+          dotnet build "halcyon.slnx"
+          dotnet test "halcyon.slnx"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
