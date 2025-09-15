@@ -27,6 +27,10 @@ jobs:
           dotnet tool restore
           dotnet gitversion /output buildserver /updateprojectfiles
 
+      - name: Check .NET Version
+        run: |
+          dotnet --version
+
       - name: Build and test (dotnet)
         run: |
           dotnet build "halcyon.slnx"
