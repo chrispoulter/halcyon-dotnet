@@ -18,6 +18,7 @@ var maildev = builder
 var api = builder
     .AddProject<Projects.Halcyon_Api>("api")
     .WithExternalHttpEndpoints()
+    .WithHttpHealthCheck("/health")
     .WithReference(database)
     .WaitFor(database)
     .WithReference(maildev)
