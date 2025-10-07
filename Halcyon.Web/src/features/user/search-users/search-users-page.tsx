@@ -23,7 +23,7 @@ const searchParamsSchema = z.object({
     page: z.coerce
         .number({ message: 'Page must be a valid number' })
         .int('Page must be a valid integer')
-        .positive('Page must be a postive number')
+        .positive('Page must be a positive number')
         .catch(1),
     sort: z
         .enum(
