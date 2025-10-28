@@ -13,10 +13,7 @@ public class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
         var request = context.Arguments.OfType<T>().FirstOrDefault();
         if (request is null)
         {
-            return Results.Problem(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: "One or more validation errors occurred."
-            );
+            return await next(context);
         }
 
         var result = await validator.ValidateAsync(request);
