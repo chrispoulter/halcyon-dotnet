@@ -33,17 +33,16 @@ public class GetUserEndpoint : IEndpoint
             );
         }
 
-        var result = new GetUserResponse
-        {
-            Id = user.Id,
-            EmailAddress = user.EmailAddress,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            DateOfBirth = user.DateOfBirth,
-            Roles = user.Roles,
-            IsLockedOut = user.IsLockedOut,
-            Version = user.Version,
-        };
+        var result = new GetUserResponse(
+            user.Id,
+            user.EmailAddress,
+            user.FirstName,
+            user.LastName,
+            user.DateOfBirth,
+            user.IsLockedOut,
+            user.Roles,
+            user.Version
+        );
 
         return Results.Ok(result);
     }

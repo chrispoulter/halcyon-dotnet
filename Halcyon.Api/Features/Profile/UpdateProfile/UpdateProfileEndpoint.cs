@@ -14,7 +14,7 @@ public class UpdateProfileEndpoint : IEndpoint
             .RequireAuthorization()
             .AddValidationFilter<UpdateProfileRequest>()
             .WithTags(Tags.Profile)
-            .Produces<UpdateResponse>();
+            .Produces<UpdateProfileResponse>();
     }
 
     private static async Task<IResult> HandleAsync(
@@ -73,6 +73,6 @@ public class UpdateProfileEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new UpdateProfileResponse(user.Id));
     }
 }

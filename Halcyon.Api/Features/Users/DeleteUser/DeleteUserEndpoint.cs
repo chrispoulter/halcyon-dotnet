@@ -13,12 +13,12 @@ public class DeleteUserEndpoint : IEndpoint
         app.MapDelete("/user/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .WithTags(Tags.Users)
-            .Produces<UpdateResponse>();
+            .Produces<DeleteUserResponse>();
     }
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody] UpdateRequest request,
+        [FromBody] DeleteUserRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
@@ -54,6 +54,6 @@ public class DeleteUserEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new DeleteUserResponse(user.Id));
     }
 }

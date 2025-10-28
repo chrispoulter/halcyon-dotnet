@@ -61,26 +61,22 @@ public class SearchUsersEndpoint : IEndpoint
         query = query.Take(size);
 
         var users = await query
-            .Select(u => new SearchUserResponse
-            {
-                Id = u.Id,
-                EmailAddress = u.EmailAddress,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Roles = u.Roles,
-                IsLockedOut = u.IsLockedOut,
-            })
+            .Select(u => new SearchUserResponse(
+                u.Id,
+                u.EmailAddress,
+                u.FirstName,
+                u.LastName,
+                u.IsLockedOut,
+                u.Roles
+            ))
             .ToListAsync(cancellationToken);
 
         var pageCount = (count + size - 1) / size;
+        var hasNextPage = page < pageCount;
+        var hasPreviousPage = page > 1 && page <= pageCount;
 
-        return Results.Ok(
-            new SearchUsersResponse()
-            {
-                Items = users,
-                HasNextPage = page < pageCount,
-                HasPreviousPage = page > 1 && page <= pageCount,
-            }
-        );
+        var result = new SearchUsersResponse(users, hasNextPage, hasPreviousPage);
+
+        return Results.Ok(result);
     }
 }

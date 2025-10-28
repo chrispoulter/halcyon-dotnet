@@ -1,13 +1,5 @@
 ﻿namespace Halcyon.Api.Features.Account.Login;
 
-public class LoginRequest
-{
-    public string EmailAddress { get; set; } = null!;
+public record LoginRequest(string EmailAddress, string Password);
 
-    public string Password { get; set; } = null!;
-}
-
-public class LoginResponse
-{
-    public string AccessToken { get; set; } = null!;
-}
+public record LoginResponse(string AccessToken);

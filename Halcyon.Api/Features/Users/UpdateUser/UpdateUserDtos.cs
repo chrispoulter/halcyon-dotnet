@@ -1,14 +1,12 @@
 namespace Halcyon.Api.Features.Users.UpdateUser;
 
-public class UpdateUserRequest : UpdateRequest
-{
-    public string EmailAddress { get; set; } = null!;
+public record UpdateUserRequest(
+    string EmailAddress,
+    string FirstName,
+    string LastName,
+    DateOnly DateOfBirth,
+    List<string>? Roles,
+    uint? Version
+);
 
-    public string FirstName { get; set; } = null!;
-
-    public string LastName { get; set; } = null!;
-
-    public DateOnly DateOfBirth { get; set; }
-
-    public List<string> Roles { get; set; } = null!;
-}
+public record UpdateUserResponse(Guid Id);

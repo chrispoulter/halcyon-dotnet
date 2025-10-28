@@ -14,7 +14,7 @@ public class UpdateUserEndpoint : IEndpoint
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<UpdateUserRequest>()
             .WithTags(Tags.Users)
-            .Produces<UpdateResponse>();
+            .Produces<UpdateUserResponse>();
     }
 
     private static async Task<IResult> HandleAsync(
@@ -71,6 +71,6 @@ public class UpdateUserEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new UpdateUserResponse(user.Id));
     }
 }

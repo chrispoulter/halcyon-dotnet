@@ -13,7 +13,7 @@ public class ResetPasswordEndpoint : IEndpoint
         app.MapPut("/account/reset-password", HandleAsync)
             .AddValidationFilter<ResetPasswordRequest>()
             .WithTags(Tags.Account)
-            .Produces<UpdateResponse>();
+            .Produces<ResetPasswordResponse>();
     }
 
     private static async Task<IResult> HandleAsync(
@@ -41,6 +41,6 @@ public class ResetPasswordEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new ResetPasswordResponse(user.Id));
     }
 }

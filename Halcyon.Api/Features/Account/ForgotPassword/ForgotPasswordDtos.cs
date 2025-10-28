@@ -1,6 +1,3 @@
 namespace Halcyon.Api.Features.Account.ForgotPassword;
 
-public class ForgotPasswordRequest
-{
-    public string EmailAddress { get; set; } = null!;
-}
+public record ForgotPasswordRequest(string EmailAddress);

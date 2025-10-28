@@ -14,7 +14,7 @@ public class RegisterEndpoint : IEndpoint
         app.MapPost("/account/register", HandleAsync)
             .AddValidationFilter<RegisterRequest>()
             .WithTags(Tags.Account)
-            .Produces<UpdateResponse>();
+            .Produces<RegisterResponse>();
     }
 
     private static async Task<IResult> HandleAsync(
@@ -50,6 +50,6 @@ public class RegisterEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new RegisterResponse(user.Id));
     }
 }
