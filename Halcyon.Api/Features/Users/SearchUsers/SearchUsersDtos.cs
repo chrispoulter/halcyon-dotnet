@@ -1,5 +1,24 @@
 ﻿namespace Halcyon.Api.Features.Users.SearchUsers;
 
+public enum UserSort
+{
+    EMAIL_ADDRESS_ASC,
+    EMAIL_ADDRESS_DESC,
+    NAME_ASC,
+    NAME_DESC,
+}
+
+public class SearchUsersRequest
+{
+    public string? Search { get; set; }
+
+    public UserSort? Sort { get; set; }
+
+    public int? Page { get; set; }
+
+    public int? Size { get; set; }
+}
+
 public class SearchUsersResponse
 {
     public List<SearchUserResponse>? Items { get; set; }
