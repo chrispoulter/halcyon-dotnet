@@ -32,5 +32,10 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
         RuleFor(x => x.FirstName).NotEmpty().MaximumLength(50).WithName("First Name");
         RuleFor(x => x.LastName).NotEmpty().MaximumLength(50).WithName("Last Name");
         RuleFor(x => x.DateOfBirth).NotEmpty().InThePast(timeProvider).WithName("Date Of Birth");
+
+        RuleForEach(x => x.Roles)
+            .Must(role => Roles.AssignableRoles.Contains(role))
+            .WithMessage("Role '{PropertyValue}' is not recognized.")
+            .WithName("Roles");
     }
 }
