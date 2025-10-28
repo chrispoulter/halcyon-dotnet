@@ -2,6 +2,8 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.UpdateUser;
@@ -19,7 +21,7 @@ public class UpdateUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        UpdateUserRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] UpdateUserRequest request,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
     )

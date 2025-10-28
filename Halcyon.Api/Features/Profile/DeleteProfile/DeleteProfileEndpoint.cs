@@ -2,6 +2,7 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Profile.DeleteProfile;
@@ -17,7 +18,7 @@ public class DeleteProfileEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        [FromBody] DeleteProfileRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] DeleteProfileRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default

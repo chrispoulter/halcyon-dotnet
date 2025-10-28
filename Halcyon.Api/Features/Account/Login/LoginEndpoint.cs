@@ -2,6 +2,8 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Account.Login;
@@ -17,7 +19,7 @@ public class LoginEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        LoginRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] LoginRequest request,
         HalcyonDbContext dbContext,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,

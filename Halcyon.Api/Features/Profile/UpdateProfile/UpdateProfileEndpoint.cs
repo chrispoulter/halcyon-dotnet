@@ -2,6 +2,8 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Profile.UpdateProfile;
@@ -18,7 +20,7 @@ public class UpdateProfileEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        UpdateProfileRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] UpdateProfileRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default

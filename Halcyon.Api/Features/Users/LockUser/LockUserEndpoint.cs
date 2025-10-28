@@ -2,6 +2,7 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.LockUser;
@@ -18,7 +19,7 @@ public class LockUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody] LockUserRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] LockUserRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default

@@ -2,6 +2,7 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.UnlockUser;
@@ -18,7 +19,7 @@ public class UnlockUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody] UnlockUserRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] UnlockUserRequest request,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
     )

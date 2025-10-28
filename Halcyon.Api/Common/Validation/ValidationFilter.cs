@@ -20,7 +20,7 @@ public class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Request not provided."
+                title: "One or more validation errors occurred."
             );
         }
 

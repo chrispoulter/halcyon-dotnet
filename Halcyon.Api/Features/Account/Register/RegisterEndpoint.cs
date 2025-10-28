@@ -3,6 +3,8 @@ using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Halcyon.Api.Data.Users;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Account.Register;
@@ -18,7 +20,7 @@ public class RegisterEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        RegisterRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]RegisterRequest request,
         HalcyonDbContext dbContext,
         IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
