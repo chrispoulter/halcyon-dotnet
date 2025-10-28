@@ -2,6 +2,8 @@
 
 namespace Halcyon.Api.Features.Account.Login;
 
+public record LoginRequest(string EmailAddress, string Password);
+
 public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {
     public LoginRequestValidator()

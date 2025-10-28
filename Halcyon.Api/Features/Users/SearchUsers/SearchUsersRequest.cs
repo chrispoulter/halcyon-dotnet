@@ -2,6 +2,16 @@
 
 namespace Halcyon.Api.Features.Users.SearchUsers;
 
+public enum UserSort
+{
+    EMAIL_ADDRESS_ASC,
+    EMAIL_ADDRESS_DESC,
+    NAME_ASC,
+    NAME_DESC,
+}
+
+public record SearchUsersRequest(string? Search, UserSort? Sort, int? Page, int? Size);
+
 public class SearchUsersRequestValidator : AbstractValidator<SearchUsersRequest>
 {
     public SearchUsersRequestValidator()

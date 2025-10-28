@@ -2,6 +2,8 @@ using FluentValidation;
 
 namespace Halcyon.Api.Features.Profile.ChangePassword;
 
+public record ChangePasswordRequest(string CurrentPassword, string NewPassword, uint? Version);
+
 public class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRequest>
 {
     public ChangePasswordRequestValidator()

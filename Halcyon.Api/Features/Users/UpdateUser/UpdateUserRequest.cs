@@ -3,6 +3,15 @@ using Halcyon.Api.Common.Validation;
 
 namespace Halcyon.Api.Features.Users.UpdateUser;
 
+public record UpdateUserRequest(
+    string EmailAddress,
+    string FirstName,
+    string LastName,
+    DateOnly DateOfBirth,
+    List<string>? Roles,
+    uint? Version
+);
+
 public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
 {
     public UpdateUserRequestValidator(TimeProvider timeProvider)

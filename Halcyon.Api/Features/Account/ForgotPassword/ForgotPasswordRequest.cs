@@ -2,6 +2,8 @@ using FluentValidation;
 
 namespace Halcyon.Api.Features.Account.ForgotPassword;
 
+public record ForgotPasswordRequest(string EmailAddress);
+
 public class ForgotPasswordRequestValidator : AbstractValidator<ForgotPasswordRequest>
 {
     public ForgotPasswordRequestValidator()
