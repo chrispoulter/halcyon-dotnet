@@ -13,8 +13,8 @@ public class SearchUsersEndpoint : IEndpoint
         app.MapGet("/user", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<SearchUsersRequest>()
-            .WithTags(Tags.Users)
-            .Produces<SearchUsersResponse>();
+            .Produces<SearchUsersResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(

@@ -13,8 +13,8 @@ public class UpdateProfileEndpoint : IEndpoint
         app.MapPut("/profile", HandleAsync)
             .RequireAuthorization()
             .AddValidationFilter<UpdateProfileRequest>()
-            .WithTags(Tags.Profile)
-            .Produces<UpdateProfileResponse>();
+            .Produces<UpdateProfileResponse>()
+            .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(

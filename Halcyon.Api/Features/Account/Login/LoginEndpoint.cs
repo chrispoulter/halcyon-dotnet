@@ -12,8 +12,8 @@ public class LoginEndpoint : IEndpoint
     {
         app.MapPost("/account/login", HandleAsync)
             .AddValidationFilter<LoginRequest>()
-            .WithTags(Tags.Account)
-            .Produces<LoginResponse>();
+            .Produces<LoginResponse>()
+            .WithTags(Tags.Account);
     }
 
     private static async Task<IResult> HandleAsync(

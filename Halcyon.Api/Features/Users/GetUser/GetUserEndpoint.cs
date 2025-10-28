@@ -11,8 +11,8 @@ public class GetUserEndpoint : IEndpoint
     {
         app.MapGet("/user/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
-            .WithTags(Tags.Users)
-            .Produces<GetUserResponse>();
+            .Produces<GetUserResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(

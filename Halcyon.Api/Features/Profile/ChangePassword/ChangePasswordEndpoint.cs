@@ -13,8 +13,8 @@ public class ChangePasswordEndpoint : IEndpoint
         app.MapPut("/profile/change-password", HandleAsync)
             .RequireAuthorization()
             .AddValidationFilter<ChangePasswordRequest>()
-            .WithTags(Tags.Profile)
-            .Produces<ChangePasswordResponse>();
+            .Produces<ChangePasswordResponse>()
+            .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(

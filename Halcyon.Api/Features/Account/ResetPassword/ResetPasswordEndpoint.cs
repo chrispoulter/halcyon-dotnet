@@ -12,8 +12,8 @@ public class ResetPasswordEndpoint : IEndpoint
     {
         app.MapPut("/account/reset-password", HandleAsync)
             .AddValidationFilter<ResetPasswordRequest>()
-            .WithTags(Tags.Account)
-            .Produces<ResetPasswordResponse>();
+            .Produces<ResetPasswordResponse>()
+            .WithTags(Tags.Account);
     }
 
     private static async Task<IResult> HandleAsync(

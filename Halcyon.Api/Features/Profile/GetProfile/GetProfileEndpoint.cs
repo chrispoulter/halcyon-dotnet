@@ -11,8 +11,8 @@ public class GetProfileEndpoint : IEndpoint
     {
         app.MapGet("/profile", HandleAsync)
             .RequireAuthorization()
-            .WithTags(Tags.Profile)
-            .Produces<GetProfileResponse>();
+            .Produces<GetProfileResponse>()
+            .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(

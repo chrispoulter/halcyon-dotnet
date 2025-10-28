@@ -2,7 +2,6 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.LockUser;
@@ -13,8 +12,8 @@ public class LockUserEndpoint : IEndpoint
     {
         app.MapPut("/user/{id}/lock", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
-            .WithTags(Tags.Users)
-            .Produces<LockUserResponse>();
+            .Produces<LockUserResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(

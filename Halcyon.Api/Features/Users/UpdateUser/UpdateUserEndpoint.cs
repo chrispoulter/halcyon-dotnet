@@ -13,8 +13,8 @@ public class UpdateUserEndpoint : IEndpoint
         app.MapPut("/user/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<UpdateUserRequest>()
-            .WithTags(Tags.Users)
-            .Produces<UpdateUserResponse>();
+            .Produces<UpdateUserResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(

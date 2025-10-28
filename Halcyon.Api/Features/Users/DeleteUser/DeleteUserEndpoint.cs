@@ -12,8 +12,8 @@ public class DeleteUserEndpoint : IEndpoint
     {
         app.MapDelete("/user/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
-            .WithTags(Tags.Users)
-            .Produces<DeleteUserResponse>();
+            .Produces<DeleteUserResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(
