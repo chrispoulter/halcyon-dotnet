@@ -13,8 +13,8 @@ public class UpdateUserEndpoint : IEndpoint
         app.MapPut("/user/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<UpdateUserRequest>()
-            .WithTags(Tags.Users)
-            .Produces<UpdateResponse>();
+            .Produces<UpdateUserResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(
@@ -71,6 +71,6 @@ public class UpdateUserEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new UpdateUserResponse(user.Id));
     }
 }

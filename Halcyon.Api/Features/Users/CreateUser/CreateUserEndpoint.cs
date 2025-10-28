@@ -14,8 +14,8 @@ public class CreateUserEndpoint : IEndpoint
         app.MapPost("/user", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<CreateUserRequest>()
-            .WithTags(Tags.Users)
-            .Produces<UpdateResponse>();
+            .Produces<CreateUserResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(
@@ -52,6 +52,6 @@ public class CreateUserEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new CreateUserResponse(user.Id));
     }
 }

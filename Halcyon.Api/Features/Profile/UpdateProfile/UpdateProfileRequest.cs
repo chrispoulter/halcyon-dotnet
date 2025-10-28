@@ -3,16 +3,13 @@ using Halcyon.Api.Common.Validation;
 
 namespace Halcyon.Api.Features.Profile.UpdateProfile;
 
-public class UpdateProfileRequest : UpdateRequest
-{
-    public string EmailAddress { get; set; } = null!;
-
-    public string FirstName { get; set; } = null!;
-
-    public string LastName { get; set; } = null!;
-
-    public DateOnly DateOfBirth { get; set; }
-}
+public record UpdateProfileRequest(
+    string EmailAddress,
+    string FirstName,
+    string LastName,
+    DateOnly DateOfBirth,
+    uint? Version
+);
 
 public class UpdateProfileRequestValidator : AbstractValidator<UpdateProfileRequest>
 {

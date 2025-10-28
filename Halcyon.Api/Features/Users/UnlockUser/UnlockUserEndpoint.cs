@@ -12,13 +12,13 @@ public class UnlockUserEndpoint : IEndpoint
     {
         app.MapPut("/user/{id}/unlock", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
-            .WithTags(Tags.Users)
-            .Produces<UpdateResponse>();
+            .Produces<UnlockUserResponse>()
+            .WithTags(Tags.Users);
     }
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody] UpdateRequest request,
+        [FromBody] UnlockUserRequest request,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
     )
@@ -45,6 +45,6 @@ public class UnlockUserEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new UnlockUserResponse(user.Id));
     }
 }

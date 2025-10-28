@@ -1,6 +1,3 @@
 ﻿namespace Halcyon.Api.Features.Account.Login;
 
-public class LoginResponse
-{
-    public string AccessToken { get; set; } = null!;
-}
+public record LoginResponse(string AccessToken);

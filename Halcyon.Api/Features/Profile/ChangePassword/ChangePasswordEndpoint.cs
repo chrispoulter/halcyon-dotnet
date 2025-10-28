@@ -13,8 +13,8 @@ public class ChangePasswordEndpoint : IEndpoint
         app.MapPut("/profile/change-password", HandleAsync)
             .RequireAuthorization()
             .AddValidationFilter<ChangePasswordRequest>()
-            .WithTags(Tags.Profile)
-            .Produces<UpdateResponse>();
+            .Produces<ChangePasswordResponse>()
+            .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(
@@ -69,6 +69,6 @@ public class ChangePasswordEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new ChangePasswordResponse(user.Id));
     }
 }

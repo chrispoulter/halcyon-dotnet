@@ -3,8 +3,8 @@
 public static class ValidationExtensions
 {
     public static RouteHandlerBuilder AddValidationFilter<T>(this RouteHandlerBuilder builder)
-        where T : class, new()
+        where T : class
     {
-        return builder.AddEndpointFilter<RouteHandlerBuilder, ValidationFilter<T>>();
+        return builder.AddEndpointFilter<ValidationFilter<T>>();
     }
 }

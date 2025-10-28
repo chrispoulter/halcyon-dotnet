@@ -2,12 +2,7 @@
 
 namespace Halcyon.Api.Features.Account.Login;
 
-public class LoginRequest
-{
-    public string EmailAddress { get; set; } = null!;
-
-    public string Password { get; set; } = null!;
-}
+public record LoginRequest(string EmailAddress, string Password);
 
 public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {

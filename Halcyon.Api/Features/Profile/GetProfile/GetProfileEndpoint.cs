@@ -11,8 +11,8 @@ public class GetProfileEndpoint : IEndpoint
     {
         app.MapGet("/profile", HandleAsync)
             .RequireAuthorization()
-            .WithTags(Tags.Profile)
-            .Produces<GetProfileResponse>();
+            .Produces<GetProfileResponse>()
+            .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(
@@ -33,15 +33,14 @@ public class GetProfileEndpoint : IEndpoint
             );
         }
 
-        var result = new GetProfileResponse
-        {
-            Id = user.Id,
-            EmailAddress = user.EmailAddress,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            DateOfBirth = user.DateOfBirth,
-            Version = user.Version,
-        };
+        var result = new GetProfileResponse(
+            user.Id,
+            user.EmailAddress,
+            user.FirstName,
+            user.LastName,
+            user.DateOfBirth,
+            user.Version
+        );
 
         return Results.Ok(result);
     }

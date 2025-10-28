@@ -12,8 +12,8 @@ public class LoginEndpoint : IEndpoint
     {
         app.MapPost("/account/login", HandleAsync)
             .AddValidationFilter<LoginRequest>()
-            .WithTags(Tags.Account)
-            .Produces<LoginResponse>();
+            .Produces<LoginResponse>()
+            .WithTags(Tags.Account);
     }
 
     private static async Task<IResult> HandleAsync(
@@ -54,7 +54,8 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        var result = new LoginResponse { AccessToken = jwtTokenGenerator.GenerateJwtToken(user) };
+        var token = jwtTokenGenerator.GenerateJwtToken(user);
+        var result = new LoginResponse(token);
 
         return Results.Ok(result);
     }

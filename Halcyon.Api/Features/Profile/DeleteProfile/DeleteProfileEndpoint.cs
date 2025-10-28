@@ -12,12 +12,12 @@ public class DeleteProfileEndpoint : IEndpoint
     {
         app.MapDelete("/profile", HandleAsync)
             .RequireAuthorization()
-            .WithTags(Tags.Profile)
-            .Produces<UpdateResponse>();
+            .Produces<DeleteProfileResponse>()
+            .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(
-        [FromBody] UpdateRequest request,
+        [FromBody] DeleteProfileRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
@@ -48,6 +48,6 @@ public class DeleteProfileEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UpdateResponse { Id = user.Id });
+        return Results.Ok(new DeleteProfileResponse(user.Id));
     }
 }

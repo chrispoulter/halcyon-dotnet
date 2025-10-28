@@ -10,16 +10,7 @@ public enum UserSort
     NAME_DESC,
 }
 
-public class SearchUsersRequest
-{
-    public string? Search { get; set; }
-
-    public UserSort? Sort { get; set; }
-
-    public int? Page { get; set; }
-
-    public int? Size { get; set; }
-}
+public record SearchUsersRequest(string? Search, UserSort? Sort, int? Page, int? Size);
 
 public class SearchUsersRequestValidator : AbstractValidator<SearchUsersRequest>
 {
