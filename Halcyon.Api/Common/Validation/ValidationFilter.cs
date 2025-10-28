@@ -10,11 +10,6 @@ public class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
         EndpointFilterDelegate next
     )
     {
-        if (validator is null)
-        {
-            return await next(context);
-        }
-
         var request = context.Arguments.OfType<T>().FirstOrDefault();
         if (request is null)
         {

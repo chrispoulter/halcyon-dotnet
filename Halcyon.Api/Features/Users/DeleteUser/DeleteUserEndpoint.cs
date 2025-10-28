@@ -2,7 +2,6 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.DeleteUser;
@@ -19,7 +18,7 @@ public class DeleteUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] DeleteUserRequest request,
+        [FromBody] DeleteUserRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default

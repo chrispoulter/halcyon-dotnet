@@ -3,8 +3,6 @@ using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Halcyon.Api.Data.Users;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.CreateUser;
@@ -21,7 +19,7 @@ public class CreateUserEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] CreateUserRequest request,
+        CreateUserRequest request,
         HalcyonDbContext dbContext,
         IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default

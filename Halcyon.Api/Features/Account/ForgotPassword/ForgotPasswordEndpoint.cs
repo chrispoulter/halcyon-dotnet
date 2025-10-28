@@ -1,11 +1,9 @@
-﻿using FluentEmail.Core;
+﻿using System.Reflection;
+using FluentEmail.Core;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Halcyon.Api.Features.Account.ForgotPassword;
 
@@ -19,7 +17,7 @@ public class ForgotPasswordEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] ForgotPasswordRequest request,
+        ForgotPasswordRequest request,
         HalcyonDbContext dbContext,
         IFluentEmail fluentEmail,
         CancellationToken cancellationToken = default

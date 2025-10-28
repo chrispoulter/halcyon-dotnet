@@ -2,8 +2,6 @@
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Profile.ChangePassword;
@@ -20,7 +18,7 @@ public class ChangePasswordEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] ChangePasswordRequest request,
+        ChangePasswordRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         IPasswordHasher passwordHasher,

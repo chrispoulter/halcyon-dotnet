@@ -19,7 +19,7 @@ public class LockUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] LockUserRequest request,
+        [FromBody] LockUserRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
