@@ -1,7 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import type { GetProfileResponse } from '@/features/profile/profile-types';
 import { apiClient } from '@/lib/api-client';
+
+export type GetProfileResponse = {
+    id: string;
+    emailAddress: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    version: number;
+};
 
 export const useGetProfile = () => {
     const { accessToken } = useAuth();

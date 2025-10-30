@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import type {
-    DeleteAccountRequest,
-    DeleteAccountResponse,
-} from '@/features/profile/profile-types';
 import { apiClient } from '@/lib/api-client';
+
+type DeleteAccountRequest = { version?: number };
+
+type DeleteAccountResponse = { id: string };
 
 export const useDeleteAccount = () => {
     const { accessToken } = useAuth();

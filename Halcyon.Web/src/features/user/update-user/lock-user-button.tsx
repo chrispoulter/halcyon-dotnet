@@ -11,8 +11,8 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
+import type { GetUserResponse } from '@/features/user/hooks/use-get-user';
 import { useLockUser } from '@/features/user/hooks/use-lock-user';
-import type { GetUserResponse } from '@/features/user/user-types';
 
 type LockUserButtonProps = {
     user: GetUserResponse;

@@ -1,10 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import type {
-    UpdateProfileRequest,
-    UpdateProfileResponse,
-} from '@/features/profile/profile-types';
 import { apiClient } from '@/lib/api-client';
+
+type UpdateProfileRequest = {
+    emailAddress: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    version?: number;
+};
+
+type UpdateProfileResponse = { id: string };
 
 export const useUpdateProfile = () => {
     const { accessToken } = useAuth();

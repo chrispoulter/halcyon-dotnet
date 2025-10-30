@@ -1,10 +1,33 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import type {
-    SearchUsersRequest,
-    SearchUsersResponse,
-} from '@/features/user/user-types';
 import { apiClient } from '@/lib/api-client';
+import type { Role } from '@/lib/session';
+
+export type UserSort =
+    | 'EMAIL_ADDRESS_ASC'
+    | 'EMAIL_ADDRESS_DESC'
+    | 'NAME_ASC'
+    | 'NAME_DESC';
+
+type SearchUsersRequest = {
+    search?: string;
+    sort: UserSort;
+    page: number;
+    size: number;
+};
+
+export type SearchUsersResponse = {
+    items: {
+        id: string;
+        emailAddress: string;
+        firstName: string;
+        lastName: string;
+        isLockedOut?: boolean;
+        roles?: Role[];
+    }[];
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+};
 
 export const useSearchUsers = (request: SearchUsersRequest) => {
     const { accessToken } = useAuth();

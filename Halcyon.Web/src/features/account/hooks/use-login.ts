@@ -1,9 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
-import type {
-    LoginRequest,
-    LoginResponse,
-} from '@/features/account/account-types';
 import { apiClient } from '@/lib/api-client';
+
+type LoginRequest = {
+    emailAddress: string;
+    password: string;
+};
+
+type LoginResponse = {
+    accessToken: string;
+};
 
 export const useLogin = () => {
     return useMutation({

@@ -1,10 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import type {
-    LockUserRequest,
-    LockUserResponse,
-} from '@/features/user/user-types';
 import { apiClient } from '@/lib/api-client';
+
+type LockUserRequest = { version?: number };
+
+type LockUserResponse = {
+    id: string;
+};
 
 export const useLockUser = (id: string) => {
     const { accessToken } = useAuth();

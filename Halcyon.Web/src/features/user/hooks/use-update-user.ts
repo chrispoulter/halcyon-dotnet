@@ -1,10 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import type {
-    UpdateUserRequest,
-    UpdateUserResponse,
-} from '@/features/user/user-types';
 import { apiClient } from '@/lib/api-client';
+import type { Role } from '@/lib/session';
+
+type UpdateUserRequest = {
+    emailAddress: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    roles?: Role[];
+    version?: number;
+};
+
+type UpdateUserResponse = {
+    id: string;
+};
 
 export const useUpdateUser = (id: string) => {
     const { accessToken } = useAuth();

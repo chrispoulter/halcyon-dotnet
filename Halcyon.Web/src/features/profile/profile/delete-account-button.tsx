@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useAuth } from '@/components/auth-provider';
 import { LoadingButton } from '@/components/loading-button';
+import type { GetProfileResponse } from '@/features/profile/hooks/use-get-profile';
 import { useDeleteAccount } from '@/features/profile/hooks/use-delete-account';
-import type { GetProfileResponse } from '@/features/profile/profile-types';
 
 type DeleteAccountButtonProps = {
     profile: GetProfileResponse;

@@ -1,10 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
-import type {
-    CreateUserRequest,
-    CreateUserResponse,
-} from '@/features/user/user-types';
 import { apiClient } from '@/lib/api-client';
+import type { Role } from '@/lib/session';
+
+type CreateUserRequest = {
+    emailAddress: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    roles?: Role[];
+};
+
+type CreateUserResponse = {
+    id: string;
+};
 
 export const useCreateUser = () => {
     const { accessToken } = useAuth();

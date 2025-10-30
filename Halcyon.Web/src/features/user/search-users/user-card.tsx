@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
-import type { SearchUsersResponse } from '@/features/user/user-types';
+import type { SearchUsersResponse } from '@/features/user/hooks/use-search-users';
 import { roleOptions } from '@/lib/session';
 
 type UserCardProps = {

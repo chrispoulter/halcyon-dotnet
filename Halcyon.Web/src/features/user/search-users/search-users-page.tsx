@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { Pager } from '@/components/pager';
 import { QueryError } from '@/components/query-error';
-import { useSearchUsers } from '@/features/user/hooks/use-search-users';
+import { useSearchUsers, type UserSort } from '@/features/user/hooks/use-search-users';
 import { SearchUsersLoading } from '@/features/user/search-users/search-users-loading';
 import {
     SearchUsersForm,
@@ -14,7 +14,6 @@ import {
 } from '@/features/user/search-users/search-users-form';
 import { SortUsersDropdown } from '@/features/user/search-users/sort-users-dropdown';
 import { UserCard } from '@/features/user/search-users/user-card';
-import type { UserSort } from '@/features/user/user-types';
 
 const PAGE_SIZE = 5;
 

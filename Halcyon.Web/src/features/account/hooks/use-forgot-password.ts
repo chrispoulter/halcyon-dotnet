@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import type { ForgotPasswordRequest } from '@/features/account/account-types';
 import { apiClient } from '@/lib/api-client';
+
+type ForgotPasswordRequest = { emailAddress: string };
 
 export const useForgotPassword = () =>
     useMutation({

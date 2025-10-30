@@ -1,9 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type {
-    RegisterRequest,
-    RegisterResponse,
-} from '@/features/account/account-types';
 import { apiClient } from '@/lib/api-client';
+
+type RegisterRequest = {
+    emailAddress: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+};
+
+type RegisterResponse = {
+    id: string;
+};
 
 export const useRegister = () => {
     const queryClient = useQueryClient();
