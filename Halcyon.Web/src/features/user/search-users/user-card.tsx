@@ -11,7 +11,7 @@ export function UserCard({ user }: UserCardProps) {
     return (
         <Link
             to={`/user/${user.id}`}
-            className="focus-within:bg-card hover:bg-card block space-y-2 rounded-lg border p-4"
+            className="focus-within:bg-accent hover:bg-accent block space-y-2 rounded-lg border p-4"
         >
             <div className="space-y-0.5">
                 <div className="truncate text-base font-medium">
