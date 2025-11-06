@@ -1,9 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Form } from '@/components/ui/form';
+import { TextField } from '@/components/form/text-field';
 import { LoadingButton } from '@/components/loading-button';
-import { TextFormField } from '@/components/text-form-field';
 
 const schema = z.object({
     emailAddress: z.email('Email Address must be a valid email'),
@@ -29,38 +28,38 @@ export function LoginForm({ loading, onSubmit }: LoginFormProps) {
     });
 
     return (
-        <Form {...form}>
-            <form
-                noValidate
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-            >
-                <TextFormField
-                    name="emailAddress"
-                    label="Email Address"
-                    type="email"
-                    maxLength={254}
-                    autoComplete="username"
-                    required
-                    disabled={loading}
-                />
+        <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+        >
+            <TextField
+                control={form.control}
+                name="emailAddress"
+                label="Email Address"
+                type="email"
+                maxLength={254}
+                autoComplete="username"
+                required
+                disabled={loading}
+            />
 
-                <TextFormField
-                    name="password"
-                    label="Password"
-                    type="password"
-                    maxLength={50}
-                    autoComplete="current-password"
-                    required
-                    disabled={loading}
-                />
+            <TextField
+                control={form.control}
+                name="password"
+                label="Password"
+                type="password"
+                maxLength={50}
+                autoComplete="current-password"
+                required
+                disabled={loading}
+            />
 
-                <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
-                    <LoadingButton type="submit" loading={loading}>
-                        Submit
-                    </LoadingButton>
-                </div>
-            </form>
-        </Form>
+            <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+                <LoadingButton type="submit" loading={loading}>
+                    Submit
+                </LoadingButton>
+            </div>
+        </form>
     );
 }
