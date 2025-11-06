@@ -1,8 +1,14 @@
 import { useSearchParams, Link } from 'react-router';
 import { z } from 'zod';
-import { AlertCircleIcon } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+    Empty,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from '@/components/ui/empty';
 import { Metadata } from '@/components/metadata';
 import { Pager } from '@/components/pager';
 import { QueryError } from '@/components/query-error';
@@ -128,13 +134,17 @@ export function SearchUsersPage() {
                     ))}
                 </div>
             ) : (
-                <Alert>
-                    <AlertCircleIcon />
-                    <AlertTitle>No Results</AlertTitle>
-                    <AlertDescription>
-                        No users could be found.
-                    </AlertDescription>
-                </Alert>
+                <Empty className="border border-dashed">
+                    <EmptyHeader>
+                        <EmptyMedia variant="icon">
+                            <User />
+                        </EmptyMedia>
+                        <EmptyTitle>No Results</EmptyTitle>
+                        <EmptyDescription>
+                            No users could be found.
+                        </EmptyDescription>
+                    </EmptyHeader>
+                </Empty>
             )}
 
             <Pager
