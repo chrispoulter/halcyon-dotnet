@@ -11,7 +11,7 @@ import { isInPast } from '@/lib/dates';
 const schema = z.object({
     emailAddress: z.email('Email Address must be a valid email'),
     firstName: z
-        .string({ message: 'Last Name must be a valid string' })
+        .string({ message: 'First Name must be a valid string' })
         .min(1, 'First Name is a required field')
         .max(50, 'First Name must be no more than 50 characters'),
     lastName: z

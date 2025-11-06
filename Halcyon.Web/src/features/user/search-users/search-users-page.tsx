@@ -6,7 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { Pager } from '@/components/pager';
 import { QueryError } from '@/components/query-error';
-import { useSearchUsers, type UserSort } from '@/features/user/hooks/use-search-users';
+import {
+    useSearchUsers,
+    type UserSort,
+} from '@/features/user/hooks/use-search-users';
 import { SearchUsersLoading } from '@/features/user/search-users/search-users-loading';
 import {
     SearchUsersForm,
