@@ -30,64 +30,63 @@ export function SwitchField<T extends FieldValues>({
         <Controller
             name={name}
             control={control}
-            render={({ field, fieldState }) => (
-                <div className="space-y-2">
-                    {Object.entries(options).map(
-                        ([key, { title, description }]) => {
-                            const checked = field.value.includes(key);
+            render={({ field, fieldState }) => {
+                const value: string[] = field.value || [];
 
-                            function onCheckChanged(checked: boolean) {
-                                if (checked) {
-                                    return field.onChange([
-                                        ...field.value,
-                                        key,
-                                    ]);
+                return (
+                    <div className="space-y-2">
+                        {Object.entries(options).map(
+                            ([key, { title, description }]) => {
+                                const checked = value?.includes(key);
+
+                                function onCheckChanged(checked: boolean) {
+                                    if (checked) {
+                                        return field.onChange([...value, key]);
+                                    }
+
+                                    return field.onChange(
+                                        value.filter((item) => item !== key)
+                                    );
                                 }
 
-                                return field.onChange(
-                                    field.value.filter(
-                                        (item: string) => item !== key
-                                    )
+                                return (
+                                    <Field
+                                        key={key}
+                                        orientation="horizontal"
+                                        data-invalid={fieldState.invalid}
+                                        className="rounded-md border p-4"
+                                    >
+                                        <FieldContent>
+                                            <FieldLabel
+                                                htmlFor={`${name}-${key}`}
+                                            >
+                                                {title}
+                                            </FieldLabel>
+                                            <FieldDescription>
+                                                {description}
+                                            </FieldDescription>
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </FieldContent>
+                                        <Switch
+                                            id={`${name}-${key}`}
+                                            name={name}
+                                            checked={checked}
+                                            value={key}
+                                            onCheckedChange={onCheckChanged}
+                                            disabled={disabled}
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                    </Field>
                                 );
                             }
-
-                            return (
-                                <Field
-                                    key={key}
-                                    orientation="horizontal"
-                                    data-invalid={fieldState.invalid}
-                                    className="rounded-md border p-4"
-                                >
-                                    <FieldContent>
-                                        <FieldLabel
-                                            htmlFor={`${field.name}-${key}`}
-                                        >
-                                            {title}
-                                        </FieldLabel>
-                                        <FieldDescription>
-                                            {description}
-                                        </FieldDescription>
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </FieldContent>
-                                    <Switch
-                                        id={`${field.name}-${key}`}
-                                        name={field.name}
-                                        checked={checked}
-                                        value={key}
-                                        onCheckedChange={onCheckChanged}
-                                        disabled={disabled}
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                </Field>
-                            );
-                        }
-                    )}
-                </div>
-            )}
+                        )}
+                    </div>
+                );
+            }}
         />
     );
 }
