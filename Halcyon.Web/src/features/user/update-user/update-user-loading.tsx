@@ -15,11 +15,7 @@ export function UpdateUserLoading() {
                     <Skeleton className="h-14 w-full" />
                 </div>
 
-                <div className="flex gap-2">
-                    <Skeleton className="h-14 w-full" />
-                    <Skeleton className="h-14 w-full" />
-                    <Skeleton className="h-14 w-full" />
-                </div>
+                <Skeleton className="h-14" />
 
                 <Skeleton className="h-20" />
                 <Skeleton className="h-20" />
