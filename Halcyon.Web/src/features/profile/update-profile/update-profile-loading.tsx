@@ -14,11 +14,7 @@ export function UpdateProfileLoading() {
                     <Skeleton className="h-14 w-full" />
                 </div>
 
-                <div className="flex gap-2">
-                    <Skeleton className="h-14 w-full" />
-                    <Skeleton className="h-14 w-full" />
-                    <Skeleton className="h-14 w-full" />
-                </div>
+                <Skeleton className="h-14" />
 
                 <div className="flex flex-col justify-end gap-2 sm:flex-row">
                     <Skeleton className="h-10 w-full sm:w-32" />

@@ -1,9 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Form } from '@/components/ui/form';
+import { TextField } from '@/components/form/text-field';
 import { LoadingButton } from '@/components/loading-button';
-import { TextFormField } from '@/components/text-form-field';
 
 const schema = z
     .object({
@@ -48,57 +47,57 @@ export function ChangePasswordForm({
     });
 
     return (
-        <Form {...form}>
-            <form
-                noValidate
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-            >
-                <TextFormField
-                    name="currentPassword"
-                    label="Current Password"
+        <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+        >
+            <TextField
+                control={form.control}
+                name="currentPassword"
+                label="Current Password"
+                type="password"
+                maxLength={50}
+                autoComplete="current-password"
+                required
+                disabled={disabled}
+            />
+
+            <div className="flex flex-col gap-6 sm:flex-row">
+                <TextField
+                    control={form.control}
+                    name="newPassword"
+                    label="New Password"
                     type="password"
                     maxLength={50}
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     required
                     disabled={disabled}
                 />
 
-                <div className="flex flex-col gap-6 sm:flex-row">
-                    <TextFormField
-                        name="newPassword"
-                        label="New Password"
-                        type="password"
-                        maxLength={50}
-                        autoComplete="new-password"
-                        required
-                        disabled={disabled}
-                        className="flex-1"
-                    />
-                    <TextFormField
-                        name="confirmNewPassword"
-                        label="Confirm New Password"
-                        type="password"
-                        maxLength={50}
-                        autoComplete="new-password"
-                        required
-                        disabled={disabled}
-                        className="flex-1"
-                    />
-                </div>
+                <TextField
+                    control={form.control}
+                    name="confirmNewPassword"
+                    label="Confirm New Password"
+                    type="password"
+                    maxLength={50}
+                    autoComplete="new-password"
+                    required
+                    disabled={disabled}
+                />
+            </div>
 
-                <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
-                    {children}
+            <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+                {children}
 
-                    <LoadingButton
-                        type="submit"
-                        loading={loading}
-                        disabled={disabled}
-                    >
-                        Submit
-                    </LoadingButton>
-                </div>
-            </form>
-        </Form>
+                <LoadingButton
+                    type="submit"
+                    loading={loading}
+                    disabled={disabled}
+                >
+                    Submit
+                </LoadingButton>
+            </div>
+        </form>
     );
 }

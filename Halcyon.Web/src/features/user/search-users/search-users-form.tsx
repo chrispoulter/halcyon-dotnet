@@ -1,16 +1,9 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { TextField } from '@/components/form/text-field';
 
 const schema = z.object({
     search: z
@@ -41,38 +34,28 @@ export function SearchUsersForm({
     });
 
     return (
-        <Form {...form}>
-            <form
-                noValidate
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex w-full gap-2"
+        <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex w-full gap-2"
+        >
+            <TextField
+                control={form.control}
+                name="search"
+                type="search"
+                placeholder="Search Users..."
+                disabled={disabled}
+            />
+
+            <Button
+                type="submit"
+                variant="secondary"
+                size="icon"
+                disabled={disabled}
             >
-                <FormField
-                    name="search"
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormControl>
-                                <Input
-                                    {...field}
-                                    type="search"
-                                    placeholder="Search Users..."
-                                    disabled={disabled}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button
-                    type="submit"
-                    variant="secondary"
-                    size="icon"
-                    disabled={disabled}
-                >
-                    <Search />
-                    <span className="sr-only">Search users</span>
-                </Button>
-            </form>
-        </Form>
+                <Search />
+                <span className="sr-only">Search users</span>
+            </Button>
+        </form>
     );
 }

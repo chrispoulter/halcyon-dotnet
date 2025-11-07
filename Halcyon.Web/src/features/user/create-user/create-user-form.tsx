@@ -1,11 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Form } from '@/components/ui/form';
-import { DateFormField } from '@/components/date-form-field';
+import { DateField } from '@/components/form/date-field';
+import { SwitchField } from '@/components/form/switch-field';
+import { TextField } from '@/components/form/text-field';
 import { LoadingButton } from '@/components/loading-button';
-import { TextFormField } from '@/components/text-form-field';
-import { SwitchFormField } from '@/components/switch-form-field';
 import { isInPast } from '@/lib/dates';
 import { roleOptions, roles } from '@/lib/session';
 
@@ -73,87 +72,90 @@ export function CreateUserForm({
     });
 
     return (
-        <Form {...form}>
-            <form
-                noValidate
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-            >
-                <TextFormField
-                    name="emailAddress"
-                    label="Email Address"
-                    type="email"
-                    maxLength={254}
-                    autoComplete="username"
+        <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+        >
+            <TextField
+                control={form.control}
+                name="emailAddress"
+                label="Email Address"
+                type="email"
+                maxLength={254}
+                autoComplete="username"
+                required
+                disabled={loading}
+            />
+
+            <div className="flex flex-col gap-6 sm:flex-row">
+                <TextField
+                    control={form.control}
+                    name="password"
+                    label="Password"
+                    type="password"
+                    maxLength={50}
+                    autoComplete="new-password"
                     required
                     disabled={loading}
                 />
 
-                <div className="flex flex-col gap-6 sm:flex-row">
-                    <TextFormField
-                        name="password"
-                        label="Password"
-                        type="password"
-                        maxLength={50}
-                        autoComplete="new-password"
-                        required
-                        disabled={loading}
-                        className="flex-1"
-                    />
-                    <TextFormField
-                        name="confirmPassword"
-                        label="Confirm Password"
-                        type="password"
-                        maxLength={50}
-                        autoComplete="new-password"
-                        required
-                        disabled={loading}
-                        className="flex-1"
-                    />
-                </div>
+                <TextField
+                    control={form.control}
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    maxLength={50}
+                    autoComplete="new-password"
+                    required
+                    disabled={loading}
+                />
+            </div>
 
-                <div className="flex flex-col gap-6 sm:flex-row">
-                    <TextFormField
-                        name="firstName"
-                        label="First Name"
-                        maxLength={50}
-                        autoComplete="given-name"
-                        required
-                        disabled={loading}
-                        className="flex-1"
-                    />
-                    <TextFormField
-                        name="lastName"
-                        label="Last Name"
-                        maxLength={50}
-                        autoComplete="family-name"
-                        required
-                        disabled={loading}
-                        className="flex-1"
-                    />
-                </div>
-
-                <DateFormField
-                    name="dateOfBirth"
-                    label="Date Of Birth"
+            <div className="flex flex-col gap-6 sm:flex-row">
+                <TextField
+                    control={form.control}
+                    name="firstName"
+                    label="First Name"
+                    maxLength={50}
+                    autoComplete="given-name"
                     required
                     disabled={loading}
                 />
 
-                <SwitchFormField
-                    name="roles"
-                    options={roleOptions}
+                <TextField
+                    control={form.control}
+                    name="lastName"
+                    label="Last Name"
+                    maxLength={50}
+                    autoComplete="family-name"
+                    required
                     disabled={loading}
                 />
+            </div>
 
-                <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
-                    {children}
+            <DateField
+                control={form.control}
+                name="dateOfBirth"
+                label="Date Of Birth"
+                required
+                disabled={loading}
+            />
 
-                    <LoadingButton type="submit" loading={loading}>
-                        Submit
-                    </LoadingButton>
-                </div>
-            </form>
-        </Form>
+            <SwitchField
+                control={form.control}
+                name="roles"
+                options={roleOptions}
+                disabled={loading}
+            />
+
+            <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+                {children}
+
+                <LoadingButton type="submit" loading={loading}>
+                    Submit
+                </LoadingButton>
+            </div>
+        </form>
     );
 }

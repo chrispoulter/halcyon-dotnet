@@ -1,5 +1,5 @@
-import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 type LoadingButtonProps = { loading?: boolean } & React.ComponentProps<
@@ -14,7 +14,7 @@ export function LoadingButton({
 }: LoadingButtonProps) {
     return (
         <Button {...rest} disabled={disabled || loading}>
-            {loading && <Loader2 className="absolute animate-spin" />}
+            {loading && <Spinner className="absolute" />}
             <span
                 className={cn({
                     invisible: loading,
