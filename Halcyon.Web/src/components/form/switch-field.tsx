@@ -31,22 +31,22 @@ export function SwitchField<T extends FieldValues>({
             name={name}
             control={control}
             render={({ field, fieldState }) => {
-                const value: string[] = field.value || [];
+                const value = new Set(field.value);
 
                 return (
                     <div className="space-y-2">
                         {Object.entries(options).map(
                             ([key, { title, description }]) => {
-                                const checked = value?.includes(key);
+                                const checked = value.has(key);
 
                                 function onCheckChanged(checked: boolean) {
                                     if (checked) {
-                                        return field.onChange([...value, key]);
+                                        value.add(key);
+                                    } else {
+                                        value.delete(key);
                                     }
 
-                                    return field.onChange(
-                                        value.filter((item) => item !== key)
-                                    );
+                                    field.onChange(Array.from(value));
                                 }
 
                                 return (

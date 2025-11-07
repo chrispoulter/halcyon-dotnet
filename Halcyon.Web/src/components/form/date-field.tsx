@@ -45,7 +45,7 @@ export function DateField<T extends FieldValues>({
                     setOpen(false);
                 }
 
-                function isDisabled(date: Date) {
+                function isDateDisabled(date: Date) {
                     return !isInPast(date);
                 }
 
@@ -83,7 +83,7 @@ export function DateField<T extends FieldValues>({
                                     defaultMonth={field.value}
                                     required={required}
                                     onSelect={onSelect}
-                                    disabled={isDisabled}
+                                    disabled={isDateDisabled}
                                 />
                             </PopoverContent>
                         </Popover>
