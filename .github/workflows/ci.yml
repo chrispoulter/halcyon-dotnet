@@ -110,11 +110,11 @@ jobs:
         with:
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME_API }}
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          imageToDeploy: ghcr.io/${{ env.REPO }}-api:${{ steps.version_step.outputs.semVer }}-${{ steps.version_step.outputs.shortSha }}
+          imageToDeploy: ghcr.io/${{ env.REPO }}-api:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
 
       - name: Trigger deployment (web)
         uses: azure/container-apps-deploy-action@v1
         with:
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME_WEB }}
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          imageToDeploy: ghcr.io/${{ env.REPO }}-web:${{ steps.version_step.outputs.semVer }}-${{ steps.version_step.outputs.shortSha }}
+          imageToDeploy: ghcr.io/${{ env.REPO }}-web:${{ env.GitVersion_SemVer }}-${{ env.GitVersion_ShortSha }}
