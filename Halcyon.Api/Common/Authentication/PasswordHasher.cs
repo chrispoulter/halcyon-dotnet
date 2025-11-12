@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 
 namespace Halcyon.Api.Common.Authentication;
 
@@ -14,25 +15,41 @@ public class PasswordHasher : IPasswordHasher
 
     public string HashPassword(string password)
     {
-        using var algorithm = new Rfc2898DeriveBytes(password, SaltSize, Iterations, Algorithm);
+        var salt = RandomNumberGenerator.GetBytes(SaltSize);
 
-        var key = Convert.ToBase64String(algorithm.GetBytes(KeySize));
-        var salt = Convert.ToBase64String(algorithm.Salt);
+        var key = Rfc2898DeriveBytes.Pbkdf2(
+            password: Encoding.UTF8.GetBytes(password),
+            salt: salt,
+            iterations: Iterations,
+            hashAlgorithm: Algorithm,
+            outputLength: KeySize
+        );
 
-        return $"{salt}.{key}";
+        var saltBase64 = Convert.ToBase64String(salt);
+        var keyBase64 = Convert.ToBase64String(key);
+
+        return $"{saltBase64}.{keyBase64}";
     }
 
     public bool VerifyPassword(string password, string hashedPassword)
     {
         var parts = hashedPassword.Split('.', 2);
+        if (parts.Length != 2)
+        {
+            return false;
+        }
+
         var salt = Convert.FromBase64String(parts[0]);
         var key = Convert.FromBase64String(parts[1]);
 
-        using var algorithm = new Rfc2898DeriveBytes(password, salt, Iterations, Algorithm);
+        var keyToCheck = Rfc2898DeriveBytes.Pbkdf2(
+            password: Encoding.UTF8.GetBytes(password),
+            salt: salt,
+            iterations: Iterations,
+            hashAlgorithm: Algorithm,
+            outputLength: KeySize
+        );
 
-        var keyToCheck = algorithm.GetBytes(KeySize);
-        var verified = keyToCheck.SequenceEqual(key);
-
-        return verified;
+        return CryptographicOperations.FixedTimeEquals(key, keyToCheck);
     }
 }
