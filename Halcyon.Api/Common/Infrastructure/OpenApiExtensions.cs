@@ -12,25 +12,22 @@ public static class OpenApiExtensions
             "v1",
             options =>
             {
-                var scheme = new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.Http,
-                    Name = JwtBearerDefaults.AuthenticationScheme,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme,
-                };
-
                 options.AddDocumentTransformer(
                     async (document, context, cancellationToken) =>
                     {
-                        document.Servers?.Clear();
-                        document.Components ??= new();
-                        document.Components.SecuritySchemes ??=
-                            new Dictionary<string, IOpenApiSecurityScheme>();
+                        var securitySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                        {
+                            [JwtBearerDefaults.AuthenticationScheme] = new OpenApiSecurityScheme
+                            {
+                                Type = SecuritySchemeType.Http,
+                                Scheme = "bearer",
+                                In = ParameterLocation.Header,
+                                BearerFormat = "Json Web Token",
+                            },
+                        };
 
-                        document.Components.SecuritySchemes.Add(
-                            JwtBearerDefaults.AuthenticationScheme,
-                            scheme
-                        );
+                        document.Components ??= new OpenApiComponents();
+                        document.Components.SecuritySchemes = securitySchemes;
                     }
                 );
 
@@ -43,12 +40,18 @@ public static class OpenApiExtensions
                                 .Any()
                         )
                         {
-                            var schemeRef = new OpenApiSecuritySchemeReference(
-                                JwtBearerDefaults.AuthenticationScheme,
-                                context.Document
+                            operation.Security ??= [];
+                            operation.Security.Add(
+                                new OpenApiSecurityRequirement
+                                {
+                                    [
+                                        new OpenApiSecuritySchemeReference(
+                                            JwtBearerDefaults.AuthenticationScheme,
+                                            context.Document
+                                        )
+                                    ] = [],
+                                }
                             );
-
-                            operation.Security = [new() { [schemeRef] = [] }];
                         }
                     }
                 );
