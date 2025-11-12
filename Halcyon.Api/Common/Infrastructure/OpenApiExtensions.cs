@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Halcyon.Api.Common.Infrastructure;
 
@@ -17,19 +17,16 @@ public static class OpenApiExtensions
                     Type = SecuritySchemeType.Http,
                     Name = JwtBearerDefaults.AuthenticationScheme,
                     Scheme = JwtBearerDefaults.AuthenticationScheme,
-                    Reference = new()
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = JwtBearerDefaults.AuthenticationScheme,
-                    },
                 };
 
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        document.Servers.Clear();
-
+                        document.Servers?.Clear();
                         document.Components ??= new();
+                        document.Components.SecuritySchemes ??=
+                            new Dictionary<string, IOpenApiSecurityScheme>();
+
                         document.Components.SecuritySchemes.Add(
                             JwtBearerDefaults.AuthenticationScheme,
                             scheme
@@ -48,7 +45,13 @@ public static class OpenApiExtensions
                                 .Any()
                         )
                         {
-                            operation.Security = [new() { [scheme] = [] }];
+                            var schemeRef = new OpenApiSecuritySchemeReference(
+                                JwtBearerDefaults.AuthenticationScheme,
+                                context.Document,
+                                JwtBearerDefaults.AuthenticationScheme
+                            );
+
+                            operation.Security = [new() { [schemeRef] = [] }];
                         }
 
                         return Task.CompletedTask;
