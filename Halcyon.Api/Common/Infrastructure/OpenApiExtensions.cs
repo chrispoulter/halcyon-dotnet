@@ -20,7 +20,7 @@ public static class OpenApiExtensions
                 };
 
                 options.AddDocumentTransformer(
-                    (document, context, cancellationToken) =>
+                    async (document, context, cancellationToken) =>
                     {
                         document.Servers?.Clear();
                         document.Components ??= new();
@@ -31,13 +31,11 @@ public static class OpenApiExtensions
                             JwtBearerDefaults.AuthenticationScheme,
                             scheme
                         );
-
-                        return Task.CompletedTask;
                     }
                 );
 
                 options.AddOperationTransformer(
-                    (operation, context, cancellationToken) =>
+                    async (operation, context, cancellationToken) =>
                     {
                         if (
                             context
@@ -47,14 +45,11 @@ public static class OpenApiExtensions
                         {
                             var schemeRef = new OpenApiSecuritySchemeReference(
                                 JwtBearerDefaults.AuthenticationScheme,
-                                context.Document,
-                                JwtBearerDefaults.AuthenticationScheme
+                                context.Document
                             );
 
                             operation.Security = [new() { [schemeRef] = [] }];
                         }
-
-                        return Task.CompletedTask;
                     }
                 );
             }
