@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import {
     AlertDialog,
@@ -12,36 +11,29 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
-import type { GetUserResponse } from '@/features/user/hooks/use-get-user';
-import { useDeleteUser } from '@/features/user/hooks/use-delete-user';
+import type { GetUserResponse } from '@/features/users/hooks/use-get-user';
+import { useLockUser } from '@/features/users/hooks/use-lock-user';
 
-type DeleteUserButtonProps = {
+type LockUserButtonProps = {
     user: GetUserResponse;
     disabled?: boolean;
     className?: string;
 };
 
-export function DeleteUserButton({
+export function LockUserButton({
     user,
     disabled,
     className,
-}: DeleteUserButtonProps) {
-    const navigate = useNavigate();
+}: LockUserButtonProps) {
+    const { mutate: lockUser, isPending: isLocking } = useLockUser(user.id);
 
-    const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser(
-        user.id
-    );
-
-    function onDelete() {
-        deleteUser(
+    function onLock() {
+        lockUser(
             {
                 version: user.version,
             },
             {
-                onSuccess: () => {
-                    toast.success('User successfully deleted.');
-                    navigate('/user');
-                },
+                onSuccess: () => toast.success('User successfully locked.'),
                 onError: (error) => toast.error(error.message),
             }
         );
@@ -51,28 +43,27 @@ export function DeleteUserButton({
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <LoadingButton
-                    variant="destructive"
-                    loading={isDeleting}
+                    variant="secondary"
+                    loading={isLocking}
                     disabled={disabled}
                     className={className}
                 >
-                    Delete
+                    Lock
                 </LoadingButton>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Delete User</AlertDialogTitle>
+                    <AlertDialogTitle>Lock User</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Are you sure you want to delete this user account? All
-                        of the data will be permanently removed. This action
-                        cannot be undone.
+                        Are you sure you want to lock this user account? The
+                        user will no longer be able to access the system.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        disabled={disabled || isDeleting}
-                        onClick={onDelete}
+                        disabled={disabled || isLocking}
+                        onClick={onLock}
                     >
                         Continue
                     </AlertDialogAction>

@@ -35,7 +35,7 @@ export const useSearchUsers = (request: SearchUsersRequest) => {
     return useQuery({
         queryKey: ['users', request],
         queryFn: ({ signal }) =>
-            apiClient.get<SearchUsersResponse>('/user', signal, request, {
+            apiClient.get<SearchUsersResponse>('/users', signal, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
         placeholderData: keepPreviousData,

@@ -6,7 +6,7 @@ import { ErrorPage } from '@/error-page';
 
 import { accountRoutes } from '@/features/account/account-routes';
 import { profileRoutes } from '@/features/profile/profile-routes';
-import { userRoutes } from '@/features/user/user-routes';
+import { usersRoutes } from '@/features/users/users-routes';
 
 export const routes: RouteObject[] = [
     {
@@ -21,7 +21,7 @@ export const routes: RouteObject[] = [
                     },
                     ...accountRoutes,
                     ...profileRoutes,
-                    ...userRoutes,
+                    ...usersRoutes,
                     {
                         path: '*',
                         Component: NotFoundPage,

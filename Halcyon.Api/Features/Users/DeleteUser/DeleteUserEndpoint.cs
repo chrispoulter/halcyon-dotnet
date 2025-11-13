@@ -10,7 +10,7 @@ public class DeleteUserEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/user/{id}", HandleAsync)
+        app.MapDelete("/users/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<DeleteUserResponse>()
             .WithTags(Tags.Users);

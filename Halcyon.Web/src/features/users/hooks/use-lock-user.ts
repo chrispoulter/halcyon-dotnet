@@ -15,7 +15,7 @@ export const useLockUser = (id: string) => {
 
     return useMutation({
         mutationFn: (request: LockUserRequest) =>
-            apiClient.put<LockUserResponse>(`/user/${id}/lock`, request, {
+            apiClient.put<LockUserResponse>(`/users/${id}/lock`, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
         onSuccess: (data) => {
