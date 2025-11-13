@@ -14,41 +14,41 @@ namespace Halcyon.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "users",
+                name: "Users",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    email_address = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
-                    password_reset_token = table.Column<Guid>(type: "uuid", nullable: true),
-                    first_name = table.Column<string>(type: "text", nullable: false),
-                    last_name = table.Column<string>(type: "text", nullable: false),
-                    date_of_birth = table.Column<DateOnly>(type: "date", nullable: false),
-                    is_locked_out = table.Column<bool>(
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmailAddress = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: true),
+                    PasswordResetToken = table.Column<Guid>(type: "uuid", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
+                    IsLockedOut = table.Column<bool>(
                         type: "boolean",
                         nullable: false,
                         defaultValue: false
                     ),
-                    roles = table.Column<List<string>>(type: "text[]", nullable: true),
+                    Roles = table.Column<List<string>>(type: "text[]", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
-                    search_vector = table
+                    SearchVector = table
                         .Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
                         .Annotation("Npgsql:TsVectorConfig", "english")
                         .Annotation(
                             "Npgsql:TsVectorProperties",
-                            new[] { "first_name", "last_name", "email_address" }
+                            new[] { "FirstName", "LastName", "EmailAddress" }
                         ),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_users", x => x.id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 }
             );
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_email_address",
-                table: "users",
-                column: "email_address",
+                name: "IX_Users_EmailAddress",
+                table: "Users",
+                column: "EmailAddress",
                 unique: true
             );
         }
@@ -56,7 +56,7 @@ namespace Halcyon.Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(name: "users");
+            migrationBuilder.DropTable(name: "Users");
         }
     }
 }

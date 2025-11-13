@@ -9,7 +9,7 @@ public class User : IJwtUser
 
     public string EmailAddress { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string? Password { get; set; }
 
     public Guid? PasswordResetToken { get; set; }
 
