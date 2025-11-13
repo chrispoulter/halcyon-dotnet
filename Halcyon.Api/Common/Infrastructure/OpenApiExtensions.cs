@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Halcyon.Api.Common.Infrastructure;
 
@@ -12,28 +12,22 @@ public static class OpenApiExtensions
             "v1",
             options =>
             {
-                var scheme = new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.Http,
-                    Name = JwtBearerDefaults.AuthenticationScheme,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme,
-                    Reference = new()
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = JwtBearerDefaults.AuthenticationScheme,
-                    },
-                };
-
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        document.Servers.Clear();
+                        var securitySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                        {
+                            [JwtBearerDefaults.AuthenticationScheme] = new OpenApiSecurityScheme
+                            {
+                                Type = SecuritySchemeType.Http,
+                                Scheme = "bearer",
+                                In = ParameterLocation.Header,
+                                BearerFormat = "Json Web Token",
+                            },
+                        };
 
-                        document.Components ??= new();
-                        document.Components.SecuritySchemes.Add(
-                            JwtBearerDefaults.AuthenticationScheme,
-                            scheme
-                        );
+                        document.Components ??= new OpenApiComponents();
+                        document.Components.SecuritySchemes = securitySchemes;
 
                         return Task.CompletedTask;
                     }
@@ -48,7 +42,18 @@ public static class OpenApiExtensions
                                 .Any()
                         )
                         {
-                            operation.Security = [new() { [scheme] = [] }];
+                            operation.Security ??= [];
+                            operation.Security.Add(
+                                new OpenApiSecurityRequirement
+                                {
+                                    [
+                                        new OpenApiSecuritySchemeReference(
+                                            JwtBearerDefaults.AuthenticationScheme,
+                                            context.Document
+                                        )
+                                    ] = [],
+                                }
+                            );
                         }
 
                         return Task.CompletedTask;
