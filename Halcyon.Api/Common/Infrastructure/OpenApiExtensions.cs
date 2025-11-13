@@ -13,7 +13,7 @@ public static class OpenApiExtensions
             options =>
             {
                 options.AddDocumentTransformer(
-                    async (document, context, cancellationToken) =>
+                    (document, context, cancellationToken) =>
                     {
                         var securitySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                         {
@@ -28,11 +28,13 @@ public static class OpenApiExtensions
 
                         document.Components ??= new OpenApiComponents();
                         document.Components.SecuritySchemes = securitySchemes;
+
+                        return Task.CompletedTask;
                     }
                 );
 
                 options.AddOperationTransformer(
-                    async (operation, context, cancellationToken) =>
+                    (operation, context, cancellationToken) =>
                     {
                         if (
                             context
@@ -53,6 +55,8 @@ public static class OpenApiExtensions
                                 }
                             );
                         }
+
+                        return Task.CompletedTask;
                     }
                 );
             }
