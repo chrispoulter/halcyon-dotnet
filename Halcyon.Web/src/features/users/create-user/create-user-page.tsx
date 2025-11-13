@@ -5,8 +5,8 @@ import { Metadata } from '@/components/metadata';
 import {
     CreateUserForm,
     type CreateUserFormValues,
-} from '@/features/user/create-user/create-user-form';
-import { useCreateUser } from '@/features/user/hooks/use-create-user';
+} from '@/features/users/create-user/create-user-form';
+import { useCreateUser } from '@/features/users/hooks/use-create-user';
 
 export function CreateUserPage() {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ export function CreateUserPage() {
         createUser(data, {
             onSuccess: () => {
                 toast.success('User successfully created.');
-                navigate('/user');
+                navigate('/users');
             },
             onError: (error) => toast.error(error.message),
         });
@@ -41,7 +41,7 @@ export function CreateUserPage() {
 
             <CreateUserForm onSubmit={onSubmit} loading={isSaving}>
                 <Button asChild variant="outline">
-                    <Link to="/user">Cancel</Link>
+                    <Link to="/users">Cancel</Link>
                 </Button>
             </CreateUserForm>
         </main>

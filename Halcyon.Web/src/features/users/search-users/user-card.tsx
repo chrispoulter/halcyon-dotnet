@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
-import type { SearchUsersResponse } from '@/features/user/hooks/use-search-users';
+import type { SearchUsersResponse } from '@/features/users/hooks/use-search-users';
 import { roleOptions } from '@/lib/session';
 
 type UserCardProps = {
@@ -10,7 +10,7 @@ type UserCardProps = {
 export function UserCard({ user }: UserCardProps) {
     return (
         <Link
-            to={`/user/${user.id}`}
+            to={`/users/${user.id}`}
             className="focus-within:bg-accent hover:bg-accent block space-y-2 rounded-lg border p-4"
         >
             <div className="space-y-0.5">

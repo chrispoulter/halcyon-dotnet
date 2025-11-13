@@ -10,7 +10,7 @@ public class SearchUsersEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/user", HandleAsync)
+        app.MapGet("/users", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<SearchUsersRequest>()
             .Produces<SearchUsersResponse>()
@@ -28,7 +28,7 @@ public class SearchUsersEndpoint : IEndpoint
         if (!string.IsNullOrEmpty(request.Search))
         {
             query = query.Where(u =>
-                u.SearchVector.Matches(EF.Functions.PhraseToTsQuery("english", request.Search))
+                u.SearchVector.Matches(EF.Functions.WebSearchToTsQuery("english", request.Search))
             );
         }
 

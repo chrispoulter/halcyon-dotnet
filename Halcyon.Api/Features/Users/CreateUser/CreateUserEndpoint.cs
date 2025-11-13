@@ -11,7 +11,7 @@ public class CreateUserEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/user", HandleAsync)
+        app.MapPost("/users", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<CreateUserRequest>()
             .Produces<CreateUserResponse>()

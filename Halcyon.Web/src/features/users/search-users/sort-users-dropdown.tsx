@@ -1,5 +1,5 @@
 import { ArrowDownWideNarrow } from 'lucide-react';
-import type { UserSort } from '@/features/user/hooks/use-search-users';
+import type { UserSort } from '@/features/users/hooks/use-search-users';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,

@@ -23,7 +23,7 @@ export const useCreateUser = () => {
 
     return useMutation({
         mutationFn: (request: CreateUserRequest) =>
-            apiClient.post<CreateUserResponse>('/user', request, {
+            apiClient.post<CreateUserResponse>('/users', request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),

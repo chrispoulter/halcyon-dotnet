@@ -9,7 +9,7 @@ public class GetUserEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/user/{id}", HandleAsync)
+        app.MapGet("/users/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<GetUserResponse>()
             .WithTags(Tags.Users);

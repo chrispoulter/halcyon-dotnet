@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import {
     AlertDialog,
@@ -11,31 +12,36 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
-import type { GetUserResponse } from '@/features/user/hooks/use-get-user';
-import { useUnlockUser } from '@/features/user/hooks/use-unlock-user';
+import type { GetUserResponse } from '@/features/users/hooks/use-get-user';
+import { useDeleteUser } from '@/features/users/hooks/use-delete-user';
 
-type UnlockUserButtonProps = {
+type DeleteUserButtonProps = {
     user: GetUserResponse;
     disabled?: boolean;
     className?: string;
 };
 
-export function UnlockUserButton({
+export function DeleteUserButton({
     user,
     disabled,
     className,
-}: UnlockUserButtonProps) {
-    const { mutate: unlockUser, isPending: isUnlocking } = useUnlockUser(
+}: DeleteUserButtonProps) {
+    const navigate = useNavigate();
+
+    const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser(
         user.id
     );
 
-    function onUnlock() {
-        unlockUser(
+    function onDelete() {
+        deleteUser(
             {
                 version: user.version,
             },
             {
-                onSuccess: () => toast.success('User successfully unlocked.'),
+                onSuccess: () => {
+                    toast.success('User successfully deleted.');
+                    navigate('/users');
+                },
                 onError: (error) => toast.error(error.message),
             }
         );
@@ -45,27 +51,28 @@ export function UnlockUserButton({
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <LoadingButton
-                    variant="secondary"
-                    loading={isUnlocking}
+                    variant="destructive"
+                    loading={isDeleting}
                     disabled={disabled}
                     className={className}
                 >
-                    Unlock
+                    Delete
                 </LoadingButton>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Unlock User</AlertDialogTitle>
+                    <AlertDialogTitle>Delete User</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Are you sure you want to unlock this user account? The
-                        user will now be able to access the system.
+                        Are you sure you want to delete this user account? All
+                        of the data will be permanently removed. This action
+                        cannot be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        disabled={disabled || isUnlocking}
-                        onClick={onUnlock}
+                        disabled={disabled || isDeleting}
+                        onClick={onDelete}
                     >
                         Continue
                     </AlertDialogAction>

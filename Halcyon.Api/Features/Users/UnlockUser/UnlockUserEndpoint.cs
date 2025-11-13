@@ -10,7 +10,7 @@ public class UnlockUserEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPut("/user/{id}/unlock", HandleAsync)
+        app.MapPut("/users/{id}/unlock", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<UnlockUserResponse>()
             .WithTags(Tags.Users);

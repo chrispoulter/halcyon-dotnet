@@ -1,13 +1,13 @@
 import type { RouteObject } from 'react-router';
 import { ProtectedRoute } from '@/components/protected-route';
-import { CreateUserPage } from '@/features/user/create-user/create-user-page';
-import { SearchUsersPage } from '@/features/user/search-users/search-users-page';
-import { UpdateUserPage } from '@/features/user/update-user/update-user-page';
+import { CreateUserPage } from '@/features/users/create-user/create-user-page';
+import { SearchUsersPage } from '@/features/users/search-users/search-users-page';
+import { UpdateUserPage } from '@/features/users/update-user/update-user-page';
 import { isUserAdministrator } from '@/lib/session';
 
-export const userRoutes: RouteObject[] = [
+export const usersRoutes: RouteObject[] = [
     {
-        path: 'user',
+        path: 'users',
         Component: () => <ProtectedRoute roles={isUserAdministrator} />,
         children: [
             { index: true, Component: SearchUsersPage },

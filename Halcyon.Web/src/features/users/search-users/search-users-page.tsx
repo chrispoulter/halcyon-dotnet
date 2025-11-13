@@ -15,14 +15,14 @@ import { QueryError } from '@/components/query-error';
 import {
     useSearchUsers,
     type UserSort,
-} from '@/features/user/hooks/use-search-users';
-import { SearchUsersLoading } from '@/features/user/search-users/search-users-loading';
+} from '@/features/users/hooks/use-search-users';
+import { SearchUsersLoading } from '@/features/users/search-users/search-users-loading';
 import {
     SearchUsersForm,
     type SearchUsersFormValues,
-} from '@/features/user/search-users/search-users-form';
-import { SortUsersDropdown } from '@/features/user/search-users/sort-users-dropdown';
-import { UserCard } from '@/features/user/search-users/user-card';
+} from '@/features/users/search-users/search-users-form';
+import { SortUsersDropdown } from '@/features/users/search-users/sort-users-dropdown';
+import { UserCard } from '@/features/users/search-users/user-card';
 
 const PAGE_SIZE = 5;
 
@@ -124,7 +124,7 @@ export function SearchUsersPage() {
             </div>
 
             <Button asChild className="w-full sm:w-auto">
-                <Link to="/user/create">Create New</Link>
+                <Link to="/users/create">Create New</Link>
             </Button>
 
             {data.items.length ? (

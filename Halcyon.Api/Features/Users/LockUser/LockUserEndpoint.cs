@@ -10,7 +10,7 @@ public class LockUserEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPut("/user/{id}/lock", HandleAsync)
+        app.MapPut("/users/{id}/lock", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<LockUserResponse>()
             .WithTags(Tags.Users);

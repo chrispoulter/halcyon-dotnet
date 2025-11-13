@@ -3,16 +3,16 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
-import { useGetUser } from '@/features/user/hooks/use-get-user';
-import { useUpdateUser } from '@/features/user/hooks/use-update-user';
+import { useGetUser } from '@/features/users/hooks/use-get-user';
+import { useUpdateUser } from '@/features/users/hooks/use-update-user';
 import {
     UpdateUserForm,
     type UpdateUserFormValues,
-} from '@/features/user/update-user/update-user-form';
-import { DeleteUserButton } from '@/features/user/update-user/delete-user-button';
-import { LockUserButton } from '@/features/user/update-user/lock-user-button';
-import { UnlockUserButton } from '@/features/user/update-user/unlock-user-button';
-import { UpdateUserLoading } from '@/features/user/update-user/update-user-loading';
+} from '@/features/users/update-user/update-user-form';
+import { DeleteUserButton } from '@/features/users/update-user/delete-user-button';
+import { LockUserButton } from '@/features/users/update-user/lock-user-button';
+import { UnlockUserButton } from '@/features/users/update-user/unlock-user-button';
+import { UpdateUserLoading } from '@/features/users/update-user/update-user-loading';
 
 type UpdateUserPageParams = { id: string };
 
@@ -48,7 +48,7 @@ export function UpdateUserPage() {
             {
                 onSuccess: () => {
                     toast.success('User successfully updated.');
-                    navigate('/user');
+                    navigate('/users');
                 },
                 onError: (error) => toast.error(error.message),
             }
@@ -78,7 +78,7 @@ export function UpdateUserPage() {
                 loading={isSaving}
             >
                 <Button asChild variant="outline">
-                    <Link to="/user">Cancel</Link>
+                    <Link to="/users">Cancel</Link>
                 </Button>
 
                 {user.isLockedOut ? (
