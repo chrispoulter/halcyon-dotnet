@@ -18,9 +18,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.DateOfBirth).HasColumnName("date_of_birth").IsRequired();
         builder.Property(u => u.Roles).HasColumnName("roles").HasColumnType("text[]");
         builder.Property(u => u.IsLockedOut).HasColumnName("is_locked_out").HasDefaultValue(false);
+        builder.Property(u => u.SearchVector).HasColumnName("search_vector");
         builder.Property(u => u.Version).IsRowVersion();
-
-        builder.HasIndex(u => u.EmailAddress, "users_email_address_unique").IsUnique();
 
         builder.HasGeneratedTsVectorColumn(
             u => u.SearchVector,
@@ -32,5 +31,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 u.EmailAddress,
             }
         );
+
+        builder.HasKey(u => u.Id).HasName("pk_users");
+        builder.HasIndex(u => u.EmailAddress, "ix_users_email_address").IsUnique();
+        builder.HasIndex(u => u.SearchVector, "ix_users_search_vector").HasMethod("gin");
     }
 }

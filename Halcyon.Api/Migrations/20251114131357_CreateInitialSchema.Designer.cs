@@ -14,7 +14,7 @@ using NpgsqlTypes;
 namespace Halcyon.Api.Migrations
 {
     [DbContext(typeof(HalcyonDbContext))]
-    [Migration("20251113172315_CreateInitialSchema")]
+    [Migration("20251114131357_CreateInitialSchema")]
     partial class CreateInitialSchema
     {
         /// <inheritdoc />
@@ -75,6 +75,7 @@ namespace Halcyon.Api.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("tsvector")
+                        .HasColumnName("search_vector")
                         .HasAnnotation("Npgsql:TsVectorConfig", "english")
                         .HasAnnotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "EmailAddress" });
 
@@ -84,10 +85,15 @@ namespace Halcyon.Api.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_users");
 
-                    b.HasIndex(new[] { "EmailAddress" }, "users_email_address_unique")
+                    b.HasIndex(new[] { "EmailAddress" }, "ix_users_email_address")
                         .IsUnique();
+
+                    b.HasIndex(new[] { "SearchVector" }, "ix_users_search_vector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex(new[] { "SearchVector" }, "ix_users_search_vector"), "gin");
 
                     b.ToTable("users", (string)null);
                 });
