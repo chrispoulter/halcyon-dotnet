@@ -25,7 +25,7 @@ var api = builder
     .WaitFor(maildev);
 
 var web = builder
-    .AddNpmApp("web", "../Halcyon.Web", scriptName: "dev")
+    .AddJavaScriptApp("web", "../Halcyon.Web")
     .WithEnvironment("BROWSER", "none")
     .WithHttpEndpoint(env: "VITE_PORT", port: 5173)
     .WithExternalHttpEndpoints()
