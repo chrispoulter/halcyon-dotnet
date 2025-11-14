@@ -10,7 +10,10 @@ public class MigrationBackgroundService<TDbContext>(
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Migrating database for {DbContext}", typeof(TDbContext).Name);
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Migrating database for {DbContext}", typeof(TDbContext).Name);
+        }
 
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
@@ -21,11 +24,14 @@ public class MigrationBackgroundService<TDbContext>(
         }
         catch (Exception ex)
         {
-            logger.LogError(
-                ex,
-                "An error occurred while migrating database for {DbContext}",
-                typeof(TDbContext).Name
-            );
+            if (logger.IsEnabled(LogLevel.Error))
+            {
+                logger.LogError(
+                    ex,
+                    "An error occurred while migrating database for {DbContext}",
+                    typeof(TDbContext).Name
+                );
+            }
 
             return;
         }
@@ -39,11 +45,14 @@ public class MigrationBackgroundService<TDbContext>(
 
         foreach (var seeder in dbSeeders)
         {
-            logger.LogInformation(
-                "Seeding database for {DbContext} with {DbSeeder}",
-                typeof(TDbContext).Name,
-                seeder.GetType().Name
-            );
+            if (logger.IsEnabled(LogLevel.Information))
+            {
+                logger.LogInformation(
+                    "Seeding database for {DbContext} with {DbSeeder}",
+                    typeof(TDbContext).Name,
+                    seeder.GetType().Name
+                );
+            }
 
             try
             {
@@ -51,12 +60,15 @@ public class MigrationBackgroundService<TDbContext>(
             }
             catch (Exception ex)
             {
-                logger.LogError(
-                    ex,
-                    "An error occurred while seeding database for {DbContext} with {DbSeeder}",
-                    typeof(TDbContext).Name,
-                    seeder.GetType().Name
-                );
+                if (logger.IsEnabled(LogLevel.Error))
+                {
+                    logger.LogError(
+                        ex,
+                        "An error occurred while seeding database for {DbContext} with {DbSeeder}",
+                        typeof(TDbContext).Name,
+                        seeder.GetType().Name
+                    );
+                }
             }
         }
     }

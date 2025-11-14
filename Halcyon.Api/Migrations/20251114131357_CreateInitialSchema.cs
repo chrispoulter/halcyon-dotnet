@@ -19,7 +19,7 @@ namespace Halcyon.Api.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     email_address = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
+                    password = table.Column<string>(type: "text", nullable: true),
                     password_reset_token = table.Column<Guid>(type: "uuid", nullable: true),
                     first_name = table.Column<string>(type: "text", nullable: false),
                     last_name = table.Column<string>(type: "text", nullable: false),
@@ -51,6 +51,14 @@ namespace Halcyon.Api.Migrations
                 column: "email_address",
                 unique: true
             );
+
+            migrationBuilder
+                .CreateIndex(
+                    name: "ix_users_search_vector",
+                    table: "users",
+                    column: "search_vector"
+                )
+                .Annotation("Npgsql:IndexMethod", "gin");
         }
 
         /// <inheritdoc />

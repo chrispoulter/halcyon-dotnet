@@ -7,13 +7,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.Property(u => u.EmailAddress).IsRequired();
-        builder.HasIndex(u => u.EmailAddress).IsUnique();
-        builder.Property(u => u.FirstName).IsRequired();
-        builder.Property(u => u.LastName).IsRequired();
-        builder.Property(u => u.DateOfBirth).IsRequired();
-        builder.Property(u => u.Roles).HasColumnType("text[]");
-        builder.Property(u => u.IsLockedOut).HasDefaultValue(false);
+        builder.ToTable("users");
+
+        builder.Property(u => u.Id).HasColumnName("id");
+        builder.Property(u => u.EmailAddress).HasColumnName("email_address").IsRequired();
+        builder.Property(u => u.Password).HasColumnName("password");
+        builder.Property(u => u.PasswordResetToken).HasColumnName("password_reset_token");
+        builder.Property(u => u.FirstName).HasColumnName("first_name").IsRequired();
+        builder.Property(u => u.LastName).HasColumnName("last_name").IsRequired();
+        builder.Property(u => u.DateOfBirth).HasColumnName("date_of_birth").IsRequired();
+        builder.Property(u => u.Roles).HasColumnName("roles").HasColumnType("text[]");
+        builder.Property(u => u.IsLockedOut).HasColumnName("is_locked_out").HasDefaultValue(false);
+        builder.Property(u => u.SearchVector).HasColumnName("search_vector");
         builder.Property(u => u.Version).IsRowVersion();
 
         builder.HasGeneratedTsVectorColumn(
@@ -26,5 +31,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 u.EmailAddress,
             }
         );
+
+        builder.HasKey(u => u.Id).HasName("pk_users");
+        builder.HasIndex(u => u.EmailAddress, "ix_users_email_address").IsUnique();
+        builder.HasIndex(u => u.SearchVector, "ix_users_search_vector").HasMethod("gin");
     }
 }

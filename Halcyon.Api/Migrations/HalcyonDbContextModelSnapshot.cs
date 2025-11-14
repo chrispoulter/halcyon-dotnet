@@ -19,7 +19,7 @@ namespace Halcyon.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -57,7 +57,6 @@ namespace Halcyon.Api.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("password");
 
@@ -86,9 +85,12 @@ namespace Halcyon.Api.Migrations
                     b.HasKey("Id")
                         .HasName("pk_users");
 
-                    b.HasIndex("EmailAddress")
-                        .IsUnique()
-                        .HasDatabaseName("ix_users_email_address");
+                    b.HasIndex(new[] { "EmailAddress" }, "ix_users_email_address")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "SearchVector" }, "ix_users_search_vector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex(new[] { "SearchVector" }, "ix_users_search_vector"), "gin");
 
                     b.ToTable("users", (string)null);
                 });
