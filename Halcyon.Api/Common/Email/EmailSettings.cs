@@ -27,32 +27,20 @@ public class EmailSettings
             ConnectionString = connectionString,
         };
 
-        if (connectionStringBuilder.TryGetValue("Host", out var host))
+        if (connectionStringBuilder.TryGetValue("Endpoint", out var endpoint))
         {
-            SmtpServer = host?.ToString() ?? string.Empty;
-        }
-
-        if (connectionStringBuilder.TryGetValue("Port", out var port))
-        {
-            if (int.TryParse(port?.ToString(), out var portValue))
+            if (Uri.TryCreate(endpoint.ToString(), UriKind.Absolute, out var uri))
             {
-                SmtpPort = portValue;
+                SmtpServer = uri.Host;
+                SmtpPort = uri.Port;
+                SmtpSsl = uri.Scheme == "smtps";
+
+                if (!string.IsNullOrEmpty(uri.UserInfo))
+                {
+                    SmtpUserName = uri.UserInfo.Split(':')[0];
+                    SmtpPassword = uri.UserInfo.Split(':')[1];
+                }
             }
-        }
-
-        if (connectionStringBuilder.TryGetValue("Ssl", out var ssl))
-        {
-            SmtpSsl = ssl?.ToString() == "true";
-        }
-
-        if (connectionStringBuilder.TryGetValue("UserName", out var username))
-        {
-            SmtpUserName = username?.ToString() ?? string.Empty;
-        }
-
-        if (connectionStringBuilder.TryGetValue("Password", out var password))
-        {
-            SmtpPassword = password?.ToString() ?? string.Empty;
         }
     }
 }
