@@ -10,8 +10,8 @@ var postgres = builder
 
 var database = postgres.AddDatabase("database", databaseName: "halcyon-dotnet");
 
-var maildev = builder
-    .AddMailDev("mail", httpPort: 1080, smtpPort: 1025)
+var mailpit = builder
+    .AddMailPit("mail", httpPort: 8025, smtpPort: 1025)
     .WithLifetime(ContainerLifetime.Persistent)
     .PublishAsConnectionString();
 
@@ -21,8 +21,8 @@ var api = builder
     .WithHttpHealthCheck("/health")
     .WithReference(database)
     .WaitFor(database)
-    .WithReference(maildev)
-    .WaitFor(maildev);
+    .WithReference(mailpit)
+    .WaitFor(mailpit);
 
 var web = builder
     .AddJavaScriptApp("web", "../Halcyon.Web")
