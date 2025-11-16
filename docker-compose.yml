@@ -72,4 +72,4 @@ volumes:
   postgres:
     name: halcyon-postgres
   mailpit:
-    name: halcyon-mailpit 
+    name: halcyon-mailpit

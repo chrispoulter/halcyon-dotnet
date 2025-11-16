@@ -37,9 +37,13 @@ public class EmailSettings
 
                 if (!string.IsNullOrEmpty(uri.UserInfo))
                 {
-                    var userInfoParts = uri.UserInfo.Split(':');
+                    var userInfoParts = uri.UserInfo.Split(':', 2);
                     SmtpUserName = userInfoParts[0];
-                    SmtpPassword = userInfoParts[1];
+
+                    if (userInfoParts.Length > 1)
+                    {
+                        SmtpPassword = userInfoParts[1];
+                    }
                 }
             }
         }
