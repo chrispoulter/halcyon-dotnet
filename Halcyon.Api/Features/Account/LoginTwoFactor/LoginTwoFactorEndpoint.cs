@@ -26,7 +26,7 @@ public class LoginTwoFactorEndpoint : IEndpoint
     )
     {
         var user = await dbContext
-            .Users.AsNoTracking()
+            .Users
             .FirstOrDefaultAsync(u => u.EmailAddress == request.EmailAddress, cancellationToken);
 
         if (user is null || user.Password is null)
@@ -55,28 +55,31 @@ public class LoginTwoFactorEndpoint : IEndpoint
             );
         }
 
-        if (string.IsNullOrWhiteSpace(request.Code))
+        var hasRecovery = !string.IsNullOrWhiteSpace(request.RecoveryCode);
+        var hasCode = !string.IsNullOrWhiteSpace(request.Code);
+
+        if (hasRecovery)
         {
-            return Results.Problem(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: "Code is required."
-            );
+            var input = request.RecoveryCode!.Trim();
+            var codes = user.TwoFactorRecoveryCodes ?? [];
+            var matched = codes.FirstOrDefault(c => string.Equals(c, input, StringComparison.Ordinal));
+            if (matched is null)
+            {
+                return Results.Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid recovery code.");
+            }
+
+            // consume used code
+            user.TwoFactorRecoveryCodes = codes.Where(c => !string.Equals(c, input, StringComparison.Ordinal)).ToList();
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
-
-        var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret), step: 30, totpSize: 6);
-
-        var totpVerified = totp.VerifyTotp(
-            request.Code.Trim(),
-            out _,
-            VerificationWindow.RfcSpecifiedNetworkDelay
-        );
-
-        if (!totpVerified)
+        else if (hasCode)
         {
-            return Results.Problem(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: "Invalid code."
-            );
+            var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret), step: 30, totpSize: 6);
+            var totpVerified = totp.VerifyTotp(request.Code!.Trim(), out _, VerificationWindow.RfcSpecifiedNetworkDelay);
+            if (!totpVerified)
+            {
+                return Results.Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid code.");
+            }
         }
 
         var token = jwtTokenGenerator.GenerateJwtToken(user);
