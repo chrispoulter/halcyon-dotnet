@@ -11,7 +11,7 @@ export type SetupTwoFactorResponse = {
 
 export const useSetupTwoFactor = () => {
     const { accessToken } = useAuth();
-    
+
     const queryClient = useQueryClient();
 
     return useMutation({

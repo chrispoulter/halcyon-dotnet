@@ -213,7 +213,9 @@ export function TwoFactorSetupDrawer({
                                                 setShowRecovery(
                                                     data.recoveryCodes
                                                 );
-                                                toast.success('Two-factor enabled');
+                                                toast.success(
+                                                    'Two-factor enabled'
+                                                );
                                             },
                                             onError: (err: unknown) =>
                                                 setError(

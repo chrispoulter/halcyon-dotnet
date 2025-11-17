@@ -80,22 +80,37 @@ export function LoginPage() {
                     <form className="space-y-4" onSubmit={onSubmitTwoFactor}>
                         {useRecovery ? (
                             <div>
-                                <label className="text-sm font-medium leading-none">Recovery code</label>
+                                <label className="text-sm leading-none font-medium">
+                                    Recovery code
+                                </label>
                                 <Input
                                     value={recoveryCode}
-                                    onChange={(e) => setRecoveryCode(e.currentTarget.value.trim())}
+                                    onChange={(e) =>
+                                        setRecoveryCode(
+                                            e.currentTarget.value.trim()
+                                        )
+                                    }
                                     disabled={isVerifying}
                                 />
                             </div>
                         ) : (
                             <div>
-                                <label className="text-sm font-medium leading-none">Verification code</label>
+                                <label className="text-sm leading-none font-medium">
+                                    Verification code
+                                </label>
                                 <Input
                                     inputMode="numeric"
                                     pattern="[0-9]*"
                                     maxLength={6}
                                     value={code}
-                                    onChange={(e) => setCode(e.currentTarget.value.replace(/\D/g, ''))}
+                                    onChange={(e) =>
+                                        setCode(
+                                            e.currentTarget.value.replace(
+                                                /\D/g,
+                                                ''
+                                            )
+                                        )
+                                    }
                                     disabled={isVerifying}
                                 />
                             </div>
@@ -106,7 +121,7 @@ export function LoginPage() {
                             </LoadingButton>
                             <button
                                 type="button"
-                                className="underline underline-offset-4 text-sm"
+                                className="text-sm underline underline-offset-4"
                                 onClick={() => setTwoFactorPending(null)}
                                 disabled={isVerifying}
                             >
@@ -114,7 +129,7 @@ export function LoginPage() {
                             </button>
                             <button
                                 type="button"
-                                className="underline underline-offset-4 text-sm"
+                                className="text-sm underline underline-offset-4"
                                 onClick={() => {
                                     setUseRecovery((v) => !v);
                                     setCode('');
@@ -122,7 +137,9 @@ export function LoginPage() {
                                 }}
                                 disabled={isVerifying}
                             >
-                                {useRecovery ? 'Use authenticator code' : 'Use recovery code'}
+                                {useRecovery
+                                    ? 'Use authenticator code'
+                                    : 'Use recovery code'}
                             </button>
                         </div>
                     </form>
@@ -132,27 +149,32 @@ export function LoginPage() {
                     <p className="leading-7">
                         Enter your email address below to login to your account.
                     </p>
-                    <LoginForm loading={isSaving} onSubmit={(values) =>
-                        login(values, {
-                            onSuccess: (res) => {
-                                if (res.requiresTwoFactor) {
-                                    setTwoFactorPending(values);
-                                    setUseRecovery(false);
-                                    setCode('');
-                                    setRecoveryCode('');
-                                    return;
-                                }
-                                if (res.accessToken) {
-                                    toast.success('Signed in');
-                                    setAuth(res.accessToken);
-                                    navigate('/');
-                                } else {
-                                    toast.error('Login response missing token');
-                                }
-                            },
-                            onError: (error) => toast.error(error.message),
-                        })
-                    } />
+                    <LoginForm
+                        loading={isSaving}
+                        onSubmit={(values) =>
+                            login(values, {
+                                onSuccess: (res) => {
+                                    if (res.requiresTwoFactor) {
+                                        setTwoFactorPending(values);
+                                        setUseRecovery(false);
+                                        setCode('');
+                                        setRecoveryCode('');
+                                        return;
+                                    }
+                                    if (res.accessToken) {
+                                        toast.success('Signed in');
+                                        setAuth(res.accessToken);
+                                        navigate('/');
+                                    } else {
+                                        toast.error(
+                                            'Login response missing token'
+                                        );
+                                    }
+                                },
+                                onError: (error) => toast.error(error.message),
+                            })
+                        }
+                    />
                 </>
             )}
 

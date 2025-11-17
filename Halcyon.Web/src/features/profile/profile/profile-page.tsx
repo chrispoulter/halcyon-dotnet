@@ -186,17 +186,28 @@ export function ProfilePage() {
                         Regenerate Recovery Codes
                     </Button>
 
-                    <AlertDialog open={recoveryOpen} onOpenChange={setRecoveryOpen}>
+                    <AlertDialog
+                        open={recoveryOpen}
+                        onOpenChange={setRecoveryOpen}
+                    >
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>New recovery codes</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                    New recovery codes
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    Save these codes now. They will not be shown again.
+                                    Save these codes now. They will not be shown
+                                    again.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <div className="grid grid-cols-2 gap-2">
                                 {(recoveryCodes ?? []).map((rc) => (
-                                    <code key={rc} className="bg-muted rounded px-2 py-1 text-sm">{rc}</code>
+                                    <code
+                                        key={rc}
+                                        className="bg-muted rounded px-2 py-1 text-sm"
+                                    >
+                                        {rc}
+                                    </code>
                                 ))}
                             </div>
                             <AlertDialogFooter>
@@ -205,9 +216,7 @@ export function ProfilePage() {
                                     onClick={async () => {
                                         try {
                                             await navigator.clipboard.writeText(
-                                                (recoveryCodes ?? []).join(
-                                                    '\n'
-                                                )
+                                                (recoveryCodes ?? []).join('\n')
                                             );
                                             toast.success(
                                                 'Copied recovery codes'
@@ -223,7 +232,9 @@ export function ProfilePage() {
                                     onClick={() => {
                                         const list = recoveryCodes ?? [];
                                         const content = list.join('\n');
-                                        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                                        const blob = new Blob([content], {
+                                            type: 'text/plain;charset=utf-8',
+                                        });
                                         const url = URL.createObjectURL(blob);
                                         const a = document.createElement('a');
                                         a.href = url;
@@ -232,7 +243,9 @@ export function ProfilePage() {
                                         a.click();
                                         a.remove();
                                         URL.revokeObjectURL(url);
-                                        toast.success('Downloaded recovery codes');
+                                        toast.success(
+                                            'Downloaded recovery codes'
+                                        );
                                     }}
                                 >
                                     Download

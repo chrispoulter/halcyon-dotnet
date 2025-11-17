@@ -52,7 +52,12 @@ public class SetupTwoFactorEndpoint : IEndpoint
         await dbContext.SaveChangesAsync(cancellationToken);
 
         // QrContent is the URI itself (client can render a QR code from it)
-        var response = new SetupTwoFactorResponse(user.Id.ToString(), secret, otpAuthUri, otpAuthUri);
+        var response = new SetupTwoFactorResponse(
+            user.Id.ToString(),
+            secret,
+            otpAuthUri,
+            otpAuthUri
+        );
         return Results.Ok(response);
     }
 }

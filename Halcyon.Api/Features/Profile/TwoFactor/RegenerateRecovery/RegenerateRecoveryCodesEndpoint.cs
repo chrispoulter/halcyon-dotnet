@@ -30,15 +30,22 @@ public class RegenerateRecoveryCodesEndpoint : IEndpoint
 
         if (user is null || user.IsLockedOut)
         {
-            return Results.Problem(statusCode: StatusCodes.Status404NotFound, title: "User not found.");
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "User not found."
+            );
         }
 
         if (!user.IsTwoFactorEnabled)
         {
-            return Results.Problem(statusCode: StatusCodes.Status400BadRequest, title: "Two-factor authentication is not enabled.");
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Two-factor authentication is not enabled."
+            );
         }
 
-        var codes = Enumerable.Range(0, 8)
+        var codes = Enumerable
+            .Range(0, 8)
             .Select(_ => Guid.NewGuid().ToString("N").Substring(0, 10))
             .ToList();
 
