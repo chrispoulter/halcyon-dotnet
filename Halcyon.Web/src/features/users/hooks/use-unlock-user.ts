@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type UnlockUserRequest = { version?: number };
 
 type UnlockUserResponse = {
-    id: string;
+    userId: string;
 };
 
 export const useUnlockUser = (id: string) => {
@@ -21,7 +21,7 @@ export const useUnlockUser = (id: string) => {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ['user', data.id] });
+            queryClient.invalidateQueries({ queryKey: ['user', data.userId] });
         },
     });
 };

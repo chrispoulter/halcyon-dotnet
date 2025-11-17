@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type DeleteUserRequest = { version?: number };
 
 type DeleteUserResponse = {
-    id: string;
+    userId: string;
 };
 
 export const useDeleteUser = (id: string) => {
@@ -27,7 +27,7 @@ export const useDeleteUser = (id: string) => {
             });
 
             queryClient.invalidateQueries({
-                queryKey: ['user', data.id],
+                queryKey: ['user', data.userId],
                 refetchType: 'none',
             });
         },

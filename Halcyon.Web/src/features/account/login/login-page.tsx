@@ -4,7 +4,8 @@ import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
 import { Metadata } from '@/components/metadata';
 import { useLogin } from '@/features/account/hooks/use-login';
-import { useLoginTwoFactor } from '@/features/account/hooks/use-login-two-factor';
+import { useLoginWithTwoFactor } from '@/features/account/hooks/use-login-with-two-factor';
+import { useLoginWithRecoveryCode } from '@/features/account/hooks/use-login-with-recovery-code';
 import { LoginForm } from '@/features/account/login/login-form';
 import { Input } from '@/components/ui/input';
 import { LoadingButton } from '@/components/loading-button';
@@ -15,7 +16,12 @@ export function LoginPage() {
     const { setAuth } = useAuth();
 
     const { mutate: login, isPending: isSaving } = useLogin();
-    const { mutate: login2fa, isPending: isVerifying } = useLoginTwoFactor();
+
+    const { mutate: login2fa, isPending: isVerifying } =
+        useLoginWithTwoFactor();
+
+    const { mutate: login2fa, isPending: isVerifying } =
+        useLoginWithTwoFactor();
 
     const [twoFactorPending, setTwoFactorPending] = useState<{
         emailAddress: string;

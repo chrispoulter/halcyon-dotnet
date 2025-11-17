@@ -10,7 +10,7 @@ type RegisterRequest = {
 };
 
 type RegisterResponse = {
-    id: string;
+    userId: string;
 };
 
 export const useRegister = () => {

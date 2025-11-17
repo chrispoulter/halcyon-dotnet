@@ -13,7 +13,7 @@ type CreateUserRequest = {
 };
 
 type CreateUserResponse = {
-    id: string;
+    userId: string;
 };
 
 export const useCreateUser = () => {
