@@ -1,7 +1,6 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Halcyon.Api.Data.Users;
 using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
@@ -37,27 +36,26 @@ public class SetupTwoFactorEndpoint : IEndpoint
             );
         }
 
-        // Generate a new temporary secret each time setup is called.
         var rawKey = KeyGeneration.GenerateRandomKey(20);
-        var secret = Base32Encoding.ToString(rawKey); // Base32 for common authenticator apps
+        var secret = Base32Encoding.ToString(rawKey);
 
         var issuer = configuration["TwoFactor:Issuer"] ?? "Halcyon";
         var label = $"{issuer}:{user.EmailAddress}";
         var otpAuthUri =
             $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={secret}&issuer={Uri.EscapeDataString(issuer)}&digits=6&period=30";
 
-        // Persist temporary secret (not yet enabled)
         user.TwoFactorTempSecret = secret;
-        user.IsTwoFactorEnabled = false; // ensure disabled until verified
+        user.IsTwoFactorEnabled = false;
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        // QrContent is the URI itself (client can render a QR code from it)
         var response = new SetupTwoFactorResponse(
             user.Id.ToString(),
             secret,
             otpAuthUri,
             otpAuthUri
         );
+
         return Results.Ok(response);
     }
 }

@@ -48,7 +48,7 @@ public class LoginTwoFactorEndpoint : IEndpoint
             );
         }
 
-        if (!user.IsTwoFactorEnabled || string.IsNullOrWhiteSpace(user.TwoFactorSecret))
+        if (!user.IsTwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -56,16 +56,12 @@ public class LoginTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var hasRecovery = !string.IsNullOrWhiteSpace(request.RecoveryCode);
-        var hasCode = !string.IsNullOrWhiteSpace(request.Code);
-
-        if (hasRecovery)
+        if (!string.IsNullOrEmpty(request.RecoveryCode))
         {
-            var input = request.RecoveryCode!.Trim();
+            var input = request.RecoveryCode;
             var codes = user.TwoFactorRecoveryCodes ?? [];
-            var matched = codes.FirstOrDefault(c =>
-                string.Equals(c, input, StringComparison.Ordinal)
-            );
+            var matched = codes.FirstOrDefault(code => code == input);
+
             if (matched is null)
             {
                 return Results.Problem(
@@ -74,24 +70,24 @@ public class LoginTwoFactorEndpoint : IEndpoint
                 );
             }
 
-            // consume used code
-            user.TwoFactorRecoveryCodes = codes
-                .Where(c => !string.Equals(c, input, StringComparison.Ordinal))
-                .ToList();
+            user.TwoFactorRecoveryCodes = [.. codes.Where(code => code != input)];
+
             await dbContext.SaveChangesAsync(cancellationToken);
         }
-        else if (hasCode)
+        else if (!string.IsNullOrEmpty(request.Code))
         {
             var totp = new Totp(
                 Base32Encoding.ToBytes(user.TwoFactorSecret),
                 step: 30,
                 totpSize: 6
             );
+
             var totpVerified = totp.VerifyTotp(
-                request.Code!.Trim(),
+                request.Code,
                 out _,
                 VerificationWindow.RfcSpecifiedNetworkDelay
             );
+
             if (!totpVerified)
             {
                 return Results.Problem(

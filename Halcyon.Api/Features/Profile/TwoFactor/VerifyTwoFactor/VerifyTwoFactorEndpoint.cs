@@ -36,7 +36,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
-        if (string.IsNullOrWhiteSpace(user.TwoFactorTempSecret))
+        if (string.IsNullOrEmpty(user.TwoFactorTempSecret))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -44,7 +44,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
-        if (string.IsNullOrWhiteSpace(request.Code))
+        if (string.IsNullOrEmpty(request.Code))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -72,16 +72,11 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
-        // Promote temp secret to active secret
         user.TwoFactorSecret = user.TwoFactorTempSecret;
         user.TwoFactorTempSecret = null;
         user.IsTwoFactorEnabled = true;
 
-        // Generate recovery codes (simple approach: random 8 groups). Consider hashing in production.
-        var codes = Enumerable
-            .Range(0, 8)
-            .Select(_ => Guid.NewGuid().ToString("N").Substring(0, 10))
-            .ToList();
+        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")[..10]).ToList();
 
         user.TwoFactorRecoveryCodes = codes; // TODO: hash or encrypt in production
 

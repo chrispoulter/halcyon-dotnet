@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Profile.TwoFactor.RegenerateRecovery;
 
-public record RegenerateRecoveryCodesResponse(Guid UserId, IReadOnlyList<string> RecoveryCodes);
-
 public class RegenerateRecoveryCodesEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
@@ -44,12 +42,10 @@ public class RegenerateRecoveryCodesEndpoint : IEndpoint
             );
         }
 
-        var codes = Enumerable
-            .Range(0, 8)
-            .Select(_ => Guid.NewGuid().ToString("N").Substring(0, 10))
-            .ToList();
+        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")[..10]).ToList();
 
         user.TwoFactorRecoveryCodes = codes; // In production, store hashed/encrypted
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return Results.Ok(new RegenerateRecoveryCodesResponse(user.Id, codes));
