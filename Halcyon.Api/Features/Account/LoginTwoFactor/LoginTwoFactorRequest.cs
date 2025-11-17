@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Halcyon.Api.Features.Account.Login;
+namespace Halcyon.Api.Features.Account.LoginTwoFactor;
 
 public record LoginTwoFactorRequest(string EmailAddress, string Password, string Code);
 

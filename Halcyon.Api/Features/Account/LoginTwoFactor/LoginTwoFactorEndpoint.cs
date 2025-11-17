@@ -5,7 +5,7 @@ using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
-namespace Halcyon.Api.Features.Account.Login;
+namespace Halcyon.Api.Features.Account.LoginTwoFactor;
 
 public class LoginTwoFactorEndpoint : IEndpoint
 {
