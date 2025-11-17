@@ -20,6 +20,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useDisableTwoFactor } from '@/features/profile/hooks/use-disable-two-factor';
+import { useRegenerateRecoveryCodes } from '@/features/profile/hooks/use-regenerate-recovery-codes';
 
 export function ProfilePage() {
     const {
@@ -31,8 +32,10 @@ export function ProfilePage() {
     } = useGetProfile();
 
     const [setupOpen, setSetupOpen] = useState(false);
-    
     const disable2fa = useDisableTwoFactor();
+    const regenerate = useRegenerateRecoveryCodes();
+    const [recoveryOpen, setRecoveryOpen] = useState(false);
+    const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
 
     if (isPending) {
         return <ProfileLoading />;
@@ -143,6 +146,56 @@ export function ProfilePage() {
                                     onClick={() => disable2fa.mutate()}
                                 >
                                     Disable
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                    <Button
+                        variant="outline"
+                        className="w-full sm:w-auto"
+                        onClick={() => {
+                            regenerate.mutate(undefined, {
+                                onSuccess: (data) => {
+                                    setRecoveryCodes(data.recoveryCodes);
+                                    setRecoveryOpen(true);
+                                },
+                            });
+                        }}
+                    >
+                        Regenerate Recovery Codes
+                    </Button>
+
+                    <AlertDialog open={recoveryOpen} onOpenChange={setRecoveryOpen}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>New recovery codes</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Save these codes now. They will not be shown again.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <div className="grid grid-cols-2 gap-2">
+                                {(recoveryCodes ?? []).map((rc) => (
+                                    <code key={rc} className="bg-muted rounded px-2 py-1 text-sm">{rc}</code>
+                                ))}
+                            </div>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Close</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={() => {
+                                        const list = recoveryCodes ?? [];
+                                        const content = list.join('\n');
+                                        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                                        const url = URL.createObjectURL(blob);
+                                        const a = document.createElement('a');
+                                        a.href = url;
+                                        a.download = 'recovery-codes.txt';
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        a.remove();
+                                        URL.revokeObjectURL(url);
+                                    }}
+                                >
+                                    Download
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
