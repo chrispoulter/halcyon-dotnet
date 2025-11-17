@@ -10,7 +10,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/profile/verify-two-factor", HandleAsync)
+        app.MapPut("/profile/verify-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<VerifyTwoFactorResponse>()
             .WithTags(Tags.Profile);

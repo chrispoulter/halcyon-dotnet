@@ -1,3 +1,3 @@
 ﻿namespace Halcyon.Api.Features.Users.UnlockUser;
 
-public record UnlockUserResponse(Guid Id);
+public record UnlockUserResponse(Guid UserId);

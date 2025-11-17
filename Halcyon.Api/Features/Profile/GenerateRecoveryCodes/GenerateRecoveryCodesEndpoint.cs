@@ -10,7 +10,7 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/profile/generate-recovery-codes", HandleAsync)
+        app.MapPut("/profile/generate-recovery-codes", HandleAsync)
             .RequireAuthorization()
             .Produces<GenerateRecoveryCodesResponse>()
             .WithTags(Tags.Profile);

@@ -10,7 +10,7 @@ public class DisableTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/profile/disable-two-factor", HandleAsync)
+        app.MapPut("/profile/disable-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<DisableTwoFactorResponse>()
             .WithTags(Tags.Profile);
