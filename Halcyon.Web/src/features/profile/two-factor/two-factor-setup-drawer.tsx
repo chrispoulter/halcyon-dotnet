@@ -18,6 +18,7 @@ import {
 import { useSetupTwoFactor } from '@/features/profile/hooks/use-setup-two-factor';
 import { useVerifyTwoFactor } from '@/features/profile/hooks/use-verify-two-factor';
 import QRCode from 'qrcode';
+import { toast } from 'sonner';
 
 export type TwoFactorSetupDrawerProps = {
     open: boolean;
@@ -175,9 +176,25 @@ export function TwoFactorSetupDrawer({
                                     a.click();
                                     a.remove();
                                     URL.revokeObjectURL(url);
+                                    toast.success('Downloaded recovery codes');
                                 }}
                             >
                                 Download codes
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={async () => {
+                                    try {
+                                        await navigator.clipboard.writeText(
+                                            (showRecovery ?? []).join('\n')
+                                        );
+                                        toast.success('Copied recovery codes');
+                                    } catch {
+                                        toast.error('Copy failed');
+                                    }
+                                }}
+                            >
+                                Copy codes
                             </Button>
                             <Button onClick={() => onOpenChange(false)}>
                                 Done
@@ -196,6 +213,7 @@ export function TwoFactorSetupDrawer({
                                                 setShowRecovery(
                                                     data.recoveryCodes
                                                 );
+                                                toast.success('Two-factor enabled');
                                             },
                                             onError: (err: unknown) =>
                                                 setError(

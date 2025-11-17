@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useDisableTwoFactor } from '@/features/profile/hooks/use-disable-two-factor';
 import { useRegenerateRecoveryCodes } from '@/features/profile/hooks/use-regenerate-recovery-codes';
+import { toast } from 'sonner';
 
 export function ProfilePage() {
     const {
@@ -143,7 +144,19 @@ export function ProfilePage() {
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
-                                    onClick={() => disable2fa.mutate()}
+                                    onClick={() =>
+                                        disable2fa.mutate(undefined, {
+                                            onSuccess: () =>
+                                                toast.success(
+                                                    'Two-factor disabled'
+                                                ),
+                                            onError: (e) =>
+                                                toast.error(
+                                                    (e as Error).message ||
+                                                        'Failed to disable'
+                                                ),
+                                        })
+                                    }
                                 >
                                     Disable
                                 </AlertDialogAction>
@@ -158,7 +171,15 @@ export function ProfilePage() {
                                 onSuccess: (data) => {
                                     setRecoveryCodes(data.recoveryCodes);
                                     setRecoveryOpen(true);
+                                    toast.success(
+                                        'Generated new recovery codes'
+                                    );
                                 },
+                                onError: (e) =>
+                                    toast.error(
+                                        (e as Error).message ||
+                                            'Failed to regenerate'
+                                    ),
                             });
                         }}
                     >
@@ -181,6 +202,24 @@ export function ProfilePage() {
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Close</AlertDialogCancel>
                                 <AlertDialogAction
+                                    onClick={async () => {
+                                        try {
+                                            await navigator.clipboard.writeText(
+                                                (recoveryCodes ?? []).join(
+                                                    '\n'
+                                                )
+                                            );
+                                            toast.success(
+                                                'Copied recovery codes'
+                                            );
+                                        } catch {
+                                            toast.error('Copy failed');
+                                        }
+                                    }}
+                                >
+                                    Copy
+                                </AlertDialogAction>
+                                <AlertDialogAction
                                     onClick={() => {
                                         const list = recoveryCodes ?? [];
                                         const content = list.join('\n');
@@ -193,6 +232,7 @@ export function ProfilePage() {
                                         a.click();
                                         a.remove();
                                         URL.revokeObjectURL(url);
+                                        toast.success('Downloaded recovery codes');
                                     }}
                                 >
                                     Download
