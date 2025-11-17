@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
@@ -6,6 +7,19 @@ import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
 import { DeleteAccountButton } from '@/features/profile/profile/delete-account-button';
 import { ProfileLoading } from '@/features/profile/profile/profile-loading';
 import { toDisplay } from '@/lib/dates';
+import { TwoFactorSetupDrawer } from '@/features/profile/two-factor/two-factor-setup-drawer';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { useDisableTwoFactor } from '@/features/profile/hooks/use-disable-two-factor';
 
 export function ProfilePage() {
     const {
@@ -15,6 +29,10 @@ export function ProfilePage() {
         isSuccess,
         error,
     } = useGetProfile();
+
+    const [setupOpen, setSetupOpen] = useState(false);
+    
+    const disable2fa = useDisableTwoFactor();
 
     if (isPending) {
         return <ProfileLoading />;
@@ -87,6 +105,66 @@ export function ProfilePage() {
                 disabled={isFetching}
                 className="w-full sm:w-auto"
             />
+
+            <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
+                Two-Factor Authentication
+            </h2>
+
+            {profile.isTwoFactorEnabled ? (
+                <div className="space-y-3">
+                    <p className="leading-7">
+                        Two-factor authentication is currently{' '}
+                        <span className="font-semibold">enabled</span> on your
+                        account.
+                    </p>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="w-full sm:w-auto"
+                            >
+                                Disable Two-Factor
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Disable two-factor authentication?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This will remove your authenticator
+                                    configuration and recovery codes. You can
+                                    re-enable 2FA at any time.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={() => disable2fa.mutate()}
+                                >
+                                    Disable
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
+            ) : (
+                <div className="space-y-3">
+                    <p className="leading-7">
+                        Protect your account by adding a second step to sign in.
+                    </p>
+                    <Button
+                        className="w-full sm:w-auto"
+                        onClick={() => setSetupOpen(true)}
+                    >
+                        Set up Two-Factor
+                    </Button>
+                    <TwoFactorSetupDrawer
+                        open={setupOpen}
+                        onOpenChange={setSetupOpen}
+                    />
+                </div>
+            )}
         </main>
     );
 }
