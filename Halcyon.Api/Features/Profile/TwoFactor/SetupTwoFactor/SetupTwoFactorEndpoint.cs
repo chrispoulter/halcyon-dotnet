@@ -43,7 +43,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
 
         var issuer = configuration["TwoFactor:Issuer"] ?? "Halcyon";
         var label = $"{issuer}:{user.EmailAddress}";
-        var otpauthUri =
+        var otpAuthUri =
             $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={secret}&issuer={Uri.EscapeDataString(issuer)}&digits=6&period=30";
 
         // Persist temporary secret (not yet enabled)
@@ -52,7 +52,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
         await dbContext.SaveChangesAsync(cancellationToken);
 
         // QrContent is the URI itself (client can render a QR code from it)
-        var response = new SetupTwoFactorResponse(secret, otpauthUri, otpauthUri);
+        var response = new SetupTwoFactorResponse(secret, otpAuthUri, otpAuthUri);
         return Results.Ok(response);
     }
 }

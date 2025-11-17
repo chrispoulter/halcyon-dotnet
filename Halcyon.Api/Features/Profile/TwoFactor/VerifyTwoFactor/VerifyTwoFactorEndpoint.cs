@@ -58,13 +58,13 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             totpSize: 6
         );
 
-        var valid = totp.VerifyTotp(
-            request.Code.Trim(),
+        var totpVerified = totp.VerifyTotp(
+            request.Code,
             out _,
             VerificationWindow.RfcSpecifiedNetworkDelay
         );
 
-        if (!valid)
+        if (!totpVerified)
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,

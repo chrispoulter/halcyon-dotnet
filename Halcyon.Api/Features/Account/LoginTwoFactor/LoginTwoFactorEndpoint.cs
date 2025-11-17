@@ -65,13 +65,13 @@ public class LoginTwoFactorEndpoint : IEndpoint
 
         var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret), step: 30, totpSize: 6);
 
-        var ok = totp.VerifyTotp(
+        var totpVerified = totp.VerifyTotp(
             request.Code.Trim(),
             out _,
             VerificationWindow.RfcSpecifiedNetworkDelay
         );
 
-        if (!ok)
+        if (!totpVerified)
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
