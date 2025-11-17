@@ -23,6 +23,14 @@ public class User : IJwtUser
 
     public List<string>? Roles { get; set; }
 
+    public bool IsTwoFactorEnabled { get; set; }
+
+    public string? TwoFactorSecret { get; set; }
+
+    public string? TwoFactorTempSecret { get; set; }
+
+    public List<string>? TwoFactorRecoveryCodes { get; set; }
+
     public uint Version { get; }
 
     public NpgsqlTsVector SearchVector { get; } = null!;
