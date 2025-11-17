@@ -1,23 +1,24 @@
-﻿using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using OtpNet;
 
-namespace Halcyon.Api.Features.Account.Login;
+namespace Halcyon.Api.Features.Account.LoginWithTwoFactor;
 
-public class LoginEndpoint : IEndpoint
+public class LoginWithTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/account/login", HandleAsync)
-            .AddValidationFilter<LoginRequest>()
-            .Produces<LoginResponse>()
+        app.MapPost("/account/login-two-factor", HandleAsync)
+            .AddValidationFilter<LoginWithTwoFactorRequest>()
+            .Produces<LoginWithTwoFactorResponse>()
             .WithTags(Tags.Account);
     }
 
     private static async Task<IResult> HandleAsync(
-        LoginRequest request,
+        LoginWithTwoFactorRequest request,
         HalcyonDbContext dbContext,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
@@ -32,7 +33,7 @@ public class LoginEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "The credentials provided were invalid."
+                title: "Invalid credentials."
             );
         }
 
@@ -42,24 +43,35 @@ public class LoginEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "The credentials provided were invalid."
+                title: "Invalid credentials."
             );
         }
 
-        if (user.IsLockedOut)
+        if (!user.IsTwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "This account has been locked out, please try again later."
+                title: "Two-factor authentication is not enabled."
             );
         }
 
-        if (user.IsTwoFactorEnabled)
+        var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret), step: 30, totpSize: 6);
+
+        var totpVerified = totp.VerifyTotp(
+            request.Code,
+            out _,
+            VerificationWindow.RfcSpecifiedNetworkDelay
+        );
+
+        if (!totpVerified)
         {
-            return Results.Ok(new LoginResponse(true, null));
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Invalid code."
+            );
         }
 
         var token = jwtTokenGenerator.GenerateJwtToken(user);
-        return Results.Ok(new LoginResponse(false, token));
+        return Results.Ok(new LoginWithTwoFactorResponse(token));
     }
 }

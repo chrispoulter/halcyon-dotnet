@@ -13,6 +13,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.EmailAddress).HasColumnName("email_address").IsRequired();
         builder.Property(u => u.Password).HasColumnName("password");
         builder.Property(u => u.PasswordResetToken).HasColumnName("password_reset_token");
+        builder
+            .Property(u => u.IsTwoFactorEnabled)
+            .HasColumnName("is_two_factor_enabled")
+            .HasDefaultValue(false);
+        builder.Property(u => u.TwoFactorSecret).HasColumnName("two_factor_secret");
+        builder.Property(u => u.TwoFactorTempSecret).HasColumnName("two_factor_temp_secret");
+        builder
+            .Property(u => u.TwoFactorRecoveryCodes)
+            .HasColumnName("two_factor_recovery_codes")
+            .HasColumnType("text[]");
         builder.Property(u => u.FirstName).HasColumnName("first_name").IsRequired();
         builder.Property(u => u.LastName).HasColumnName("last_name").IsRequired();
         builder.Property(u => u.DateOfBirth).HasColumnName("date_of_birth").IsRequired();

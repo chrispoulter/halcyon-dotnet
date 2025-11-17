@@ -54,9 +54,12 @@ public class ChangePasswordEndpoint : IEndpoint
             );
         }
 
-        var verified = passwordHasher.VerifyPassword(request.CurrentPassword, user.Password);
+        var passwordVerified = passwordHasher.VerifyPassword(
+            request.CurrentPassword,
+            user.Password
+        );
 
-        if (!verified)
+        if (!passwordVerified)
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,

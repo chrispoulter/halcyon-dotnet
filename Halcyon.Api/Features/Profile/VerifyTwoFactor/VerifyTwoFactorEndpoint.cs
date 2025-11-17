@@ -4,13 +4,13 @@ using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
-namespace Halcyon.Api.Features.Profile.TwoFactor.VerifyTwoFactor;
+namespace Halcyon.Api.Features.Profile.VerifyTwoFactor;
 
 public class VerifyTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/profile/2fa/verify", HandleAsync)
+        app.MapPost("/profile/verify-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<VerifyTwoFactorResponse>()
             .WithTags(Tags.Profile);
@@ -36,19 +36,19 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
+        if (request.Version is not null && request.Version != user.Version)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Data has been modified since entities were loaded."
+            );
+        }
+
         if (string.IsNullOrEmpty(user.TwoFactorTempSecret))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: "No 2FA setup in progress."
-            );
-        }
-
-        if (string.IsNullOrEmpty(request.Code))
-        {
-            return Results.Problem(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: "Code is required."
             );
         }
 
@@ -76,12 +76,11 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         user.TwoFactorTempSecret = null;
         user.IsTwoFactorEnabled = true;
 
-        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")[..10]).ToList();
-
-        user.TwoFactorRecoveryCodes = codes; // TODO: hash or encrypt in production
+        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")).ToList();
+        user.TwoFactorRecoveryCodes = codes;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new VerifyTwoFactorResponse(user.Id, user.IsTwoFactorEnabled, codes));
+        return Results.Ok(new VerifyTwoFactorResponse(user.Id, codes));
     }
 }

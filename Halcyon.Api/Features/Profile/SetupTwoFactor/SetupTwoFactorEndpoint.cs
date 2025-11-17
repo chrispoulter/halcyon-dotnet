@@ -1,22 +1,24 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
-namespace Halcyon.Api.Features.Profile.TwoFactor.SetupTwoFactor;
+namespace Halcyon.Api.Features.Profile.SetupTwoFactor;
 
 public class SetupTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/profile/2fa/setup", HandleAsync)
+        app.MapPost("/profile/setup-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<SetupTwoFactorResponse>()
             .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(
+        [FromBody] SetupTwoFactorRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         IConfiguration configuration,
@@ -36,6 +38,14 @@ public class SetupTwoFactorEndpoint : IEndpoint
             );
         }
 
+        if (request?.Version is not null && request.Version != user.Version)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Data has been modified since entities were loaded."
+            );
+        }
+
         var rawKey = KeyGeneration.GenerateRandomKey(20);
         var secret = Base32Encoding.ToString(rawKey);
 
@@ -49,12 +59,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new SetupTwoFactorResponse(
-            user.Id.ToString(),
-            secret,
-            otpAuthUri,
-            otpAuthUri
-        );
+        var response = new SetupTwoFactorResponse(user.Id, secret, otpAuthUri, otpAuthUri);
 
         return Results.Ok(response);
     }

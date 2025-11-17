@@ -1,21 +1,23 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Halcyon.Api.Features.Profile.TwoFactor.RegenerateRecovery;
+namespace Halcyon.Api.Features.Profile.GenerateRecoveryCodes;
 
-public class RegenerateRecoveryCodesEndpoint : IEndpoint
+public class GenerateRecoveryCodesEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/profile/2fa/recovery/regenerate", HandleAsync)
+        app.MapPost("/profile/generate-recovery-codes", HandleAsync)
             .RequireAuthorization()
-            .Produces<RegenerateRecoveryCodesResponse>()
+            .Produces<GenerateRecoveryCodesResponse>()
             .WithTags(Tags.Profile);
     }
 
     private static async Task<IResult> HandleAsync(
+        [FromBody] GenerateRecoveryCodesRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
@@ -34,6 +36,14 @@ public class RegenerateRecoveryCodesEndpoint : IEndpoint
             );
         }
 
+        if (request?.Version is not null && request.Version != user.Version)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Data has been modified since entities were loaded."
+            );
+        }
+
         if (!user.IsTwoFactorEnabled)
         {
             return Results.Problem(
@@ -42,12 +52,11 @@ public class RegenerateRecoveryCodesEndpoint : IEndpoint
             );
         }
 
-        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")[..10]).ToList();
-
-        user.TwoFactorRecoveryCodes = codes; // In production, store hashed/encrypted
+        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")).ToList();
+        user.TwoFactorRecoveryCodes = codes;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new RegenerateRecoveryCodesResponse(user.Id, codes));
+        return Results.Ok(new GenerateRecoveryCodesResponse(user.Id, codes));
     }
 }

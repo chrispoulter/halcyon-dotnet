@@ -11,7 +11,15 @@ public class User : IJwtUser
 
     public string? Password { get; set; }
 
-    public Guid? PasswordResetToken { get; set; }
+    public string? PasswordResetToken { get; set; }
+
+    public bool IsTwoFactorEnabled { get; set; }
+
+    public string? TwoFactorSecret { get; set; }
+
+    public string? TwoFactorTempSecret { get; set; }
+
+    public List<string>? TwoFactorRecoveryCodes { get; set; }
 
     public string FirstName { get; set; } = null!;
 
@@ -22,14 +30,6 @@ public class User : IJwtUser
     public bool IsLockedOut { get; set; }
 
     public List<string>? Roles { get; set; }
-
-    public bool IsTwoFactorEnabled { get; set; }
-
-    public string? TwoFactorSecret { get; set; }
-
-    public string? TwoFactorTempSecret { get; set; }
-
-    public List<string>? TwoFactorRecoveryCodes { get; set; }
 
     public uint Version { get; }
 
