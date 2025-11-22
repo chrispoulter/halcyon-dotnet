@@ -20,24 +20,18 @@ import {
     type LoginWithRecoveryCodeFormValues,
 } from '@/features/account/login/login-with-recovery-code-form';
 
-const FormStage = {
-    Login: 'login',
-    TwoFactor: 'two-factor',
-    RecoveryCode: 'recovery-code',
-} as const;
+type FormStage = 'Login' | 'TwoFactor' | 'RecoveryCode';
 
-type FormStage = (typeof FormStage)[keyof typeof FormStage];
+type State = { stage: FormStage; loginFormValues?: LoginFormValues };
 
 export function LoginPage() {
     const navigate = useNavigate();
 
     const { setAuth } = useAuth();
 
-    const [formStage, setFormStage] = useState<FormStage>(FormStage.TwoFactor);
-
-    const [loginFormValues, setLoginFormValues] = useState<
-        LoginFormValues | undefined
-    >();
+    const [state, setState] = useState<State>({
+        stage: 'TwoFactor',
+    });
 
     const { mutate: login, isPending: isLoginSaving } = useLogin();
 
@@ -56,8 +50,10 @@ export function LoginPage() {
                 }
 
                 if (response.requiresTwoFactor) {
-                    setFormStage(FormStage.TwoFactor);
-                    setLoginFormValues(data);
+                    setState({
+                        stage: 'TwoFactor',
+                        loginFormValues: data,
+                    });
                 }
             },
             onError: (error) => toast.error(error.message),
@@ -67,7 +63,7 @@ export function LoginPage() {
     function onRecoveryCodeSubmit(data: LoginWithRecoveryCodeFormValues) {
         loginWithRecoveryCode(
             {
-                ...loginFormValues!,
+                ...state.loginFormValues!,
                 recoveryCode: data.recoveryCode,
             },
             {
@@ -83,7 +79,7 @@ export function LoginPage() {
     function onTwoFactorSubmit(data: LoginWithTwoFactorFormValues) {
         loginWithTwoFactor(
             {
-                ...loginFormValues!,
+                ...state.loginFormValues!,
                 code: data.code,
             },
             {
@@ -96,8 +92,8 @@ export function LoginPage() {
         );
     }
 
-    switch (formStage) {
-        case FormStage.TwoFactor:
+    switch (state.stage) {
+        case 'TwoFactor':
             return (
                 <main className="mx-auto max-w-screen-sm space-y-6 p-6">
                     <Metadata title="Two Factor Authentication" />
@@ -117,7 +113,7 @@ export function LoginPage() {
                     >
                         <Button
                             variant="outline"
-                            onClick={() => setFormStage(FormStage.Login)}
+                            onClick={() => setState({ stage: 'Login' })}
                         >
                             Cancel
                         </Button>
@@ -130,7 +126,10 @@ export function LoginPage() {
                             <Button
                                 variant="link"
                                 onClick={() =>
-                                    setFormStage(FormStage.RecoveryCode)
+                                    setState((prev) => ({
+                                        ...prev,
+                                        stage: 'RecoveryCode',
+                                    }))
                                 }
                                 className="underline underline-offset-4"
                             >
@@ -142,7 +141,7 @@ export function LoginPage() {
                 </main>
             );
 
-        case FormStage.RecoveryCode:
+        case 'RecoveryCode':
             return (
                 <main className="mx-auto max-w-screen-sm space-y-6 p-6">
                     <Metadata title="Recovery Code Verification" />
@@ -162,7 +161,12 @@ export function LoginPage() {
                     >
                         <Button
                             variant="outline"
-                            onClick={() => setFormStage(FormStage.TwoFactor)}
+                            onClick={() =>
+                                setState((prev) => ({
+                                    ...prev,
+                                    stage: 'TwoFactor',
+                                }))
+                            }
                         >
                             Cancel
                         </Button>
