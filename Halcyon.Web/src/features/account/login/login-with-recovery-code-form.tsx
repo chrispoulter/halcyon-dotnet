@@ -15,11 +15,13 @@ export type LoginWithRecoveryCodeFormValues = z.infer<typeof schema>;
 type LoginWithRecoveryCodeFormProps = {
     loading?: boolean;
     onSubmit: (data: LoginWithRecoveryCodeFormValues) => void;
+    children?: React.ReactNode;
 };
 
 export function LoginWithRecoveryCodeForm({
     loading,
     onSubmit,
+    children,
 }: LoginWithRecoveryCodeFormProps) {
     const form = useForm<LoginWithRecoveryCodeFormValues>({
         resolver: zodResolver(schema),
@@ -44,6 +46,7 @@ export function LoginWithRecoveryCodeForm({
             />
 
             <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+                {children}
                 <LoadingButton type="submit" loading={loading}>
                     Submit
                 </LoadingButton>

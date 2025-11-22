@@ -15,11 +15,13 @@ export type LoginWithTwoFactorFormValues = z.infer<typeof schema>;
 type LoginWithTwoFactorFormProps = {
     loading?: boolean;
     onSubmit: (data: LoginWithTwoFactorFormValues) => void;
+    children?: React.ReactNode;
 };
-
+    
 export function LoginWithTwoFactorForm({
     loading,
     onSubmit,
+    children
 }: LoginWithTwoFactorFormProps) {
     const form = useForm<LoginWithTwoFactorFormValues>({
         resolver: zodResolver(schema),
@@ -44,6 +46,7 @@ export function LoginWithTwoFactorForm({
             />
 
             <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+                {children}
                 <LoadingButton type="submit" loading={loading}>
                     Submit
                 </LoadingButton>
