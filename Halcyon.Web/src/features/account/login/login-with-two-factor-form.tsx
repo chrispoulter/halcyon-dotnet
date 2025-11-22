@@ -2,12 +2,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { LoadingButton } from '@/components/loading-button';
-import { OtpField } from '@/components/form/otp-field';
+import { TextField } from '@/components/form/text-field';
 
 const schema = z.object({
     code: z
-        .string({ message: 'Recovery code must be a valid string' })
-        .min(1, 'Recovery code is a required field'),
+        .string({ message: 'Authenticator code must be a valid string' })
+        .min(1, 'Authenticator code is a required field'),
 });
 
 export type LoginWithTwoFactorFormValues = z.infer<typeof schema>;
@@ -36,10 +36,15 @@ export function LoginWithTwoFactorForm({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
         >
-            <OtpField
+            <TextField
                 control={form.control}
                 name="code"
                 label="Authenticator Code"
+                type="text"
+                maxLength={6}
+                pattern="\d{6}"
+                inputMode="numeric"
+                autoComplete="one-time-code"
                 required
                 disabled={loading}
             />
