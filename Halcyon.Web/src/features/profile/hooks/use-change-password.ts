@@ -24,10 +24,10 @@ export const useChangePassword = () => {
                     Authorization: `Bearer ${accessToken}`,
                 }
             ),
-        onSuccess: (data) => {
+        onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ['user', data.id] });
+            queryClient.invalidateQueries({ queryKey: ['user', response.id] });
         },
     });
 };

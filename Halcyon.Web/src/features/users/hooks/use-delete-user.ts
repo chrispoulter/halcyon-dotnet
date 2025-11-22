@@ -18,7 +18,7 @@ export const useDeleteUser = (id: string) => {
             apiClient.delete<DeleteUserResponse>(`/users/${id}`, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
-        onSuccess: (data) => {
+        onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
 
             queryClient.invalidateQueries({
@@ -27,7 +27,7 @@ export const useDeleteUser = (id: string) => {
             });
 
             queryClient.invalidateQueries({
-                queryKey: ['user', data.userId],
+                queryKey: ['user', response.userId],
                 refetchType: 'none',
             });
         },

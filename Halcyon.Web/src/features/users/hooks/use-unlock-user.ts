@@ -18,10 +18,12 @@ export const useUnlockUser = (id: string) => {
             apiClient.put<UnlockUserResponse>(`/users/${id}/unlock`, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
-        onSuccess: (data) => {
+        onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ['user', data.userId] });
+            queryClient.invalidateQueries({
+                queryKey: ['user', response.userId],
+            });
         },
     });
 };

@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { TextField } from '@/components/form/text-field';
 import { LoadingButton } from '@/components/loading-button';
+import { OtpField } from '@/components/form/otp-field';
 
 const schema = z.object({
     code: z
@@ -17,11 +17,11 @@ type LoginWithTwoFactorFormProps = {
     onSubmit: (data: LoginWithTwoFactorFormValues) => void;
     children?: React.ReactNode;
 };
-    
+
 export function LoginWithTwoFactorForm({
     loading,
     onSubmit,
-    children
+    children,
 }: LoginWithTwoFactorFormProps) {
     const form = useForm<LoginWithTwoFactorFormValues>({
         resolver: zodResolver(schema),
@@ -36,11 +36,10 @@ export function LoginWithTwoFactorForm({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
         >
-            <TextField
+            <OtpField
                 control={form.control}
                 name="code"
                 label="Authenticator Code"
-                maxLength={50}
                 required
                 disabled={loading}
             />

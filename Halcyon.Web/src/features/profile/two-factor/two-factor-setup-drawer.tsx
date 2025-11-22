@@ -209,9 +209,9 @@ export function TwoFactorSetupDrawer({
                                     verify.mutate(
                                         { code: code.trim() },
                                         {
-                                            onSuccess: (data) => {
+                                            onSuccess: (response) => {
                                                 setShowRecovery(
-                                                    data.recoveryCodes
+                                                    response.recoveryCodes
                                                 );
                                                 toast.success(
                                                     'Two-factor enabled'

@@ -33,7 +33,7 @@ export function LoginPage() {
 
     const { setAuth } = useAuth();
 
-    const [formStage, setFormStage] = useState<FormStage>(FormStage.Login);
+    const [formStage, setFormStage] = useState<FormStage>(FormStage.TwoFactor);
 
     const [loginFormValues, setLoginFormValues] = useState<
         LoginFormValues | undefined
@@ -71,8 +71,8 @@ export function LoginPage() {
                 recoveryCode: data.recoveryCode,
             },
             {
-                onSuccess: (data) => {
-                    setAuth(data.accessToken);
+                onSuccess: (response) => {
+                    setAuth(response.accessToken);
                     navigate('/');
                 },
                 onError: (error) => toast.error(error.message),
@@ -87,8 +87,8 @@ export function LoginPage() {
                 code: data.code,
             },
             {
-                onSuccess: (data) => {
-                    setAuth(data.accessToken);
+                onSuccess: (response) => {
+                    setAuth(response.accessToken);
                     navigate('/');
                 },
                 onError: (error) => toast.error(error.message),

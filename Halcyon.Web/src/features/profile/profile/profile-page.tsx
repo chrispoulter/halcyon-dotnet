@@ -168,8 +168,8 @@ export function ProfilePage() {
                         className="w-full sm:w-auto"
                         onClick={() => {
                             regenerate.mutate(undefined, {
-                                onSuccess: (data) => {
-                                    setRecoveryCodes(data.recoveryCodes);
+                                onSuccess: (response) => {
+                                    setRecoveryCodes(response.recoveryCodes);
                                     setRecoveryOpen(true);
                                     toast.success(
                                         'Generated new recovery codes'
