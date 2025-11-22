@@ -7,7 +7,8 @@ import { LoadingButton } from '@/components/loading-button';
 const schema = z.object({
     recoveryCode: z
         .string({ message: 'Recovery code must be a valid string' })
-        .min(1, 'Recovery code is a required field'),
+        .min(1, 'Recovery code is a required field')
+        .regex(/^\d{6}$/, 'Recovery code must be exactly 6 digits'),
 });
 
 export type LoginWithRecoveryCodeFormValues = z.infer<typeof schema>;
