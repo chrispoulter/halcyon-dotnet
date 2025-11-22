@@ -30,7 +30,7 @@ export function LoginPage() {
     const { setAuth } = useAuth();
 
     const [state, setState] = useState<State>({
-        stage: 'TwoFactor',
+        stage: 'Login',
     });
 
     const { mutate: login, isPending: isLoginSaving } = useLogin();
@@ -44,16 +44,14 @@ export function LoginPage() {
     function onLoginSubmit(data: LoginFormValues) {
         login(data, {
             onSuccess: (response) => {
-                if (response.accessToken) {
-                    setAuth(response.accessToken);
-                    navigate('/');
-                }
-
                 if (response.requiresTwoFactor) {
                     setState({
                         stage: 'TwoFactor',
                         loginFormValues: data,
                     });
+                } else if (response.accessToken) {
+                    setAuth(response.accessToken);
+                    navigate('/');
                 }
             },
             onError: (error) => toast.error(error.message),
