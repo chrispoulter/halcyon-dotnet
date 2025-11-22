@@ -2,11 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
-export type SetupTwoFactorResponse = {
-    id: string;
+type SetupTwoFactorRequest = { version?: number };
+
+type SetupTwoFactorResponse = {
+    userId: string;
     secret: string;
-    otpauthUri: string;
-    qrContent: string; // same as otpauthUri (server returns the URI)
+    otpAuthUri: string;
 };
 
 export const useSetupTwoFactor = () => {
@@ -15,10 +16,10 @@ export const useSetupTwoFactor = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: () =>
-            apiClient.post<SetupTwoFactorResponse>(
-                '/profile/2fa/setup',
-                undefined,
+        mutationFn: (request: SetupTwoFactorRequest) =>
+            apiClient.put<SetupTwoFactorResponse>(
+                '/profile/setup-two-factor',
+                request,
                 {
                     Authorization: `Bearer ${accessToken}`,
                 }
@@ -26,7 +27,9 @@ export const useSetupTwoFactor = () => {
         onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ['user', response.id] });
+            queryClient.invalidateQueries({
+                queryKey: ['user', response.userId],
+            });
         },
     });
 };

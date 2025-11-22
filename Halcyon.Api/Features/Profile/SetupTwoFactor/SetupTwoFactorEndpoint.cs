@@ -59,7 +59,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new SetupTwoFactorResponse(user.Id, secret, otpAuthUri, otpAuthUri);
+        var response = new SetupTwoFactorResponse(user.Id, secret, otpAuthUri);
 
         return Results.Ok(response);
     }

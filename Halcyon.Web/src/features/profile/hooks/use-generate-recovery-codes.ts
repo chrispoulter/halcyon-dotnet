@@ -2,22 +2,22 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
-type VerifyTwoFactorRequest = { code: string; version?: number };
+type GenerateRecoveryCodesRequest = { version?: number };
 
-type VerifyTwoFactorResponse = {
+type GenerateRecoveryCodesResponse = {
     userId: string;
     recoveryCodes: string[];
 };
 
-export const useVerifyTwoFactor = () => {
+export const useGenerateRecoveryCodes = () => {
     const { accessToken } = useAuth();
 
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (request: VerifyTwoFactorRequest) =>
-            apiClient.put<VerifyTwoFactorResponse>(
-                '/profile/verify-two-factor',
+        mutationFn: (request: GenerateRecoveryCodesRequest) =>
+            apiClient.put<GenerateRecoveryCodesResponse>(
+                '/profile/generate-recovery-codes',
                 request,
                 {
                     Authorization: `Bearer ${accessToken}`,
