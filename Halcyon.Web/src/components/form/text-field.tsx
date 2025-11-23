@@ -7,16 +7,10 @@ import {
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
-type TextFieldProps<T extends FieldValues> = {
+type TextFieldProps<T extends FieldValues> = React.ComponentProps<'input'> & {
     control: Control<T>;
     name: FieldPath<T>;
     label?: string;
-    type?: string;
-    placeholder?: string;
-    disabled?: boolean;
-    maxLength?: number;
-    autoComplete?: string;
-    required?: boolean;
 };
 
 export function TextField<T extends FieldValues>({
