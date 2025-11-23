@@ -32,10 +32,10 @@ export function UpdateProfilePage() {
         return <QueryError error={error} />;
     }
 
-    function onSubmit(data: UpdateProfileFormValues) {
+    function onSubmit(values: UpdateProfileFormValues) {
         updateProfile(
             {
-                ...data,
+                ...values,
                 version: profile?.version,
             },
             {

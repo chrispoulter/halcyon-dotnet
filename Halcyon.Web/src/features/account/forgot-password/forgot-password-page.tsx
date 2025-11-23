@@ -12,8 +12,8 @@ export function ForgotPasswordPage() {
 
     const { mutate: forgotPassword, isPending: isSaving } = useForgotPassword();
 
-    function onSubmit(data: ForgotPasswordFormValues) {
-        forgotPassword(data, {
+    function onSubmit(values: ForgotPasswordFormValues) {
+        forgotPassword(values, {
             onSuccess: () => {
                 toast.success(
                     'Instructions as to how to reset your password have been sent to you via email.'

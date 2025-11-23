@@ -13,8 +13,8 @@ export function CreateUserPage() {
 
     const { mutate: createUser, isPending: isSaving } = useCreateUser();
 
-    function onSubmit(data: CreateUserFormValues) {
-        createUser(data, {
+    function onSubmit(values: CreateUserFormValues) {
+        createUser(values, {
             onSuccess: () => {
                 toast.success('User successfully created.');
                 navigate('/users');

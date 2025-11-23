@@ -15,8 +15,8 @@ export function LoginPage() {
 
     const { mutate: login, isPending: isSaving } = useLogin();
 
-    function onSubmit(data: LoginFormValues) {
-        login(data, {
+    function onSubmit(values: LoginFormValues) {
+        login(values, {
             onSuccess: (data) => {
                 setAuth(data.accessToken);
                 navigate('/');
