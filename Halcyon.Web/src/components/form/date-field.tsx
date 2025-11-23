@@ -17,13 +17,13 @@ import {
 import { isInPast, toDateOnly, toDisplay } from '@/lib/dates';
 import { cn } from '@/lib/utils';
 
-interface DateFieldProps<T extends FieldValues> {
+type DateFieldProps<T extends FieldValues> = {
     control: Control<T>;
     name: FieldPath<T>;
     label: string;
     required?: boolean;
     disabled?: boolean;
-}
+};
 
 export function DateField<T extends FieldValues>({
     control,
@@ -51,7 +51,7 @@ export function DateField<T extends FieldValues>({
 
                 return (
                     <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor={name}>{label}</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
                         <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
                                 <Button

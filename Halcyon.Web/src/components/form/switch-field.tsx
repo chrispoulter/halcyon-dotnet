@@ -13,12 +13,12 @@ import {
 } from '@/components/ui/field';
 import { Switch } from '@/components/ui/switch';
 
-interface SwitchFieldProps<T extends FieldValues> {
+type SwitchFieldProps<T extends FieldValues> = {
     control: Control<T>;
     name: FieldPath<T>;
     disabled?: boolean;
     options: Record<string, { title: string; description: string }>;
-}
+};
 
 export function SwitchField<T extends FieldValues>({
     control,
@@ -58,7 +58,7 @@ export function SwitchField<T extends FieldValues>({
                                     >
                                         <FieldContent>
                                             <FieldLabel
-                                                htmlFor={`${name}-${key}`}
+                                                htmlFor={`${field.name}-${key}`}
                                             >
                                                 {title}
                                             </FieldLabel>
@@ -72,8 +72,8 @@ export function SwitchField<T extends FieldValues>({
                                             )}
                                         </FieldContent>
                                         <Switch
-                                            id={`${name}-${key}`}
-                                            name={name}
+                                            id={`${field.name}-${key}`}
+                                            name={field.name}
                                             checked={checked}
                                             value={key}
                                             onCheckedChange={onCheckChanged}

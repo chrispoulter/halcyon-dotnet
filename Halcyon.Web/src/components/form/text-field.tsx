@@ -7,12 +7,17 @@ import {
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
-interface TextFieldProps<T extends FieldValues>
-    extends React.ComponentProps<'input'> {
+type TextFieldProps<T extends FieldValues> = {
     control: Control<T>;
     name: FieldPath<T>;
     label?: string;
-}
+    type?: string;
+    placeholder?: string;
+    disabled?: boolean;
+    maxLength?: number;
+    autoComplete?: string;
+    required?: boolean;
+};
 
 export function TextField<T extends FieldValues>({
     control,
@@ -26,11 +31,14 @@ export function TextField<T extends FieldValues>({
             control={control}
             render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                    {label && <FieldLabel htmlFor={name}>{label}</FieldLabel>}
+                    {label && (
+                        <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+                    )}
                     <Input
-                        aria-invalid={fieldState.invalid}
                         {...props}
                         {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
                     />
                     {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
