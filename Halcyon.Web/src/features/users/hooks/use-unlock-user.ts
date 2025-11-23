@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type UnlockUserRequest = { version?: number };
 
 type UnlockUserResponse = {
-    userId: string;
+    id: string;
 };
 
 export const useUnlockUser = (id: string) => {
@@ -18,11 +18,11 @@ export const useUnlockUser = (id: string) => {
             apiClient.put<UnlockUserResponse>(`/users/${id}/unlock`, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
             });
         },
     });

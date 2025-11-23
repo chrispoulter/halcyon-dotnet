@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type LockUserRequest = { version?: number };
 
 type LockUserResponse = {
-    userId: string;
+    id: string;
 };
 
 export const useLockUser = (id: string) => {
@@ -18,11 +18,11 @@ export const useLockUser = (id: string) => {
             apiClient.put<LockUserResponse>(`/users/${id}/lock`, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
             });
         },
     });

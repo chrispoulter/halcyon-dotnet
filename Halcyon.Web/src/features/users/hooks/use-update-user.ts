@@ -13,7 +13,7 @@ type UpdateUserRequest = {
 };
 
 type UpdateUserResponse = {
-    userId: string;
+    id: string;
 };
 
 export const useUpdateUser = (id: string) => {
@@ -26,11 +26,11 @@ export const useUpdateUser = (id: string) => {
             apiClient.put<UpdateUserResponse>(`/users/${id}`, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
             });
         },
     });

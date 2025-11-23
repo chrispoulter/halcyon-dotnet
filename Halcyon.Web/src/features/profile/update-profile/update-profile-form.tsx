@@ -26,7 +26,7 @@ export type UpdateProfileFormValues = z.infer<typeof schema>;
 
 type UpdateProfileFormProps = {
     profile: GetProfileResponse;
-    onSubmit: (data: UpdateProfileFormValues) => void;
+    onSubmit: (values: UpdateProfileFormValues) => void;
     loading?: boolean;
     disabled?: boolean;
     children?: React.ReactNode;

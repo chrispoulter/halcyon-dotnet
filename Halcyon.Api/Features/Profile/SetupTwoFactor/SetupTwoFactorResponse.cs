@@ -1,3 +1,3 @@
 namespace Halcyon.Api.Features.Profile.SetupTwoFactor;
 
-public record SetupTwoFactorResponse(Guid UserId, string Secret, string OtpAuthUri);
+public record SetupTwoFactorResponse(Guid Id, string Secret, string OtpAuthUri);

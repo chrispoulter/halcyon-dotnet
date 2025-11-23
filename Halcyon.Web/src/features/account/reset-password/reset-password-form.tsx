@@ -24,7 +24,7 @@ export type ResetPasswordFormValues = z.infer<typeof schema>;
 
 type ResetPasswordFormProps = {
     loading?: boolean;
-    onSubmit: (data: ResetPasswordFormValues) => void;
+    onSubmit: (values: ResetPasswordFormValues) => void;
 };
 
 export function ResetPasswordForm({

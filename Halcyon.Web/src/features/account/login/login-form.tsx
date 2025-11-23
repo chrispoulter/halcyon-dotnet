@@ -15,7 +15,7 @@ export type LoginFormValues = z.infer<typeof schema>;
 
 type LoginFormProps = {
     loading?: boolean;
-    onSubmit: (data: LoginFormValues) => void;
+    onSubmit: (values: LoginFormValues) => void;
 };
 
 export function LoginForm({ loading, onSubmit }: LoginFormProps) {

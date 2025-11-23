@@ -17,7 +17,7 @@ export type SearchUsersFormValues = z.infer<typeof schema>;
 
 type SearchUsersFormProps = {
     search?: string;
-    onSubmit: (data: SearchUsersFormValues) => void;
+    onSubmit: (values: SearchUsersFormValues) => void;
     disabled?: boolean;
 };
 

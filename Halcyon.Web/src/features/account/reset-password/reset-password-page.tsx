@@ -16,11 +16,11 @@ export function ResetPasswordPage() {
 
     const { mutate: resetPassword, isPending: isSaving } = useResetPassword();
 
-    function onSubmit(data: ResetPasswordFormValues) {
+    function onSubmit(values: ResetPasswordFormValues) {
         resetPassword(
             {
                 token,
-                ...data,
+                ...values,
             },
             {
                 onSuccess: () => {

@@ -1,3 +1,3 @@
 namespace Halcyon.Api.Features.Profile.UpdateProfile;
 
-public record UpdateProfileResponse(Guid UserId);
+public record UpdateProfileResponse(Guid Id);

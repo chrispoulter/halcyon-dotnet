@@ -50,7 +50,7 @@ export function TwoFactorSetupDrawer({
                 setError(null);
                 setSecret(data.secret);
                 try {
-                    const url = await QRCode.toDataURL(data.otpauthUri, {
+                    const url = await QRCode.toDataURL(data.otpAuthUri, {
                         margin: 1,
                         width: 256,
                     });
@@ -209,9 +209,9 @@ export function TwoFactorSetupDrawer({
                                     verify.mutate(
                                         { code: code.trim() },
                                         {
-                                            onSuccess: (response) => {
+                                            onSuccess: (data) => {
                                                 setShowRecovery(
-                                                    response.recoveryCodes
+                                                    data.recoveryCodes
                                                 );
                                                 toast.success(
                                                     'Two-factor enabled'

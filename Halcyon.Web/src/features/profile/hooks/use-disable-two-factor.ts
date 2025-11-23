@@ -4,7 +4,7 @@ import { apiClient } from '@/lib/api-client';
 
 type DisableTwoFactorRequest = { version?: number };
 
-type DisableTwoFactorResponse = { userId: string };
+type DisableTwoFactorResponse = { id: string };
 
 export const useDisableTwoFactor = () => {
     const { accessToken } = useAuth();
@@ -20,10 +20,10 @@ export const useDisableTwoFactor = () => {
                     Authorization: `Bearer ${accessToken}`,
                 }
             ),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ['user', response.userId] });
+            queryClient.invalidateQueries({ queryKey: ['user', data.id] });
         },
     });
 };

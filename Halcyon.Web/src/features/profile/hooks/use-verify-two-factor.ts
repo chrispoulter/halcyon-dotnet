@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type VerifyTwoFactorRequest = { code: string; version?: number };
 
 type VerifyTwoFactorResponse = {
-    userId: string;
+    id: string;
     recoveryCodes: string[];
 };
 
@@ -23,11 +23,11 @@ export const useVerifyTwoFactor = () => {
                     Authorization: `Bearer ${accessToken}`,
                 }
             ),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
             });
         },
     });

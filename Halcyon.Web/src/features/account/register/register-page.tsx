@@ -12,8 +12,8 @@ export function RegisterPage() {
 
     const { mutate: register, isPending: isSaving } = useRegister();
 
-    function onSubmit(data: RegisterFormValues) {
-        register(data, {
+    function onSubmit(values: RegisterFormValues) {
+        register(values, {
             onSuccess: () => {
                 toast.success('User successfully registered.');
                 navigate('/account/login');

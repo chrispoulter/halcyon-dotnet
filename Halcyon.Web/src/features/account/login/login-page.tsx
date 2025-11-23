@@ -41,16 +41,16 @@ export function LoginPage() {
     const { mutate: loginWithRecoveryCode, isPending: isRecoveryCodeSaving } =
         useLoginWithRecoveryCode();
 
-    function onLoginSubmit(data: LoginFormValues) {
-        login(data, {
-            onSuccess: (response) => {
-                if (response.requiresTwoFactor) {
+    function onLoginSubmit(values: LoginFormValues) {
+        login(values, {
+            onSuccess: (data) => {
+                if (data.requiresTwoFactor) {
                     setState({
                         stage: 'TwoFactor',
-                        loginFormValues: data,
+                        loginFormValues: values,
                     });
-                } else if (response.accessToken) {
-                    setAuth(response.accessToken);
+                } else if (data.accessToken) {
+                    setAuth(data.accessToken);
                     navigate('/');
                 }
             },
@@ -65,8 +65,8 @@ export function LoginPage() {
                 recoveryCode: data.recoveryCode,
             },
             {
-                onSuccess: (response) => {
-                    setAuth(response.accessToken);
+                onSuccess: (data) => {
+                    setAuth(data.accessToken);
                     navigate('/');
                 },
                 onError: (error) => toast.error(error.message),
@@ -81,8 +81,8 @@ export function LoginPage() {
                 code: data.code,
             },
             {
-                onSuccess: (response) => {
-                    setAuth(response.accessToken);
+                onSuccess: (data) => {
+                    setAuth(data.accessToken);
                     navigate('/');
                 },
                 onError: (error) => toast.error(error.message),

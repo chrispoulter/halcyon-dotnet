@@ -39,10 +39,10 @@ export function UpdateUserPage() {
         return <QueryError error={error} />;
     }
 
-    function onSubmit(data: UpdateUserFormValues) {
+    function onSubmit(values: UpdateUserFormValues) {
         updateUser(
             {
-                ...data,
+                ...values,
                 version: user?.version,
             },
             {

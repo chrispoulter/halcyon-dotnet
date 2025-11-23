@@ -8,7 +8,7 @@ type ResetPasswordRequest = {
 };
 
 type ResetPasswordResponse = {
-    userId: string;
+    id: string;
 };
 
 export const useResetPassword = () => {
@@ -20,11 +20,11 @@ export const useResetPassword = () => {
                 '/account/reset-password',
                 request
             ),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
             });
         },
     });

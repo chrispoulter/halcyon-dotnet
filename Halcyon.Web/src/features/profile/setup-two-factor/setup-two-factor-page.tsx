@@ -17,7 +17,7 @@ export function SetupTwoFactorPage() {
     const {
         data: setupTwoFactor,
         isPending,
-        isFetching,
+        // isFetching,
         isSuccess,
         error,
     } = useSetupTwoFactor();

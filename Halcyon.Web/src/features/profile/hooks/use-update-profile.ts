@@ -22,10 +22,10 @@ export const useUpdateProfile = () => {
             apiClient.put<UpdateProfileResponse>('/profile', request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ['user', response.id] });
+            queryClient.invalidateQueries({ queryKey: ['user', data.id] });
         },
     });
 };

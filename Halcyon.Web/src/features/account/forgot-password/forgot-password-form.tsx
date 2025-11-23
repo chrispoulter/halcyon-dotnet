@@ -12,7 +12,7 @@ export type ForgotPasswordFormValues = z.infer<typeof schema>;
 
 type ForgotPasswordFormProps = {
     loading?: boolean;
-    onSubmit: (data: ForgotPasswordFormValues) => void;
+    onSubmit: (values: ForgotPasswordFormValues) => void;
 };
 
 export function ForgotPasswordForm({

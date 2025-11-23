@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type GenerateRecoveryCodesRequest = { version?: number };
 
 type GenerateRecoveryCodesResponse = {
-    userId: string;
+    id: string;
     recoveryCodes: string[];
 };
 
@@ -23,11 +23,11 @@ export const useGenerateRecoveryCodes = () => {
                     Authorization: `Bearer ${accessToken}`,
                 }
             ),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
             });
         },
     });

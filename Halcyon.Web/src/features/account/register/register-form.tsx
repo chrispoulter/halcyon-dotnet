@@ -37,7 +37,7 @@ export type RegisterFormValues = z.infer<typeof schema>;
 
 type RegisterFormProps = {
     loading?: boolean;
-    onSubmit: (data: RegisterFormValues) => void;
+    onSubmit: (values: RegisterFormValues) => void;
 };
 
 export function RegisterForm({ loading, onSubmit }: RegisterFormProps) {

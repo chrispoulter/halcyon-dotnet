@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type DeleteUserRequest = { version?: number };
 
 type DeleteUserResponse = {
-    userId: string;
+    id: string;
 };
 
 export const useDeleteUser = (id: string) => {
@@ -18,7 +18,7 @@ export const useDeleteUser = (id: string) => {
             apiClient.delete<DeleteUserResponse>(`/users/${id}`, request, {
                 Authorization: `Bearer ${accessToken}`,
             }),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
 
             queryClient.invalidateQueries({
@@ -27,7 +27,7 @@ export const useDeleteUser = (id: string) => {
             });
 
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
                 refetchType: 'none',
             });
         },

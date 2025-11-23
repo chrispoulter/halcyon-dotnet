@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type SetupTwoFactorRequest = { version?: number };
 
 type SetupTwoFactorResponse = {
-    userId: string;
+    id: string;
     secret: string;
     otpAuthUri: string;
 };
@@ -24,11 +24,11 @@ export const useSetupTwoFactor = () => {
                     Authorization: `Bearer ${accessToken}`,
                 }
             ),
-        onSuccess: (response) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({
-                queryKey: ['user', response.userId],
+                queryKey: ['user', data.id],
             });
         },
     });
