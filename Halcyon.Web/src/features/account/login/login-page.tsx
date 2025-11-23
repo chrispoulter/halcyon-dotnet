@@ -58,11 +58,11 @@ export function LoginPage() {
         });
     }
 
-    function onRecoveryCodeSubmit(data: LoginWithRecoveryCodeFormValues) {
-        loginWithRecoveryCode(
+    function onTwoFactorSubmit(data: LoginWithTwoFactorFormValues) {
+        loginWithTwoFactor(
             {
                 ...state.loginFormValues!,
-                recoveryCode: data.recoveryCode,
+                code: data.code,
             },
             {
                 onSuccess: (data) => {
@@ -74,11 +74,11 @@ export function LoginPage() {
         );
     }
 
-    function onTwoFactorSubmit(data: LoginWithTwoFactorFormValues) {
-        loginWithTwoFactor(
+    function onRecoveryCodeSubmit(data: LoginWithRecoveryCodeFormValues) {
+        loginWithRecoveryCode(
             {
                 ...state.loginFormValues!,
-                code: data.code,
+                recoveryCode: data.recoveryCode,
             },
             {
                 onSuccess: (data) => {
