@@ -42,6 +42,7 @@ export function LoginWithRecoveryCodeForm({
                 name="recoveryCode"
                 label="Recovery Code"
                 maxLength={50}
+                autoComplete="off"
                 required
                 disabled={loading}
             />
