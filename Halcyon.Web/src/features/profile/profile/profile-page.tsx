@@ -80,7 +80,7 @@ export function ProfilePage() {
 
             <div className="flex flex-col-reverse gap-2 sm:flex-row">
                 <Button>
-                    <Link to="/profile/configure-two-factor">
+                    <Link to="/profile/setup-two-factor">
                         Set Up Authenticator App
                     </Link>
                 </Button>

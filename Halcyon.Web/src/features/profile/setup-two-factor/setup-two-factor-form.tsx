@@ -6,8 +6,8 @@ import { LoadingButton } from '@/components/loading-button';
 
 const schema = z.object({
     code: z
-        .string({ message: 'Authenticator code must be a valid string' })
-        .min(1, 'Authenticator code is a required field'),
+        .string({ message: 'Verification code must be a valid string' })
+        .min(1, 'Verification code is a required field'),
 });
 
 export type SetupTwoFactorFormValues = z.infer<typeof schema>;
@@ -41,7 +41,7 @@ export function SetupTwoFactorForm({
             <TextField
                 control={form.control}
                 name="code"
-                label="Authenticator Code"
+                label="Verification Code"
                 type="text"
                 maxLength={6}
                 pattern="\d{6}"
