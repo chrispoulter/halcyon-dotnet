@@ -15,6 +15,17 @@ type TextFieldProps<T extends FieldValues> = {
     placeholder?: string;
     disabled?: boolean;
     maxLength?: number;
+    pattern?: string;
+    inputMode?:
+        | 'search'
+        | 'text'
+        | 'none'
+        | 'tel'
+        | 'url'
+        | 'email'
+        | 'numeric'
+        | 'decimal'
+        | undefined;
     autoComplete?: string;
     required?: boolean;
 };
