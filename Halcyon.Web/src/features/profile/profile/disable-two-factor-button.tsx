@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import {
     AlertDialog,
@@ -11,7 +10,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { useAuth } from '@/components/auth-provider';
 import { LoadingButton } from '@/components/loading-button';
 import type { GetProfileResponse } from '@/features/profile/hooks/use-get-profile';
 import { useDisableTwoFactor } from '@/features/profile/hooks/use-disable-two-factor';
@@ -27,10 +25,6 @@ export function DisableTwoFactorButton({
     disabled,
     className,
 }: DisableTwoFactorButtonProps) {
-    const navigate = useNavigate();
-
-    const { clearAuth } = useAuth();
-
     const { mutate: disableTwoFactor, isPending: isDisabling } =
         useDisableTwoFactor();
 
@@ -40,13 +34,10 @@ export function DisableTwoFactorButton({
                 version: profile.version,
             },
             {
-                onSuccess: () => {
+                onSuccess: () =>
                     toast.success(
                         'Two-factor authentication has been disabled.'
-                    );
-                    clearAuth();
-                    navigate('/');
-                },
+                    ),
                 onError: (error) => toast.error(error.message),
             }
         );

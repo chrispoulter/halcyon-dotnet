@@ -101,9 +101,9 @@ export function SetupTwoFactorPage() {
                 </li>
                 <li>
                     Scan the QR Code or enter this key{' '}
-                    <kbd className="bg-muted rounded p-1 font-mono font-semibold">
+                    <code className="bg-muted rounded p-1 font-mono font-semibold">
                         {setupTwoFactor.secret}
-                    </kbd>{' '}
+                    </code>{' '}
                     into your two factor authenticator app. Spaces and casing do
                     not matter.
                     <QRCodeSVG

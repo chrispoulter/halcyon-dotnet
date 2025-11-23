@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
@@ -9,13 +9,14 @@ type GenerateRecoveryCodesResponse = {
     recoveryCodes: string[];
 };
 
-export const useGenerateRecoveryCodes = () => {
+export const useGenerateRecoveryCodes = (
+    request: GenerateRecoveryCodesRequest
+) => {
     const { accessToken } = useAuth();
 
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: (request: GenerateRecoveryCodesRequest) =>
+    return useQuery({
+        queryKey: ['recovery-codes'],
+        queryFn: () =>
             apiClient.put<GenerateRecoveryCodesResponse>(
                 '/profile/generate-recovery-codes',
                 request,
@@ -23,12 +24,5 @@ export const useGenerateRecoveryCodes = () => {
                     Authorization: `Bearer ${accessToken}`,
                 }
             ),
-        onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['profile'] });
-            queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({
-                queryKey: ['user', data.id],
-            });
-        },
     });
 };
