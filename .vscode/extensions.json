@@ -4,7 +4,6 @@
     "ms-dotnettools.vscode-dotnet-runtime",
     "ms-dotnettools.csharp",
     "ms-dotnettools.csdevkit",
-    "ms-dotnettools.vscodeintellicode-csharp",
     "microsoft-aspire.aspire-vscode",
     "mikestead.dotenv",
     "dbaeumer.vscode-eslint",
