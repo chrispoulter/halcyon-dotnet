@@ -8,5 +8,6 @@
   },
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+  "aspire.enableAspireDashboardAutoLaunch": false
 }
