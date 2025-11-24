@@ -52,12 +52,12 @@ public class UpdateProfileEndpoint : IEndpoint
             )
         )
         {
-            var existing = await dbContext.Users.AnyAsync(
+            var existingUser = await dbContext.Users.AnyAsync(
                 u => u.EmailAddress == request.EmailAddress,
                 cancellationToken
             );
 
-            if (existing)
+            if (existingUser)
             {
                 return Results.Problem(
                     statusCode: StatusCodes.Status400BadRequest,

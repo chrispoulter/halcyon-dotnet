@@ -11,6 +11,7 @@ public record SearchUserResponse(
     string EmailAddress,
     string FirstName,
     string LastName,
+    bool IsTwoFactorEnabled,
     bool IsLockedOut,
     List<string>? Roles
 );

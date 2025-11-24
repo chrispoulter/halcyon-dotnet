@@ -51,6 +51,12 @@ namespace Halcyon.Api.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_locked_out");
 
+                    b.Property<bool>("IsTwoFactorEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_two_factor_enabled");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text")
@@ -60,8 +66,8 @@ namespace Halcyon.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password");
 
-                    b.Property<Guid?>("PasswordResetToken")
-                        .HasColumnType("uuid")
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("text")
                         .HasColumnName("password_reset_token");
 
                     b.PrimitiveCollection<List<string>>("Roles")
@@ -75,6 +81,18 @@ namespace Halcyon.Api.Migrations
                         .HasColumnName("search_vector")
                         .HasAnnotation("Npgsql:TsVectorConfig", "english")
                         .HasAnnotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "EmailAddress" });
+
+                    b.PrimitiveCollection<List<string>>("TwoFactorRecoveryCodes")
+                        .HasColumnType("text[]")
+                        .HasColumnName("two_factor_recovery_codes");
+
+                    b.Property<string>("TwoFactorSecret")
+                        .HasColumnType("text")
+                        .HasColumnName("two_factor_secret");
+
+                    b.Property<string>("TwoFactorTempSecret")
+                        .HasColumnType("text")
+                        .HasColumnName("two_factor_temp_secret");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()

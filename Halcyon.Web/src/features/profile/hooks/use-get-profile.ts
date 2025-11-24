@@ -8,6 +8,7 @@ export type GetProfileResponse = {
     firstName: string;
     lastName: string;
     dateOfBirth: string;
+    isTwoFactorEnabled: boolean;
     version: number;
 };
 

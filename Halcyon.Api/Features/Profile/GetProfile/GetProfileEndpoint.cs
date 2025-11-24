@@ -39,6 +39,7 @@ public class GetProfileEndpoint : IEndpoint
             user.FirstName,
             user.LastName,
             user.DateOfBirth,
+            user.IsTwoFactorEnabled,
             user.Version
         );
 

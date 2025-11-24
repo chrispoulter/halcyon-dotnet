@@ -29,7 +29,9 @@ export const useUpdateUser = (id: string) => {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ['user', data.id] });
+            queryClient.invalidateQueries({
+                queryKey: ['user', data.id],
+            });
         },
     });
 };

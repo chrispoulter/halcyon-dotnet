@@ -36,9 +36,9 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        var verified = passwordHasher.VerifyPassword(request.Password, user.Password);
+        var passwordVerified = passwordHasher.VerifyPassword(request.Password, user.Password);
 
-        if (!verified)
+        if (!passwordVerified)
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -54,9 +54,12 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        var token = jwtTokenGenerator.GenerateJwtToken(user);
-        var result = new LoginResponse(token);
+        if (user.IsTwoFactorEnabled)
+        {
+            return Results.Ok(new LoginResponse(true, null));
+        }
 
-        return Results.Ok(result);
+        var token = jwtTokenGenerator.GenerateJwtToken(user);
+        return Results.Ok(new LoginResponse(false, token));
     }
 }
