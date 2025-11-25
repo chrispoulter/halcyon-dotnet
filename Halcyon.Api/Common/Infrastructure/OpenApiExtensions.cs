@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi;
 
@@ -15,8 +16,18 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        document.Servers?.Clear();
+                        var version = Assembly.GetExecutingAssembly().GetSemverVersion();
 
+                        document.Info ??= new OpenApiInfo();
+                        document.Info.Version = version;
+
+                        return Task.CompletedTask;
+                    }
+                );
+
+                options.AddDocumentTransformer(
+                    (document, context, cancellationToken) =>
+                    {
                         var securitySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                         {
                             [JwtBearerDefaults.AuthenticationScheme] = new OpenApiSecurityScheme
