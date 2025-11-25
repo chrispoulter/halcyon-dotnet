@@ -83,7 +83,6 @@ export function ProfilePage() {
             </p>
 
             <DeleteAccountButton
-                profile={profile}
                 disabled={isFetching}
                 className="w-full sm:w-auto"
             />
