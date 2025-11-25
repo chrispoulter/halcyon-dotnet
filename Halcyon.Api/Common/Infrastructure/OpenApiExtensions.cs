@@ -31,9 +31,9 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        var baseUrl = Environment.GetEnvironmentVariable("APP_BASE_URL");
+                        var baseUrl = builder.Configuration.GetValue("APP_BASE_URL", string.Empty);
 
-                        if (string.IsNullOrWhiteSpace(baseUrl))
+                        if (!string.IsNullOrEmpty(baseUrl))
                         {
                             document.Servers ??= [];
                             document.Servers = [new OpenApiServer { Url = baseUrl }];
