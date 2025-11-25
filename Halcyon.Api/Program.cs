@@ -23,14 +23,6 @@ builder.Services.AddMigration<HalcyonDbContext, HalcyonDbSeeder>();
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddProblemDetails();
 
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders =
-        ForwardedHeaders.XForwardedFor
-        | ForwardedHeaders.XForwardedProto
-        | ForwardedHeaders.XForwardedHost;
-});
-
 builder.ConfigureJsonOptions();
 builder.AddAuthentication();
 builder.AddSecurityServices();
@@ -41,7 +33,6 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseCors();
-app.UseForwardedHeaders();
 app.UseAuthentication();
 app.UseAuthorization();
 
