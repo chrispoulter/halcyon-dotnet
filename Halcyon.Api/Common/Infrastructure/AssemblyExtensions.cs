@@ -17,6 +17,6 @@ public static partial class AssemblyExtensions
         return match.Success ? match.Groups[1].Value : "1.0.0";
     }
 
-    [GeneratedRegex(@"\b(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)")]
+    [GeneratedRegex(@"^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)")]
     private static partial Regex SemVerPattern();
 }

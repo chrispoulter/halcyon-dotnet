@@ -5,6 +5,7 @@ using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Email;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var assembly = Assembly.GetExecutingAssembly();
 
@@ -32,7 +33,13 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseCors();
-app.UseForwardedHeaders();
+
+var opts = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost,
+};
+app.UseForwardedHeaders(opts);
+
 app.UseAuthentication();
 app.UseAuthorization();
 
