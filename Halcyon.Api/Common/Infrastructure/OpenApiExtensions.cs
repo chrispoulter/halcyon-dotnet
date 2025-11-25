@@ -19,7 +19,7 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        var version = assembly.GetFullSemVer();
+                        var version = assembly.GetTagVersion();
 
                         document.Info ??= new OpenApiInfo();
                         document.Info.Version = version;
