@@ -40,8 +40,7 @@ public class GetUserEndpoint : IEndpoint
             user.LastName,
             user.DateOfBirth,
             user.IsLockedOut,
-            user.Roles,
-            user.Version
+            user.Roles
         );
 
         return Results.Ok(result);

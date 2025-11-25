@@ -5,6 +5,5 @@ public record GetProfileResponse(
     string EmailAddress,
     string FirstName,
     string LastName,
-    DateOnly DateOfBirth,
-    uint Version
+    DateOnly DateOfBirth
 );

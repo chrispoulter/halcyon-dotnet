@@ -9,7 +9,6 @@ type UpdateUserRequest = {
     lastName: string;
     dateOfBirth: string;
     roles?: Role[];
-    version?: number;
 };
 
 type UpdateUserResponse = {

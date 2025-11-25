@@ -5,7 +5,6 @@ import { apiClient } from '@/lib/api-client';
 type ChangePasswordRequest = {
     currentPassword: string;
     newPassword: string;
-    version?: number;
 };
 
 type ChangePasswordResponse = { id: string };

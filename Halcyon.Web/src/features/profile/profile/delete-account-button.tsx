@@ -13,17 +13,14 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useAuth } from '@/components/auth-provider';
 import { LoadingButton } from '@/components/loading-button';
-import type { GetProfileResponse } from '@/features/profile/hooks/use-get-profile';
 import { useDeleteAccount } from '@/features/profile/hooks/use-delete-account';
 
 type DeleteAccountButtonProps = {
-    profile: GetProfileResponse;
     disabled?: boolean;
     className?: string;
 };
 
 export function DeleteAccountButton({
-    profile,
     disabled,
     className,
 }: DeleteAccountButtonProps) {
@@ -34,19 +31,14 @@ export function DeleteAccountButton({
     const { mutate: deleteAccount, isPending: isDeleting } = useDeleteAccount();
 
     function onDelete() {
-        deleteAccount(
-            {
-                version: profile.version,
+        deleteAccount(undefined, {
+            onSuccess: () => {
+                toast.success('Your account has been deleted.');
+                clearAuth();
+                navigate('/');
             },
-            {
-                onSuccess: () => {
-                    toast.success('Your account has been deleted.');
-                    clearAuth();
-                    navigate('/');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (

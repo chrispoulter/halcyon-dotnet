@@ -37,14 +37,6 @@ public class UpdateProfileEndpoint : IEndpoint
             );
         }
 
-        if (request.Version is not null && request.Version != user.Version)
-        {
-            return Results.Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Data has been modified since entities were loaded."
-            );
-        }
-
         if (
             !request.EmailAddress.Equals(
                 user.EmailAddress,

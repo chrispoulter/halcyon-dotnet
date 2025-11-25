@@ -40,19 +40,13 @@ export function UpdateUserPage() {
     }
 
     function onSubmit(values: UpdateUserFormValues) {
-        updateUser(
-            {
-                ...values,
-                version: user?.version,
+        updateUser(values, {
+            onSuccess: () => {
+                toast.success('User successfully updated.');
+                navigate('/users');
             },
-            {
-                onSuccess: () => {
-                    toast.success('User successfully updated.');
-                    navigate('/users');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (

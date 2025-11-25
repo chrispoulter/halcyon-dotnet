@@ -28,15 +28,10 @@ export function LockUserButton({
     const { mutate: lockUser, isPending: isLocking } = useLockUser(user.id);
 
     function onLock() {
-        lockUser(
-            {
-                version: user.version,
-            },
-            {
-                onSuccess: () => toast.success('User successfully locked.'),
-                onError: (error) => toast.error(error.message),
-            }
-        );
+        lockUser(undefined, {
+            onSuccess: () => toast.success('User successfully locked.'),
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (
