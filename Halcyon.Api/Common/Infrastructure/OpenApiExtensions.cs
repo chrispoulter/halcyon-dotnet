@@ -33,11 +33,7 @@ public static class OpenApiExtensions
                     {
                         foreach (var server in document.Servers ?? [])
                         {
-                            server.Url = server.Url?.Replace(
-                                "http://",
-                                "https://",
-                                StringComparison.OrdinalIgnoreCase
-                            );
+                            server.Url = server.Url?.Replace("http://", "https://");
                         }
 
                         return Task.CompletedTask;
