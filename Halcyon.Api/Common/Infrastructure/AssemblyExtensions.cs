@@ -5,7 +5,7 @@ namespace Halcyon.Api.Common.Infrastructure;
 
 public static partial class AssemblyExtensions
 {
-    public static string GetSemverVersion(this Assembly assembly)
+    public static string GetSemVer(this Assembly assembly)
     {
         var informationalVersion =
             assembly

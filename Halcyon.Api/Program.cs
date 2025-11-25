@@ -26,12 +26,13 @@ builder.ConfigureJsonOptions();
 builder.AddAuthentication();
 builder.AddSecurityServices();
 builder.AddCors();
-builder.AddOpenApi();
+builder.AddOpenApi(assembly);
 
 var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseCors();
+app.UseForwardedHeaders();
 app.UseAuthentication();
 app.UseAuthorization();
 

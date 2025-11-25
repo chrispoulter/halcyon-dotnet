@@ -7,7 +7,10 @@ namespace Halcyon.Api.Common.Infrastructure;
 
 public static class OpenApiExtensions
 {
-    public static IHostApplicationBuilder AddOpenApi(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddOpenApi(
+        this IHostApplicationBuilder builder,
+        Assembly assembly
+    )
     {
         builder.Services.AddOpenApi(
             "v1",
@@ -16,7 +19,7 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        var version = Assembly.GetExecutingAssembly().GetSemverVersion();
+                        var version = assembly.GetSemVer();
 
                         document.Info ??= new OpenApiInfo();
                         document.Info.Version = version;
