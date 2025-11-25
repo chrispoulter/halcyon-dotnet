@@ -31,12 +31,7 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        if (document.Servers is null)
-                        {
-                            return Task.CompletedTask;
-                        }
-
-                        foreach (var server in document.Servers)
+                        foreach (var server in document.Servers ?? [])
                         {
                             server.Url = server.Url?.Replace(
                                 "http://",
