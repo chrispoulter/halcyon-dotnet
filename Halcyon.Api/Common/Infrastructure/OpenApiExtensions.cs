@@ -31,6 +31,21 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
+                        var baseUrl = Environment.GetEnvironmentVariable("APP_BASE_URL");
+
+                        if (string.IsNullOrWhiteSpace(baseUrl))
+                        {
+                            document.Servers ??= [];
+                            document.Servers = [new OpenApiServer { Url = baseUrl }];
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                );
+
+                options.AddDocumentTransformer(
+                    (document, context, cancellationToken) =>
+                    {
                         var securitySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                         {
                             [JwtBearerDefaults.AuthenticationScheme] = new OpenApiSecurityScheme
