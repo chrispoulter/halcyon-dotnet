@@ -19,22 +19,10 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        var version = assembly.GetSemVer();
+                        var version = assembly.GetFullSemVer();
 
                         document.Info ??= new OpenApiInfo();
                         document.Info.Version = version;
-
-                        return Task.CompletedTask;
-                    }
-                );
-
-                options.AddDocumentTransformer(
-                    (document, context, cancellationToken) =>
-                    {
-                        foreach (var server in document.Servers ?? [])
-                        {
-                            server.Url = server.Url?.Replace("http://", "https://");
-                        }
 
                         return Task.CompletedTask;
                     }
