@@ -5,7 +5,7 @@ namespace Halcyon.Api.Common.Infrastructure;
 
 public static partial class AssemblyExtensions
 {
-    public static string? GetDisplayVersion(this Assembly assembly)
+    public static string? GetSemVerShortSha(this Assembly assembly)
     {
         var informationalVersion = assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
@@ -16,15 +16,13 @@ public static partial class AssemblyExtensions
             return null;
         }
 
-        var match = DisplayVersionPattern().Match(informationalVersion);
+        var match = SemVerShortShaPattern().Match(informationalVersion);
 
-        return match.Success
-            ? $"{match.Groups[1].Value}-{match.Groups[2].Value}"
-            : null;
+        return match.Success ? $"{match.Groups[1].Value}-{match.Groups[2].Value}" : null;
     }
 
     [GeneratedRegex(
         @"^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)(?:\+[0-9A-Za-z]+)\.Branch\.[^.]+\.Sha\.([0-9A-Fa-f]{7})"
     )]
-    private static partial Regex DisplayVersionPattern();
+    private static partial Regex SemVerShortShaPattern();
 }
