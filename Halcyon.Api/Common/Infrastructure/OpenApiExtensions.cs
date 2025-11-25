@@ -31,12 +31,18 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        var baseUrl = builder.Configuration.GetValue("APP_BASE_URL", string.Empty);
-
-                        if (!string.IsNullOrEmpty(baseUrl))
+                        if (document.Servers is null)
                         {
-                            document.Servers ??= [];
-                            document.Servers = [new OpenApiServer { Url = baseUrl }];
+                            return Task.CompletedTask;
+                        }
+
+                        foreach (var server in document.Servers)
+                        {
+                            server.Url = server.Url?.Replace(
+                                "http://",
+                                "https://",
+                                StringComparison.OrdinalIgnoreCase
+                            );
                         }
 
                         return Task.CompletedTask;
