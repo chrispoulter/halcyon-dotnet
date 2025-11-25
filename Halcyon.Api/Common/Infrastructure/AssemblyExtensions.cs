@@ -20,7 +20,7 @@ public static partial class AssemblyExtensions
     }
 
     [GeneratedRegex(
-        @"^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)(?:\+[0-9A-Za-z]+)\.Branch\.[^.]+\.Sha\.([0-9A-Fa-f]{6})"
+        @"^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)(?:\+[0-9A-Za-z]+)\.Branch\.[^.]+\.Sha\.([0-9A-Fa-f]{7})"
     )]
     private static partial Regex DisplayVersionPattern();
 }
