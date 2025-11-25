@@ -30,15 +30,10 @@ export function UnlockUserButton({
     );
 
     function onUnlock() {
-        unlockUser(
-            {
-                version: user.version,
-            },
-            {
-                onSuccess: () => toast.success('User successfully unlocked.'),
-                onError: (error) => toast.error(error.message),
-            }
-        );
+        unlockUser(undefined, {
+            onSuccess: () => toast.success('User successfully unlocked.'),
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (

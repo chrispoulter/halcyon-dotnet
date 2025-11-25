@@ -38,8 +38,7 @@ public class GetProfileEndpoint : IEndpoint
             user.EmailAddress,
             user.FirstName,
             user.LastName,
-            user.DateOfBirth,
-            user.Version
+            user.DateOfBirth
         );
 
         return Results.Ok(result);

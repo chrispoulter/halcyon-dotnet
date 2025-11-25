@@ -2,8 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
-type LockUserRequest = { version?: number };
-
 type LockUserResponse = {
     id: string;
 };
@@ -14,8 +12,8 @@ export const useLockUser = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (request: LockUserRequest) =>
-            apiClient.put<LockUserResponse>(`/users/${id}/lock`, request, {
+        mutationFn: () =>
+            apiClient.put<LockUserResponse>(`/users/${id}/lock`, undefined, {
                 Authorization: `Bearer ${accessToken}`,
             }),
         onSuccess: (data) => {

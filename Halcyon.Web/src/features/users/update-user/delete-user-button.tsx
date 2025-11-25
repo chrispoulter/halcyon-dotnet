@@ -33,18 +33,13 @@ export function DeleteUserButton({
     );
 
     function onDelete() {
-        deleteUser(
-            {
-                version: user.version,
+        deleteUser(undefined, {
+            onSuccess: () => {
+                toast.success('User successfully deleted.');
+                navigate('/users');
             },
-            {
-                onSuccess: () => {
-                    toast.success('User successfully deleted.');
-                    navigate('/users');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (

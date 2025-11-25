@@ -11,7 +11,6 @@ export type GetUserResponse = {
     dateOfBirth: string;
     isLockedOut?: boolean;
     roles?: Role[];
-    version: number;
 };
 
 export const useGetUser = (id: string) => {

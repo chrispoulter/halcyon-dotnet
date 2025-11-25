@@ -8,7 +8,6 @@ export type GetProfileResponse = {
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-    version: number;
 };
 
 export const useGetProfile = () => {

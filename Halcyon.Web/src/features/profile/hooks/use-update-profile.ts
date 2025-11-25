@@ -7,7 +7,6 @@ type UpdateProfileRequest = {
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-    version?: number;
 };
 
 type UpdateProfileResponse = { id: string };
