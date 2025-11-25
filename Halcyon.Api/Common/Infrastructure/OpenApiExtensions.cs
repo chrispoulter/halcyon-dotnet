@@ -15,6 +15,8 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
+                        document.Servers?.Clear();
+
                         var securitySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                         {
                             [JwtBearerDefaults.AuthenticationScheme] = new OpenApiSecurityScheme
