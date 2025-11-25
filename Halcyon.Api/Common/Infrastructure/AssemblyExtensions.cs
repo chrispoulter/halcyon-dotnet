@@ -5,18 +5,22 @@ namespace Halcyon.Api.Common.Infrastructure;
 
 public static partial class AssemblyExtensions
 {
-    public static string GetTagVersion(this Assembly assembly)
+    public static string? GetDisplayVersion(this Assembly assembly)
     {
-        var informationalVersion =
-            assembly
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion ?? string.Empty;
+        var informationalVersion = assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion;
+
+        if (informationalVersion is null)
+        {
+            return null;
+        }
 
         var match = DisplayVersionPattern().Match(informationalVersion);
 
         return match.Success
             ? $"{match.Groups[1].Value}-{match.Groups[2].Value}"
-            : informationalVersion;
+            : null;
     }
 
     [GeneratedRegex(
