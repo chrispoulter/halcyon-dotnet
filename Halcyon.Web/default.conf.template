@@ -1,6 +1,6 @@
 server {
-    listen       ${VITE_PORT};
-    listen  [::]:${VITE_PORT};
+    listen       ${PORT};
+    listen  [::]:${PORT};
     server_name  localhost;
 
     access_log  /var/log/nginx/server.access.log  main;

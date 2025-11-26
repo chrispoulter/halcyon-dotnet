@@ -27,7 +27,7 @@ var api = builder
 var web = builder
     .AddJavaScriptApp("web", "../Halcyon.Web")
     .WithEnvironment("BROWSER", "none")
-    .WithHttpEndpoint(env: "VITE_PORT", port: 5173)
+    .WithHttpEndpoint(env: "PORT", port: 5173)
     .WithExternalHttpEndpoints()
     .WithReference(api)
     .WaitFor(api)
