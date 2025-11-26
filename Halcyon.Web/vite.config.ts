@@ -24,7 +24,6 @@ export default defineConfig(({ mode }) => {
                     target: env.API_HTTPS || env.API_HTTP,
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/api/, ''),
-                    secure: false,
                 },
             },
         },
