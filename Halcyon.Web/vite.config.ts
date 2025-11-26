@@ -25,15 +25,9 @@ export default defineConfig(({ mode }) => {
                         env.services__api__https__0 ||
                         env.services__api__http__0,
                     changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/api/, ''),
                     secure: false,
+                    rewrite: (path) => path.replace(/^\/api/, ''),
                 },
-            },
-        },
-        build: {
-            outDir: 'dist',
-            rollupOptions: {
-                input: './index.html',
             },
         },
     };
