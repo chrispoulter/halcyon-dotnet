@@ -35,7 +35,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapOpenApiWithSwagger();
+app.MapOpenApiWithUI(assembly);
 app.MapEndpoints(assembly);
 app.MapDefaultEndpoints();
 

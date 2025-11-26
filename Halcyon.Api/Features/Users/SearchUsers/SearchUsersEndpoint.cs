@@ -14,7 +14,11 @@ public class SearchUsersEndpoint : IEndpoint
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<SearchUsersRequest>()
             .Produces<SearchUsersResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Search Users")
+            .WithDescription(
+                "Search for user accounts with optional filtering, sorting, and pagination."
+            );
     }
 
     private static async Task<IResult> HandleAsync(

@@ -12,7 +12,9 @@ public class DeleteProfileEndpoint : IEndpoint
         app.MapDelete("/profile", HandleAsync)
             .RequireAuthorization()
             .Produces<DeleteProfileResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Delete Profile")
+            .WithDescription("Delete the profile of the current user.");
     }
 
     private static async Task<IResult> HandleAsync(

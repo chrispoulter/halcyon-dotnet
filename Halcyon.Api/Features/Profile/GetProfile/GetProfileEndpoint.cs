@@ -12,7 +12,9 @@ public class GetProfileEndpoint : IEndpoint
         app.MapGet("/profile", HandleAsync)
             .RequireAuthorization()
             .Produces<GetProfileResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Get Profile")
+            .WithDescription("Retrieve the profile of the current user.");
     }
 
     private static async Task<IResult> HandleAsync(

@@ -15,7 +15,9 @@ public class CreateUserEndpoint : IEndpoint
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<CreateUserRequest>()
             .Produces<CreateUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Create User")
+            .WithDescription("Create a new user account.");
     }
 
     private static async Task<IResult> HandleAsync(

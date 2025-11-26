@@ -14,7 +14,9 @@ public class UpdateProfileEndpoint : IEndpoint
             .RequireAuthorization()
             .AddValidationFilter<UpdateProfileRequest>()
             .Produces<UpdateProfileResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Update Profile")
+            .WithDescription("Update the profile of the current user.");
     }
 
     private static async Task<IResult> HandleAsync(

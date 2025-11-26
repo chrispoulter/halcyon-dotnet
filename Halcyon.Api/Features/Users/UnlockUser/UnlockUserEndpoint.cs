@@ -12,7 +12,9 @@ public class UnlockUserEndpoint : IEndpoint
         app.MapPut("/users/{id}/unlock", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<UnlockUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Unlock User")
+            .WithDescription("Unlock a user account by ID.");
     }
 
     private static async Task<IResult> HandleAsync(
