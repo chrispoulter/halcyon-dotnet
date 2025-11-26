@@ -14,7 +14,9 @@ public class ChangePasswordEndpoint : IEndpoint
             .RequireAuthorization()
             .AddValidationFilter<ChangePasswordRequest>()
             .Produces<ChangePasswordResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Change Password")
+            .WithDescription("Change the password for the current user.");
     }
 
     private static async Task<IResult> HandleAsync(

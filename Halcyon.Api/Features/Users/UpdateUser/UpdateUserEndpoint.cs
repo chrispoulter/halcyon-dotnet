@@ -14,7 +14,9 @@ public class UpdateUserEndpoint : IEndpoint
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<UpdateUserRequest>()
             .Produces<UpdateUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Update User")
+            .WithDescription("Update a user account by ID.");
     }
 
     private static async Task<IResult> HandleAsync(

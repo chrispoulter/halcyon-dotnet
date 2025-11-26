@@ -12,7 +12,9 @@ public class LockUserEndpoint : IEndpoint
         app.MapPut("/users/{id}/lock", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<LockUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Lock User")
+            .WithDescription("Lock a user account by ID.");
     }
 
     private static async Task<IResult> HandleAsync(
