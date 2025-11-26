@@ -367,4 +367,4 @@ appSettings.*.json
 
 .idea
 .azure
-.aspire-output
+aspire-output
