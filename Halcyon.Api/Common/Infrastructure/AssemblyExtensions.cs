@@ -18,11 +18,13 @@ public static partial class AssemblyExtensions
 
         var match = SemVerShortShaPattern().Match(informationalVersion);
 
-        return match.Success ? $"{match.Groups[1].Value}-{match.Groups[2].Value}" : null;
+        return match.Success
+            ? $"{match.Groups["semver"].Value}-{match.Groups["commit"].Value}"
+            : null;
     }
 
     [GeneratedRegex(
-        @"^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)(?:\+[0-9A-Za-z]+)\.Branch\.[^.]+\.Sha\.([0-9A-Fa-f]{7})"
+        @"^(?<semver>\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)\+.*?(?:Sha\.)?(?<commit>[0-9A-Fa-f]{7})[0-9A-Fa-f]{33}(?:\.[0-9A-Fa-f]{40})?"
     )]
     private static partial Regex SemVerShortShaPattern();
 }
