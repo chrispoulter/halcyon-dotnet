@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
             },
         },
         server: {
-            port: parseInt(env.PORT),
+            port: parseInt(env.VITE_PORT),
             proxy: {
                 '/api': {
                     target: env.API_HTTPS || env.API_HTTP,

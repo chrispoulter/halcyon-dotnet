@@ -7,8 +7,8 @@ services:
       context: ./Halcyon.Web
       dockerfile: Dockerfile
     environment:
-      PORT: 5173
-      API_HTTP: https://host.docker.internal:7257
+      VITE_PORT: 5173
+      API_HTTPS: https://host.docker.internal:7257
     ports:
       - 5173:5173
 
