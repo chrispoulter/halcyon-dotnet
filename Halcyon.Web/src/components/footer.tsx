@@ -16,7 +16,7 @@ export function Footer() {
                     {currentYear}
                 </div>
                 <div className="text-sm leading-none font-medium">
-                    {config.VERSION} | {config.VITE_RUNTIME_VALUE_1} |{' '}
+                    v{config.VERSION} | {config.VITE_RUNTIME_VALUE_1} |{' '}
                     {config.VITE_RUNTIME_VALUE_2}
                 </div>
             </div>

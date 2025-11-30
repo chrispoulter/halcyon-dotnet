@@ -16,7 +16,7 @@ function resolveRuntimeConfig<T extends Record<string, string>>(source: T): T {
     const resolved: T = { ...source };
 
     for (const [key, value] of Object.entries(env)) {
-        if (!env[key].startsWith('${')) {
+        if (key in source && !value.startsWith('${')) {
             resolved[key as keyof T] = value as T[keyof T];
         }
     }
