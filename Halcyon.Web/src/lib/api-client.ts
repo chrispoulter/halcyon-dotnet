@@ -131,4 +131,4 @@ class ApiClient {
     }
 }
 
-export const apiClient = new ApiClient(config.VITE_API_URL);
+export const apiClient = new ApiClient(config.API_URL);
