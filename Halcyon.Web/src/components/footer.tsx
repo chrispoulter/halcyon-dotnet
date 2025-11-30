@@ -1,5 +1,5 @@
-import { config } from '@/lib/config';
 import { currentYear } from '@/lib/dates';
+import { config } from '@/lib/config';
 
 export function Footer() {
     return (
@@ -16,7 +16,8 @@ export function Footer() {
                     {currentYear}
                 </div>
                 <div className="text-sm leading-none font-medium">
-                    v{config.VERSION}
+                    {config.VERSION} | {config.VITE_RUNTIME_VALUE_1} |{' '}
+                    {config.VITE_RUNTIME_VALUE_2}
                 </div>
             </div>
         </footer>
