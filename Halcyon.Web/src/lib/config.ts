@@ -12,7 +12,6 @@ export const config = resolveRuntimeConfig({
 });
 
 function resolveRuntimeConfig<T extends Record<string, string>>(source: T): T {
-    console.log('Resolving runtime config...', source);
     const env = window.__ENV__ || {};
     const resolved: T = { ...source };
 
