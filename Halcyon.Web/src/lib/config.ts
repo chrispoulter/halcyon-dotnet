@@ -1,6 +1,6 @@
 declare global {
     interface Window {
-        __ENV__: Record<string, string>;
+        __ENV__?: Record<string, string>;
     }
 }
 
@@ -11,16 +11,14 @@ export const config = resolveRuntimeConfig({
     VITE_RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
 });
 
-function resolveRuntimeConfig(source: Record<string, string>) {
-    if (!window.__ENV__) {
-        return source;
-    }
+function resolveRuntimeConfig<T extends Record<string, string>>(source: T): T {
+    console.log('Resolving runtime config...', source);
+    const env = window.__ENV__ || {};
+    const resolved: T = { ...source };
 
-    const resolved = { ...source };
-
-    for (const [key, value] of Object.entries(window.__ENV__)) {
-        if (!value.startsWith('${')) {
-            resolved[key] = value;
+    for (const [key, value] of Object.entries(env)) {
+        if (!env[key].startsWith('${')) {
+            resolved[key as keyof T] = value as T[keyof T];
         }
     }
 
