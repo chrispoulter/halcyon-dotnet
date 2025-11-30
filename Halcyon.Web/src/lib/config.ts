@@ -12,12 +12,13 @@ export const config = resolveRuntimeConfig({
 });
 
 function resolveRuntimeConfig<T extends Record<string, string>>(source: T): T {
-    const env = window.__ENV__ || {};
     const resolved: T = { ...source };
 
-    for (const [key, value] of Object.entries(env)) {
-        if (key in source && !value.startsWith('${')) {
-            resolved[key as keyof T] = value as T[keyof T];
+    for (const key of Object.keys(source)) {
+        const runtimeValue = window.__ENV__?.[key];
+
+        if (runtimeValue && !runtimeValue.startsWith('${')) {
+            resolved[key as keyof T] = runtimeValue as T[keyof T];
         }
     }
 
