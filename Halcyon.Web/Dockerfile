@@ -17,7 +17,8 @@ COPY --from=build /app/default.conf.template /etc/nginx/templates/default.conf.t
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY --from=build /app/entrypoint.sh /docker-entrypoint.d/entrypoint.sh
 
-RUN chmod +x /docker-entrypoint.d/entrypoint.sh
+# test to see if this speeds up container start time
+# RUN chmod +x /docker-entrypoint.d/entrypoint.sh
 
 EXPOSE 80
 
