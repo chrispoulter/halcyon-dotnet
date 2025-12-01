@@ -4,12 +4,14 @@ declare global {
     }
 }
 
-export const config = resolveRuntimeConfig({
+export const config = {
     API_URL: `${window.location.origin}/api`,
     VERSION: import.meta.env.VERSION,
-    VITE_RUNTIME_VALUE_1: import.meta.env.VITE_RUNTIME_VALUE_1,
-    VITE_RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
-});
+    ...resolveRuntimeConfig({
+        VITE_RUNTIME_VALUE_1: import.meta.env.VITE_RUNTIME_VALUE_1,
+        VITE_RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
+    }),
+};
 
 function resolveRuntimeConfig<T extends Record<string, string>>(source: T): T {
     const resolved: T = { ...source };
