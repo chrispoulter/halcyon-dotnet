@@ -1,5 +1,5 @@
-import { currentYear } from '@/lib/dates';
 import { config } from '@/lib/config';
+import { currentYear } from '@/lib/dates';
 
 export function Footer() {
     return (
