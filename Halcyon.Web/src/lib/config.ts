@@ -2,8 +2,8 @@ export const config = {
     API_URL: `${window.location.origin}/api`,
     VERSION: import.meta.env.VERSION,
     ...resolveRuntimeConfig({
-        RUNTIME_VALUE_1: import.meta.env.VITE_RUNTIME_VALUE_1,
-        RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
+        VITE_RUNTIME_VALUE_1: import.meta.env.VITE_RUNTIME_VALUE_1,
+        VITE_RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
     }),
 };
 
