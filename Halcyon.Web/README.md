@@ -45,7 +45,11 @@ npm install
 For local development, you'll need to create a `.env.local` file in the root of the project to define the environment variables. This file is ignored by Git, so the secrets will not be committed to the repository.
 
 ```
+VITE_PORT=5173
 API_HTTP=https://localhost:7257
+
+# VITE_RUNTIME_VALUE_1="ENV_RUNTIME_VALUE_1"
+# VITE_RUNTIME_VALUE_2="ENV_RUNTIME_VALUE_2"
 ```
 
 ### Running the development server
