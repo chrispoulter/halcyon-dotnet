@@ -20,8 +20,10 @@ export const useGetUser = (id: string) => {
         queryKey: ['user', id],
         queryFn: ({ signal }) =>
             apiClient
-                .get(`/api/users/${id}`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                .get(`users/${id}`, {
+                    context: {
+                        accessToken,
+                    },
                     signal,
                 })
                 .json<GetUserResponse>(),

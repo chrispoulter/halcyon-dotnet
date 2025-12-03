@@ -6,7 +6,5 @@ type ForgotPasswordRequest = { emailAddress: string };
 export const useForgotPassword = () =>
     useMutation({
         mutationFn: (request: ForgotPasswordRequest) =>
-            apiClient
-                .put('/api/account/forgot-password', { json: request })
-                .json(),
+            apiClient.put('account/forgot-password', { json: request }).json(),
     });

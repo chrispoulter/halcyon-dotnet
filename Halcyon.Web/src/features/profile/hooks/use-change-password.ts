@@ -17,9 +17,11 @@ export const useChangePassword = () => {
     return useMutation({
         mutationFn: (request: ChangePasswordRequest) =>
             apiClient
-                .put('/api/profile/change-password', {
+                .put('profile/change-password', {
                     json: request,
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    context: {
+                        accessToken,
+                    },
                 })
                 .json<ChangePasswordResponse>(),
         onSuccess: (data) => {

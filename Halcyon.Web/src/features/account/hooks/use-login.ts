@@ -14,7 +14,7 @@ export const useLogin = () => {
     return useMutation({
         mutationFn: (request: LoginRequest) =>
             apiClient
-                .post('/api/account/login', { json: request })
+                .post('account/login', { json: request })
                 .json<LoginResponse>(),
     });
 };

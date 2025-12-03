@@ -19,9 +19,11 @@ export const useUpdateProfile = () => {
     return useMutation({
         mutationFn: (request: UpdateProfileRequest) =>
             apiClient
-                .put('/api/profile', {
+                .put('profile', {
                     json: request,
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    context: {
+                        accessToken,
+                    },
                 })
                 .json<UpdateProfileResponse>(),
         onSuccess: (data) => {

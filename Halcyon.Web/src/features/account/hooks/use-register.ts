@@ -19,7 +19,7 @@ export const useRegister = () => {
     return useMutation({
         mutationFn: (request: RegisterRequest) =>
             apiClient
-                .post('/api/account/register', { json: request })
+                .post('account/register', { json: request })
                 .json<RegisterResponse>(),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
     });

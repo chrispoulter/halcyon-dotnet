@@ -14,8 +14,10 @@ export const useUnlockUser = (id: string) => {
     return useMutation({
         mutationFn: () =>
             apiClient
-                .put(`/api/users/${id}/unlock`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                .put(`users/${id}/unlock`, {
+                    context: {
+                        accessToken,
+                    },
                 })
                 .json<UnlockUserResponse>(),
         onSuccess: (data) => {

@@ -23,9 +23,11 @@ export const useUpdateUser = (id: string) => {
     return useMutation({
         mutationFn: (request: UpdateUserRequest) =>
             apiClient
-                .put(`/api/users/${id}`, {
+                .put(`users/${id}`, {
                     json: request,
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    context: {
+                        accessToken,
+                    },
                 })
                 .json<UpdateUserResponse>(),
         onSuccess: (data) => {

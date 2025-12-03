@@ -8,13 +8,26 @@ type ProblemDetails = {
 };
 
 export const apiClient = ky.create({
+    prefixUrl: '/api',
     hooks: {
+        beforeRequest: [
+            (request, options) => {
+                const { accessToken } = options.context;
+                if (accessToken) {
+                    request.headers.set(
+                        'Authorization',
+                        `Bearer ${accessToken}`
+                    );
+                }
+            },
+        ],
         beforeError: [
             async (error) => {
-                const contentType = error.response.headers.get('content-type');
+                const { response } = error;
+                const contentType = response.headers.get('content-type');
 
                 if (contentType?.includes('application/problem+json')) {
-                    const body = await error.response.json<ProblemDetails>();
+                    const body = await response.json<ProblemDetails>();
                     error.message = body.title;
                 }
 
