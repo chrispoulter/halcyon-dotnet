@@ -11,9 +11,11 @@ export const useDeleteAccount = () => {
 
     return useMutation({
         mutationFn: () =>
-            apiClient.delete<DeleteAccountResponse>('/profile', undefined, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .delete('/api/profile', {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                })
+                .json<DeleteAccountResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
 

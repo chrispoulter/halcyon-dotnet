@@ -22,9 +22,12 @@ export const useUpdateUser = (id: string) => {
 
     return useMutation({
         mutationFn: (request: UpdateUserRequest) =>
-            apiClient.put<UpdateUserResponse>(`/users/${id}`, request, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .put(`/api/users/${id}`, {
+                    json: request,
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                })
+                .json<UpdateUserResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

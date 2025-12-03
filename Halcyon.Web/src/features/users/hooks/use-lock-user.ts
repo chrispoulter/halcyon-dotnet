@@ -13,9 +13,11 @@ export const useLockUser = (id: string) => {
 
     return useMutation({
         mutationFn: () =>
-            apiClient.put<LockUserResponse>(`/users/${id}/lock`, undefined, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .put(`/api/users/${id}/lock`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                })
+                .json<LockUserResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

@@ -16,13 +16,12 @@ export const useChangePassword = () => {
 
     return useMutation({
         mutationFn: (request: ChangePasswordRequest) =>
-            apiClient.put<ChangePasswordResponse>(
-                '/profile/change-password',
-                request,
-                {
-                    Authorization: `Bearer ${accessToken}`,
-                }
-            ),
+            apiClient
+                .put('/api/profile/change-password', {
+                    json: request,
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                })
+                .json<ChangePasswordResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

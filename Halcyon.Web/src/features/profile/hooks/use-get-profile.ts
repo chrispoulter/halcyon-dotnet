@@ -16,8 +16,11 @@ export const useGetProfile = () => {
     return useQuery({
         queryKey: ['profile'],
         queryFn: ({ signal }) =>
-            apiClient.get<GetProfileResponse>('/profile', signal, undefined, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .get('/api/profile', {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    signal,
+                })
+                .json<GetProfileResponse>(),
     });
 };
