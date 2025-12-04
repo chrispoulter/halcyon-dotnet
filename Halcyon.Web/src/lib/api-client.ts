@@ -13,6 +13,7 @@ export const apiClient = ky.create({
         beforeRequest: [
             (request, options) => {
                 const { accessToken } = options.context;
+
                 if (accessToken) {
                     request.headers.set(
                         'Authorization',
