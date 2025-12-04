@@ -1,7 +1,6 @@
 ﻿using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.LockUser;
@@ -13,12 +12,13 @@ public class LockUserEndpoint : IEndpoint
         app.MapPut("/users/{id}/lock", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<LockUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Lock User")
+            .WithDescription("Lock a user account by ID.");
     }
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody] LockUserRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
@@ -31,14 +31,6 @@ public class LockUserEndpoint : IEndpoint
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 title: "User not found."
-            );
-        }
-
-        if (request?.Version is not null && request.Version != user.Version)
-        {
-            return Results.Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Data has been modified since entities were loaded."
             );
         }
 

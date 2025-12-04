@@ -8,8 +8,7 @@ public record UpdateUserRequest(
     string FirstName,
     string LastName,
     DateOnly DateOfBirth,
-    List<string>? Roles,
-    uint? Version
+    List<string>? Roles
 );
 
 public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>

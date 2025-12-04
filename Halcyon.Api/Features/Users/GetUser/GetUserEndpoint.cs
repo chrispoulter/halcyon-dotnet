@@ -12,7 +12,9 @@ public class GetUserEndpoint : IEndpoint
         app.MapGet("/users/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<GetUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Get User")
+            .WithDescription("Retrieve a user account by ID.");
     }
 
     private static async Task<IResult> HandleAsync(
@@ -41,8 +43,7 @@ public class GetUserEndpoint : IEndpoint
             user.DateOfBirth,
             user.IsTwoFactorEnabled,
             user.IsLockedOut,
-            user.Roles,
-            user.Version
+            user.Roles
         );
 
         return Results.Ok(result);

@@ -12,7 +12,6 @@ export type GetUserResponse = {
     isTwoFactorEnabled?: boolean;
     isLockedOut?: boolean;
     roles?: Role[];
-    version: number;
 };
 
 export const useGetUser = (id: string) => {
@@ -21,8 +20,13 @@ export const useGetUser = (id: string) => {
     return useQuery({
         queryKey: ['user', id],
         queryFn: ({ signal }) =>
-            apiClient.get<GetUserResponse>(`/users/${id}`, signal, undefined, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .get(`users/${id}`, {
+                    context: {
+                        accessToken,
+                    },
+                    signal,
+                })
+                .json<GetUserResponse>(),
     });
 };

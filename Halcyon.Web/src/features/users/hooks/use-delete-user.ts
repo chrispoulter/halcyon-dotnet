@@ -2,8 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
-type DeleteUserRequest = { version?: number };
-
 type DeleteUserResponse = {
     id: string;
 };
@@ -14,10 +12,14 @@ export const useDeleteUser = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (request: DeleteUserRequest) =>
-            apiClient.delete<DeleteUserResponse>(`/users/${id}`, request, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+        mutationFn: () =>
+            apiClient
+                .delete(`users/${id}`, {
+                    context: {
+                        accessToken,
+                    },
+                })
+                .json<DeleteUserResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
 

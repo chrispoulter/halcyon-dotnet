@@ -16,10 +16,9 @@ export const useResetPassword = () => {
 
     return useMutation({
         mutationFn: (request: ResetPasswordRequest) =>
-            apiClient.put<ResetPasswordResponse>(
-                '/account/reset-password',
-                request
-            ),
+            apiClient
+                .put('account/reset-password', { json: request })
+                .json<ResetPasswordResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

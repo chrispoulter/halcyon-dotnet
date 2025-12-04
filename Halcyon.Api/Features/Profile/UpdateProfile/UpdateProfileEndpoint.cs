@@ -14,7 +14,9 @@ public class UpdateProfileEndpoint : IEndpoint
             .RequireAuthorization()
             .AddValidationFilter<UpdateProfileRequest>()
             .Produces<UpdateProfileResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Update Profile")
+            .WithDescription("Update the profile of the current user.");
     }
 
     private static async Task<IResult> HandleAsync(
@@ -34,14 +36,6 @@ public class UpdateProfileEndpoint : IEndpoint
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 title: "User not found."
-            );
-        }
-
-        if (request.Version is not null && request.Version != user.Version)
-        {
-            return Results.Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Data has been modified since entities were loaded."
             );
         }
 

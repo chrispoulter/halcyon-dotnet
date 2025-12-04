@@ -9,7 +9,6 @@ export type GetProfileResponse = {
     lastName: string;
     dateOfBirth: string;
     isTwoFactorEnabled: boolean;
-    version: number;
 };
 
 export const useGetProfile = () => {
@@ -18,8 +17,13 @@ export const useGetProfile = () => {
     return useQuery({
         queryKey: ['profile'],
         queryFn: ({ signal }) =>
-            apiClient.get<GetProfileResponse>('/profile', signal, undefined, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .get('profile', {
+                    context: {
+                        accessToken,
+                    },
+                    signal,
+                })
+                .json<GetProfileResponse>(),
     });
 };

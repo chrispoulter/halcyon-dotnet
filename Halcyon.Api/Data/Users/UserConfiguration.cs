@@ -29,7 +29,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Roles).HasColumnName("roles").HasColumnType("text[]");
         builder.Property(u => u.IsLockedOut).HasColumnName("is_locked_out").HasDefaultValue(false);
         builder.Property(u => u.SearchVector).HasColumnName("search_vector");
-        builder.Property(u => u.Version).IsRowVersion();
 
         builder.HasGeneratedTsVectorColumn(
             u => u.SearchVector,

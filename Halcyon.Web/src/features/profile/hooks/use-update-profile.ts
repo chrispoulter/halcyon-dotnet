@@ -7,7 +7,6 @@ type UpdateProfileRequest = {
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-    version?: number;
 };
 
 type UpdateProfileResponse = { id: string };
@@ -19,9 +18,14 @@ export const useUpdateProfile = () => {
 
     return useMutation({
         mutationFn: (request: UpdateProfileRequest) =>
-            apiClient.put<UpdateProfileResponse>('/profile', request, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .put('profile', {
+                    json: request,
+                    context: {
+                        accessToken,
+                    },
+                })
+                .json<UpdateProfileResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

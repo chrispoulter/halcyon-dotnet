@@ -14,7 +14,9 @@ public class UpdateUserEndpoint : IEndpoint
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .AddValidationFilter<UpdateUserRequest>()
             .Produces<UpdateUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Update User")
+            .WithDescription("Update a user account by ID.");
     }
 
     private static async Task<IResult> HandleAsync(
@@ -31,14 +33,6 @@ public class UpdateUserEndpoint : IEndpoint
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 title: "User not found."
-            );
-        }
-
-        if (request.Version is not null && request.Version != user.Version)
-        {
-            return Results.Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Data has been modified since entities were loaded."
             );
         }
 

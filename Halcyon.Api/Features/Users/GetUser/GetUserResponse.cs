@@ -8,6 +8,5 @@ public record GetUserResponse(
     DateOnly DateOfBirth,
     bool IsTwoFactorEnabled,
     bool IsLockedOut,
-    List<string>? Roles,
-    uint Version
+    List<string>? Roles
 );

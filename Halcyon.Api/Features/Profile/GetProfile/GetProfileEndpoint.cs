@@ -12,7 +12,9 @@ public class GetProfileEndpoint : IEndpoint
         app.MapGet("/profile", HandleAsync)
             .RequireAuthorization()
             .Produces<GetProfileResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Get Profile")
+            .WithDescription("Retrieve the profile of the current user.");
     }
 
     private static async Task<IResult> HandleAsync(
@@ -39,8 +41,7 @@ public class GetProfileEndpoint : IEndpoint
             user.FirstName,
             user.LastName,
             user.DateOfBirth,
-            user.IsTwoFactorEnabled,
-            user.Version
+            user.IsTwoFactorEnabled
         );
 
         return Results.Ok(result);

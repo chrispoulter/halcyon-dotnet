@@ -1,7 +1,6 @@
 ﻿using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.DeleteUser;
@@ -13,12 +12,13 @@ public class DeleteUserEndpoint : IEndpoint
         app.MapDelete("/users/{id}", HandleAsync)
             .RequireRole(Roles.SystemAdministrator, Roles.UserAdministrator)
             .Produces<DeleteUserResponse>()
-            .WithTags(Tags.Users);
+            .WithTags(Tags.Users)
+            .WithSummary("Delete User")
+            .WithDescription("Delete a user account by ID.");
     }
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        [FromBody] DeleteUserRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         CancellationToken cancellationToken = default
@@ -31,14 +31,6 @@ public class DeleteUserEndpoint : IEndpoint
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 title: "User not found."
-            );
-        }
-
-        if (request?.Version is not null && request.Version != user.Version)
-        {
-            return Results.Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Data has been modified since entities were loaded."
             );
         }
 

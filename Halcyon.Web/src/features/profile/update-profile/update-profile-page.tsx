@@ -33,19 +33,13 @@ export function UpdateProfilePage() {
     }
 
     function onSubmit(values: UpdateProfileFormValues) {
-        updateProfile(
-            {
-                ...values,
-                version: profile?.version,
+        updateProfile(values, {
+            onSuccess: () => {
+                toast.success('Your profile has been updated.');
+                navigate('/profile');
             },
-            {
-                onSuccess: () => {
-                    toast.success('Your profile has been updated.');
-                    navigate('/profile');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (

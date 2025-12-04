@@ -2,50 +2,25 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
-import { QueryError } from '@/components/query-error';
 import {
     ChangePasswordForm,
     type ChangePasswordFormValues,
 } from '@/features/profile/change-password/change-password-form';
-import { ChangePasswordLoading } from '@/features/profile/change-password/change-password-loading';
-import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
 import { useChangePassword } from '@/features/profile/hooks/use-change-password';
 
 export function ChangePasswordPage() {
     const navigate = useNavigate();
 
-    const {
-        data: profile,
-        isPending,
-        isFetching,
-        isSuccess,
-        error,
-    } = useGetProfile();
-
     const { mutate: changePassword, isPending: isSaving } = useChangePassword();
 
-    if (isPending) {
-        return <ChangePasswordLoading />;
-    }
-
-    if (!isSuccess) {
-        return <QueryError error={error} />;
-    }
-
     function onSubmit(values: ChangePasswordFormValues) {
-        changePassword(
-            {
-                ...values,
-                version: profile?.version,
+        changePassword(values, {
+            onSuccess: () => {
+                toast.success('Your password has been changed.');
+                navigate('/profile');
             },
-            {
-                onSuccess: () => {
-                    toast.success('Your password has been changed.');
-                    navigate('/profile');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (
@@ -65,7 +40,7 @@ export function ChangePasswordPage() {
             <ChangePasswordForm
                 onSubmit={onSubmit}
                 loading={isSaving}
-                disabled={isFetching || isSaving}
+                disabled={isSaving}
             >
                 <Button asChild variant="outline">
                     <Link to="/profile">Cancel</Link>

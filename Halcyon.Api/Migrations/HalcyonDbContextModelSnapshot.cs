@@ -94,12 +94,6 @@ namespace Halcyon.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("two_factor_temp_secret");
 
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
                     b.HasKey("Id")
                         .HasName("pk_users");
 

@@ -31,7 +31,5 @@ public class User : IJwtUser
 
     public List<string>? Roles { get; set; }
 
-    public uint Version { get; }
-
     public NpgsqlTsVector SearchVector { get; } = null!;
 }

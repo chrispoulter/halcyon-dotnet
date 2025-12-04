@@ -6,6 +6,5 @@ public record GetProfileResponse(
     string FirstName,
     string LastName,
     DateOnly DateOfBirth,
-    bool IsTwoFactorEnabled,
-    uint Version
+    bool IsTwoFactorEnabled
 );

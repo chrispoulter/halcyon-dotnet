@@ -9,7 +9,6 @@ type UpdateUserRequest = {
     lastName: string;
     dateOfBirth: string;
     roles?: Role[];
-    version?: number;
 };
 
 type UpdateUserResponse = {
@@ -23,9 +22,14 @@ export const useUpdateUser = (id: string) => {
 
     return useMutation({
         mutationFn: (request: UpdateUserRequest) =>
-            apiClient.put<UpdateUserResponse>(`/users/${id}`, request, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .put(`users/${id}`, {
+                    json: request,
+                    context: {
+                        accessToken,
+                    },
+                })
+                .json<UpdateUserResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

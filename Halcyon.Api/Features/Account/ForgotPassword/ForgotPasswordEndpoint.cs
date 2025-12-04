@@ -13,7 +13,9 @@ public class ForgotPasswordEndpoint : IEndpoint
     {
         app.MapPut("/account/forgot-password", HandleAsync)
             .AddValidationFilter<ForgotPasswordRequest>()
-            .WithTags(Tags.Account);
+            .WithTags(Tags.Account)
+            .WithSummary("Forgot Password")
+            .WithDescription("Initiate the password reset process for a user.");
     }
 
     private static async Task<IResult> HandleAsync(

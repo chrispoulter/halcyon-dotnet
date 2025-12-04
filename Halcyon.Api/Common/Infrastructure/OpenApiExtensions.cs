@@ -1,17 +1,34 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 
 namespace Halcyon.Api.Common.Infrastructure;
 
 public static class OpenApiExtensions
 {
-    public static IHostApplicationBuilder AddOpenApi(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddOpenApi(
+        this IHostApplicationBuilder builder,
+        Assembly assembly
+    )
     {
         builder.Services.AddOpenApi(
             "v1",
             options =>
             {
+                options.AddDocumentTransformer(
+                    (document, context, cancellationToken) =>
+                    {
+                        var version = assembly.GetSemVerShortSha();
+
+                        document.Info ??= new OpenApiInfo();
+                        document.Info.Version = version ?? document.Info.Version;
+
+                        return Task.CompletedTask;
+                    }
+                );
+
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
@@ -65,15 +82,17 @@ public static class OpenApiExtensions
         return builder;
     }
 
-    public static WebApplication MapOpenApiWithSwagger(this WebApplication app)
+    public static WebApplication MapOpenApiWithUI(this WebApplication app, Assembly assembly)
     {
         app.MapOpenApi();
 
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint($"/openapi/v1.json", "v1");
-            options.RoutePrefix = string.Empty;
-        });
+        app.MapScalarApiReference(
+            "/",
+            options =>
+            {
+                options.Title = assembly.GetName().Name;
+            }
+        );
 
         return app;
     }

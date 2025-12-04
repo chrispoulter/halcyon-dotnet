@@ -5,7 +5,6 @@ import { apiClient } from '@/lib/api-client';
 type ChangePasswordRequest = {
     currentPassword: string;
     newPassword: string;
-    version?: number;
 };
 
 type ChangePasswordResponse = { id: string };
@@ -17,13 +16,14 @@ export const useChangePassword = () => {
 
     return useMutation({
         mutationFn: (request: ChangePasswordRequest) =>
-            apiClient.put<ChangePasswordResponse>(
-                '/profile/change-password',
-                request,
-                {
-                    Authorization: `Bearer ${accessToken}`,
-                }
-            ),
+            apiClient
+                .put('profile/change-password', {
+                    json: request,
+                    context: {
+                        accessToken,
+                    },
+                })
+                .json<ChangePasswordResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

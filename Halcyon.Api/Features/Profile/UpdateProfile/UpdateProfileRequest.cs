@@ -7,8 +7,7 @@ public record UpdateProfileRequest(
     string EmailAddress,
     string FirstName,
     string LastName,
-    DateOnly DateOfBirth,
-    uint? Version
+    DateOnly DateOfBirth
 );
 
 public class UpdateProfileRequestValidator : AbstractValidator<UpdateProfileRequest>
