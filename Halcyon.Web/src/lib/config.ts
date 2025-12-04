@@ -1,10 +1,8 @@
-export const config = {
+export const config = resolveRuntimeConfig({
     VERSION: import.meta.env.VERSION,
-    ...resolveRuntimeConfig({
-        VITE_RUNTIME_VALUE_1: import.meta.env.VITE_RUNTIME_VALUE_1,
-        VITE_RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
-    }),
-};
+    VITE_RUNTIME_VALUE_1: import.meta.env.VITE_RUNTIME_VALUE_1,
+    VITE_RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
+});
 
 function resolveRuntimeConfig<T extends Record<string, string>>(source: T): T {
     const resolved: T = { ...source };
