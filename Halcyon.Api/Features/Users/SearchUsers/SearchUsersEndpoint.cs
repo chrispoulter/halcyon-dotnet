@@ -1,8 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using System.Data;
+using Dapper;
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.SearchUsers;
 
@@ -23,57 +24,67 @@ public class SearchUsersEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         [AsParameters] SearchUsersRequest request,
-        HalcyonDbContext dbContext,
+        IDbConnectionFactory connectionFactory,
         CancellationToken cancellationToken = default
     )
     {
-        var query = dbContext.Users.AsNoTracking().AsQueryable();
-
-        if (!string.IsNullOrEmpty(request.Search))
-        {
-            query = query.Where(u =>
-                u.SearchVector.Matches(EF.Functions.WebSearchToTsQuery("english", request.Search))
-            );
-        }
-
-        var count = await query.CountAsync(cancellationToken);
-
-        query = request.Sort switch
-        {
-            UserSort.EMAIL_ADDRESS_DESC => query
-                .OrderByDescending(r => r.EmailAddress)
-                .ThenBy(r => r.Id),
-
-            UserSort.EMAIL_ADDRESS_ASC => query.OrderBy(r => r.EmailAddress).ThenBy(r => r.Id),
-
-            UserSort.NAME_DESC => query
-                .OrderByDescending(r => r.FirstName)
-                .ThenByDescending(r => r.LastName)
-                .ThenBy(r => r.Id),
-
-            _ => query.OrderBy(r => r.FirstName).ThenBy(r => r.LastName).ThenBy(r => r.Id),
-        };
+        using var connection = connectionFactory.CreateConnection();
 
         var page = request.Page ?? 1;
         var size = request.Size ?? 10;
+        var offset = (page - 1) * size;
 
-        if (page > 1)
-        {
-            query = query.Skip((page - 1) * size);
-        }
+        var searchWhere = string.IsNullOrEmpty(request.Search)
+            ? string.Empty
+            : "WHERE search_vector @@ websearch_to_tsquery('english', @Search)";
 
-        query = query.Take(size);
+        var orderBy =
+            "ORDER BY "
+            + request.Sort switch
+            {
+                UserSort.EMAIL_ADDRESS_DESC => "email_address DESC, id",
+                UserSort.EMAIL_ADDRESS_ASC => "email_address ASC, id",
+                UserSort.NAME_DESC => "first_name DESC, last_name DESC, id",
+                _ => "first_name ASC, last_name ASC, id",
+            };
 
-        var users = await query
-            .Select(u => new SearchUserResponse(
-                u.Id,
-                u.EmailAddress,
-                u.FirstName,
-                u.LastName,
-                u.IsLockedOut,
-                u.Roles
+        var countSql = $@"SELECT COUNT(*) FROM users {searchWhere}";
+        var count = await connection.ExecuteScalarAsync<int>(countSql, new { request.Search });
+
+        var listSql =
+            $@"
+            SELECT 
+                id, 
+                email_address, 
+                first_name, 
+                last_name, 
+                is_locked_out, 
+                roles
+            FROM
+                users
+            {searchWhere}
+            {orderBy}
+            LIMIT @Size OFFSET @Offset";
+
+        var rows = await connection.QueryAsync(
+            listSql,
+            new
+            {
+                request.Search,
+                Size = size,
+                Offset = offset,
+            }
+        );
+
+        var users = rows.Select(u => new SearchUserResponse(
+                u.id,
+                u.email_address,
+                u.first_name,
+                u.last_name,
+                u.is_locked_out,
+                u.roles
             ))
-            .ToListAsync(cancellationToken);
+            .ToList();
 
         var pageCount = (count + size - 1) / size;
         var hasNextPage = page < pageCount;

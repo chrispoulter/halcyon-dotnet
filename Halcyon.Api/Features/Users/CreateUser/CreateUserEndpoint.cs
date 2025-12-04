@@ -1,9 +1,8 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data;
-using Halcyon.Api.Data.Users;
-using Microsoft.EntityFrameworkCore;
 
 namespace Halcyon.Api.Features.Users.CreateUser;
 
@@ -22,14 +21,20 @@ public class CreateUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         CreateUserRequest request,
-        HalcyonDbContext dbContext,
+        IDbConnectionFactory connectionFactory,
         IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
     )
     {
-        var existing = await dbContext.Users.AnyAsync(
-            u => u.EmailAddress == request.EmailAddress,
-            cancellationToken
+        using var connection = connectionFactory.CreateConnection();
+
+        var existing = await connection.ExecuteScalarAsync<bool>(
+            """
+            SELECT EXISTS(
+                SELECT 1 FROM users WHERE email_address = @Email
+            )
+            """,
+            new { Email = request.EmailAddress }
         );
 
         if (existing)
@@ -40,20 +45,29 @@ public class CreateUserEndpoint : IEndpoint
             );
         }
 
-        var user = new User
-        {
-            EmailAddress = request.EmailAddress,
-            Password = passwordHasher.HashPassword(request.Password),
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            DateOfBirth = request.DateOfBirth,
-            Roles = request.Roles,
-        };
+        var id = Guid.NewGuid();
+        var password = passwordHasher.HashPassword(request.Password);
 
-        dbContext.Users.Add(user);
+        await connection.ExecuteAsync(
+            """
+            INSERT INTO users (
+                id, email_address, password, first_name, last_name, date_of_birth, roles, is_locked_out
+            ) VALUES (
+                @Id, @EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, @Roles, FALSE
+            )
+            """,
+            new
+            {
+                Id = id,
+                request.EmailAddress,
+                Password = password,
+                request.FirstName,
+                request.LastName,
+                DateOfBirth = request.DateOfBirth.ToString("YYYY-MM-DD"),
+                request.Roles,
+            }
+        );
 
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return Results.Ok(new CreateUserResponse(user.Id));
+        return Results.Ok(new CreateUserResponse(id));
     }
 }

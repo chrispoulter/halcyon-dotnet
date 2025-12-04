@@ -1,8 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Halcyon.Api.Data.Users;
 
 namespace Halcyon.Api.Features.Profile.UpdateProfile;
 
@@ -22,13 +23,24 @@ public class UpdateProfileEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         UpdateProfileRequest request,
         CurrentUser currentUser,
-        HalcyonDbContext dbContext,
+        IDbConnectionFactory connectionFactory,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(
-            u => u.Id == currentUser.Id,
-            cancellationToken
+        using var connection = connectionFactory.CreateConnection();
+
+        var user = await connection.QuerySingleOrDefaultAsync<User>(
+            """
+            SELECT 
+                id AS Id,
+                email_address AS EmailAddress,
+                is_locked_out AS IsLockedOut
+            FROM 
+                users
+            WHERE 
+                id = @Id
+            """,
+            new { currentUser.Id }
         );
 
         if (user is null || user.IsLockedOut)
@@ -46,9 +58,13 @@ public class UpdateProfileEndpoint : IEndpoint
             )
         )
         {
-            var existing = await dbContext.Users.AnyAsync(
-                u => u.EmailAddress == request.EmailAddress,
-                cancellationToken
+            var existing = await connection.ExecuteScalarAsync<bool>(
+                """
+                SELECT EXISTS(
+                    SELECT 1 FROM users WHERE email_address = @Email
+                )
+                """,
+                new { Email = request.EmailAddress }
             );
 
             if (existing)
@@ -60,12 +76,24 @@ public class UpdateProfileEndpoint : IEndpoint
             }
         }
 
-        user.EmailAddress = request.EmailAddress;
-        user.FirstName = request.FirstName;
-        user.LastName = request.LastName;
-        user.DateOfBirth = request.DateOfBirth;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        var rows = await connection.ExecuteAsync(
+            """
+            UPDATE users
+            SET email_address = @EmailAddress,
+                first_name = @FirstName,
+                last_name = @LastName,
+                date_of_birth = @DateOfBirth
+            WHERE id = @Id
+            """,
+            new
+            {
+                request.EmailAddress,
+                request.FirstName,
+                request.LastName,
+                DateOfBirth = request.DateOfBirth.ToString("YYYY-MM-DD"),
+                user.Id,
+            }
+        );
 
         return Results.Ok(new UpdateProfileResponse(user.Id));
     }

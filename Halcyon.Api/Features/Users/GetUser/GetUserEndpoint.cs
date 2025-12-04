@@ -1,7 +1,8 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
-using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Halcyon.Api.Data.Users;
 
 namespace Halcyon.Api.Features.Users.GetUser;
 
@@ -19,13 +20,29 @@ public class GetUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        HalcyonDbContext dbContext,
+        IDbConnectionFactory connectionFactory,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext
-            .Users.AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        using var connection = connectionFactory.CreateConnection();
+
+        var user = await connection.QuerySingleOrDefaultAsync<User>(
+            """
+            SELECT 
+                id AS Id,
+                email_address AS EmailAddress,
+                first_name AS FirstName,
+                last_name AS LastName,
+                date_of_birth AS DateOfBirth,
+                is_locked_out AS IsLockedOut,
+                roles AS Roles
+            FROM 
+                users
+            WHERE 
+                id = @Id
+            """,
+            new { Id = id }
+        );
 
         if (user is null)
         {

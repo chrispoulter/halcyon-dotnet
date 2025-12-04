@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
+using Dapper;
 using FluentEmail.Core;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Halcyon.Api.Data.Users;
 
 namespace Halcyon.Api.Features.Account.ForgotPassword;
 
@@ -20,21 +21,39 @@ public class ForgotPasswordEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         ForgotPasswordRequest request,
-        HalcyonDbContext dbContext,
+        IDbConnectionFactory connectionFactory,
         IFluentEmail fluentEmail,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(
-            u => u.EmailAddress == request.EmailAddress,
-            cancellationToken
+        using var connection = connectionFactory.CreateConnection();
+
+        var user = await connection.QuerySingleOrDefaultAsync<User>(
+            """
+            SELECT
+                id AS Id,
+                email_address AS EmailAddress,
+                is_locked_out AS IsLockedOut
+            FROM
+                users 
+            WHERE
+                email_address = @Email
+            """,
+            new { Email = request.EmailAddress }
         );
 
         if (user is not null && !user.IsLockedOut)
         {
-            user.PasswordResetToken = Guid.NewGuid();
+            var token = Guid.NewGuid();
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            await connection.ExecuteAsync(
+                """
+                UPDATE users 
+                SET password_reset_token = @Token 
+                WHERE id = @Id
+                """,
+                new { Token = token, user.Id }
+            );
 
             var assembly = Assembly.GetExecutingAssembly();
 
@@ -43,7 +62,7 @@ public class ForgotPasswordEndpoint : IEndpoint
                 .Subject("Reset Password // Halcyon")
                 .UsingTemplateFromEmbedded(
                     "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
-                    new { user.PasswordResetToken },
+                    new { PasswordResetToken = token },
                     assembly
                 )
                 .SendAsync(cancellationToken);

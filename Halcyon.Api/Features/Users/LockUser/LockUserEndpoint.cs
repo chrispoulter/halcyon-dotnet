@@ -1,7 +1,8 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
-using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Halcyon.Api.Data.Users;
 
 namespace Halcyon.Api.Features.Users.LockUser;
 
@@ -20,11 +21,23 @@ public class LockUserEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         Guid id,
         CurrentUser currentUser,
-        HalcyonDbContext dbContext,
+        IDbConnectionFactory connectionFactory,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        using var connection = connectionFactory.CreateConnection();
+
+        var user = await connection.QuerySingleOrDefaultAsync<User>(
+            """
+            SELECT 
+                id AS Id
+            FROM 
+                users
+            WHERE 
+                id = @Id
+            """,
+            new { Id = id }
+        );
 
         if (user is null)
         {
@@ -42,9 +55,14 @@ public class LockUserEndpoint : IEndpoint
             );
         }
 
-        user.IsLockedOut = true;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await connection.ExecuteAsync(
+            """
+            UPDATE users 
+            SET is_locked_out = TRUE 
+            WHERE id = @Id
+            """,
+            new { user.Id }
+        );
 
         return Results.Ok(new LockUserResponse(user.Id));
     }

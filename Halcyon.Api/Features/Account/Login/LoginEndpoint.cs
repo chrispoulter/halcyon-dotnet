@@ -1,8 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Halcyon.Api.Data.Users;
 
 namespace Halcyon.Api.Features.Account.Login;
 
@@ -20,15 +21,30 @@ public class LoginEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         LoginRequest request,
-        HalcyonDbContext dbContext,
+        IDbConnectionFactory connectionFactory,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext
-            .Users.AsNoTracking()
-            .FirstOrDefaultAsync(u => u.EmailAddress == request.EmailAddress, cancellationToken);
+        using var connection = connectionFactory.CreateConnection();
+
+        var user = await connection.QuerySingleOrDefaultAsync<User>(
+            """
+            SELECT
+                id AS Id,
+                email_address AS EmailAddress,
+                first_name AS FirstName,
+                last_name AS LastName,
+                password AS Password,
+                roles AS Roles
+            FROM 
+                users
+            WHERE
+                email_address = @Email
+            """,
+            new { Email = request.EmailAddress }
+        );
 
         if (user is null || user.Password is null)
         {

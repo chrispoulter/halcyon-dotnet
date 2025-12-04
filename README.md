@@ -6,8 +6,8 @@ A .NET Core project template ðŸ‘· Built with a sense of peace and tranquillity ð
 
 - .NET
   [https://dotnet.microsoft.com/](https://dotnet.microsoft.com/)
-- Entity Framework
-  [https://learn.microsoft.com/en-us/ef](https://learn.microsoft.com/en-us/ef)
+- Dapper
+  [https://github.com/DapperLib/Dapper](https://github.com/DapperLib/Dapper)
 - FluentValidation
   [https://fluentvalidation.net/](https://fluentvalidation.net/)
 - FluentEmail
@@ -15,7 +15,7 @@ A .NET Core project template ðŸ‘· Built with a sense of peace and tranquillity ð
 - Swagger
   [https://swagger.io/](https://swagger.io/)
 - Aspire
-  [https://learn.microsoft.com/en-us/dotnet/aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)
+  [https://learn.microsoft.com/en-us/dotnet/aspire](https://learn.microsoft.com/en-us/dotnet/aspire)
 - Docker
   [https://www.docker.com/](https://www.docker.com/)
 - GitHub Actions

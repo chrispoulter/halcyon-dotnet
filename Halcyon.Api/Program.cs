@@ -12,12 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddNpgsqlDbContext<HalcyonDbContext>(connectionName: "Database");
+builder.Services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(
+    builder.Configuration.GetConnectionString("Database")
+));
+
 builder.AddFluentEmail(connectionName: "Mail");
 
 var seedConfig = builder.Configuration.GetSection(SeedSettings.SectionName);
 builder.Services.Configure<SeedSettings>(seedConfig);
-builder.Services.AddMigration<HalcyonDbContext, HalcyonDbSeeder>();
+builder.Services.AddHostedService<DbUpMigrationHostedService>();
 
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddProblemDetails();

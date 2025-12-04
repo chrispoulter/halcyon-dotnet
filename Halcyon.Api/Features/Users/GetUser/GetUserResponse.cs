@@ -7,5 +7,5 @@ public record GetUserResponse(
     string LastName,
     DateOnly DateOfBirth,
     bool IsLockedOut,
-    List<string>? Roles
+    IEnumerable<string>? Roles
 );

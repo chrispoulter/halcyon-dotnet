@@ -1,8 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Halcyon.Api.Data.Users;
 
 namespace Halcyon.Api.Features.Profile.ChangePassword;
 
@@ -22,14 +23,24 @@ public class ChangePasswordEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ChangePasswordRequest request,
         CurrentUser currentUser,
-        HalcyonDbContext dbContext,
-        IPasswordHasher passwordHasher,
-        CancellationToken cancellationToken = default
+        IDbConnectionFactory dbConnectionFactory,
+        IPasswordHasher passwordHasher
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(
-            u => u.Id == currentUser.Id,
-            cancellationToken
+        using var connection = dbConnectionFactory.CreateConnection();
+
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
+            """
+            SELECT 
+                id AS Id,
+                password AS Password,
+                is_locked_out AS IsLockedOut
+            FROM 
+                users
+            WHERE 
+                id = @Id
+            """,
+            new { currentUser.Id }
         );
 
         if (user is null || user.IsLockedOut)
@@ -58,10 +69,17 @@ public class ChangePasswordEndpoint : IEndpoint
             );
         }
 
-        user.Password = passwordHasher.HashPassword(request.NewPassword);
-        user.PasswordResetToken = null;
+        var password = passwordHasher.HashPassword(request.NewPassword);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await connection.ExecuteAsync(
+            """
+            UPDATE users
+            SET password = @Password,
+                password_reset_token = NULL
+            WHERE id = @Id
+            """,
+            new { Password = password, user.Id }
+        );
 
         return Results.Ok(new ChangePasswordResponse(user.Id));
     }
