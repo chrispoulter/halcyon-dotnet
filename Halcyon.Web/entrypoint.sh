@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 echo "Replacing runtime environment variables..."
 

@@ -13,6 +13,8 @@ type LoginResponse = {
 export const useLogin = () => {
     return useMutation({
         mutationFn: (request: LoginRequest) =>
-            apiClient.post<LoginResponse>('/account/login', request),
+            apiClient
+                .post('account/login', { json: request })
+                .json<LoginResponse>(),
     });
 };

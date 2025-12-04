@@ -1,134 +1,36 @@
-import { config } from '@/lib/config';
+import ky from 'ky';
 
-type ApiClientRequest = {
-    path: string;
-    method: string;
-    signal?: AbortSignal;
-    params?: Record<string, string | number | boolean>;
-    body?: Record<string, unknown>;
-    headers?: Record<string, string>;
+type ProblemDetails = {
+    title: string;
 };
 
-export class ApiClientError extends Error {
-    status?: number;
+export const apiClient = ky.create({
+    prefixUrl: '/api',
+    hooks: {
+        beforeRequest: [
+            (request, options) => {
+                const { accessToken } = options.context;
 
-    constructor(message: string, status?: number) {
-        super(message);
-        this.name = 'ApiClientError';
-        this.status = status;
-    }
-}
-
-class ApiClient {
-    private baseUrl: string;
-
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
-    }
-
-    private async fetch<Data>({
-        path,
-        method,
-        signal,
-        params,
-        body,
-        headers,
-    }: ApiClientRequest): Promise<Data> {
-        const url = new URL(`${this.baseUrl}${path}`);
-
-        if (params) {
-            for (const [key, value] of Object.entries(params)) {
-                url.searchParams.append(key, String(value));
-            }
-        }
-
-        const response = await fetch(url, {
-            method,
-            signal,
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
+                if (accessToken) {
+                    request.headers.set(
+                        'Authorization',
+                        `Bearer ${accessToken}`
+                    );
+                }
             },
-            body: body ? JSON.stringify(body) : undefined,
-        });
+        ],
+        beforeError: [
+            async (error) => {
+                const { response } = error;
+                const contentType = response.headers.get('content-type');
 
-        // wait for 3 seconds
-        // await new Promise((resolve) => setTimeout(resolve, 3000));
+                if (contentType?.includes('application/problem+json')) {
+                    const body = await response.json<ProblemDetails>();
+                    error.message = body.title;
+                }
 
-        const contentType = response.headers.get('content-type') || '';
-
-        if (!response.ok) {
-            if (contentType.includes('application/problem+json')) {
-                const problem = await response.json();
-                throw new ApiClientError(problem.title, problem.status);
-            }
-
-            throw new ApiClientError(
-                `HTTP ${response.status} ${response.statusText}`,
-                response.status
-            );
-        }
-
-        if (contentType.includes('application/json')) {
-            return await response.json();
-        }
-
-        return (await response.text()) as Data;
-    }
-
-    get<Data>(
-        path: string,
-        signal?: AbortSignal,
-        params?: Record<string, string | number | boolean>,
-        headers?: Record<string, string>
-    ): Promise<Data> {
-        return this.fetch<Data>({
-            path,
-            method: 'GET',
-            signal,
-            params,
-            headers,
-        });
-    }
-
-    post<Data>(
-        path: string,
-        body?: Record<string, unknown>,
-        headers?: Record<string, string>
-    ): Promise<Data> {
-        return this.fetch<Data>({
-            path,
-            method: 'POST',
-            body,
-            headers,
-        });
-    }
-
-    put<Data>(
-        path: string,
-        body?: Record<string, unknown>,
-        headers?: Record<string, string>
-    ): Promise<Data> {
-        return this.fetch<Data>({
-            path,
-            method: 'PUT',
-            body,
-            headers,
-        });
-    }
-
-    delete<Data>(
-        path: string,
-        body?: Record<string, unknown>,
-        headers?: Record<string, string>
-    ): Promise<Data> {
-        return this.fetch<Data>({
-            path,
-            method: 'DELETE',
-            body,
-            headers,
-        });
-    }
-}
-
-export const apiClient = new ApiClient(config.API_URL);
+                return error;
+            },
+        ],
+    },
+});
