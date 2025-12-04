@@ -1,10 +1,7 @@
 import ky from 'ky';
 
 type ProblemDetails = {
-    status: number;
     title: string;
-    traceId: string;
-    type: string;
 };
 
 export const apiClient = ky.create({
