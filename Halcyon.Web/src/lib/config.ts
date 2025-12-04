@@ -4,7 +4,7 @@ export const config = resolveRuntimeConfig({
     VITE_RUNTIME_VALUE_2: import.meta.env.VITE_RUNTIME_VALUE_2,
 });
 
-function resolveRuntimeConfig<T extends Record<string, string>>(source: T): T {
+function resolveRuntimeConfig<T extends Record<string, unknown>>(source: T): T {
     const resolved: T = { ...source };
 
     for (const key of Object.keys(source)) {
