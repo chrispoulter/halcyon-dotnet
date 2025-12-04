@@ -1,8 +1,8 @@
 ﻿using Dapper;
 using Halcyon.Api.Common.Authentication;
-using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Account.Register;
 
@@ -20,12 +20,12 @@ public class RegisterEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         RegisterRequest request,
-        IDbConnectionFactory connectionFactory,
+        NpgsqlDataSource dataSource,
         IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
     )
     {
-        using var connection = connectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         var existing = await connection.ExecuteScalarAsync<bool>(
             """

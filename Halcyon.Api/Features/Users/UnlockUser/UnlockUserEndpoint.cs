@@ -1,9 +1,8 @@
-﻿using System.Data;
-using Dapper;
+﻿using Dapper;
 using Halcyon.Api.Common.Authentication;
-using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Users.UnlockUser;
 
@@ -21,11 +20,11 @@ public class UnlockUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        IDbConnectionFactory connectionFactory,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        using var connection = connectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         var user = await connection.QuerySingleOrDefaultAsync<User>(
             """

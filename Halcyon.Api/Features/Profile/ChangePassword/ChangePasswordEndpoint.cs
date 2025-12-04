@@ -1,9 +1,9 @@
 ﻿using Dapper;
 using Halcyon.Api.Common.Authentication;
-using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Profile.ChangePassword;
 
@@ -23,11 +23,11 @@ public class ChangePasswordEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ChangePasswordRequest request,
         CurrentUser currentUser,
-        IDbConnectionFactory dbConnectionFactory,
+        NpgsqlDataSource dataSource,
         IPasswordHasher passwordHasher
     )
     {
-        using var connection = dbConnectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         var user = await connection.QueryFirstOrDefaultAsync<User>(
             """
@@ -69,7 +69,7 @@ public class ChangePasswordEndpoint : IEndpoint
             );
         }
 
-        var password = passwordHasher.HashPassword(request.NewPassword);
+        var passwordHash = passwordHasher.HashPassword(request.NewPassword);
 
         await connection.ExecuteAsync(
             """
@@ -78,7 +78,7 @@ public class ChangePasswordEndpoint : IEndpoint
                 password_reset_token = NULL
             WHERE id = @Id
             """,
-            new { Password = password, user.Id }
+            new { Password = passwordHash, user.Id }
         );
 
         return Results.Ok(new ChangePasswordResponse(user.Id));

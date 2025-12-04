@@ -2,11 +2,12 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Database;
 using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace Halcyon.Api.Data;
 
 public class UserSeeder(
-    IDbConnectionFactory connectionFactory,
+    NpgsqlDataSource dataSource,
     IPasswordHasher passwordHasher,
     IOptions<SeedSettings> seedSettings
 ) : IDbSeeder
@@ -15,11 +16,12 @@ public class UserSeeder(
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        using var connection = connectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         foreach (var seedUser in _seedSettings.Users)
         {
             var id = Guid.NewGuid();
+            var passwordHash = passwordHasher.HashPassword(seedUser.Password);
 
             await connection.ExecuteAsync(
                 """
@@ -60,7 +62,7 @@ public class UserSeeder(
                 {
                     Id = id,
                     seedUser.EmailAddress,
-                    Password = passwordHasher.HashPassword(seedUser.Password),
+                    Password = passwordHash,
                     seedUser.FirstName,
                     seedUser.LastName,
                     seedUser.DateOfBirth,

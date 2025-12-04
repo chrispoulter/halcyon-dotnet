@@ -1,9 +1,9 @@
 ﻿using Dapper;
 using Halcyon.Api.Common.Authentication;
-using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Profile.UpdateProfile;
 
@@ -23,11 +23,11 @@ public class UpdateProfileEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         UpdateProfileRequest request,
         CurrentUser currentUser,
-        IDbConnectionFactory connectionFactory,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        using var connection = connectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         var user = await connection.QuerySingleOrDefaultAsync<User>(
             """

@@ -15,9 +15,7 @@ builder.AddServiceDefaults();
 
 SqlMapper.AddTypeHandler(new DateOnlyHandler());
 
-builder.Services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(
-    builder.Configuration.GetConnectionString("Database")
-));
+builder.AddNpgsqlDataSource(connectionName: "Database");
 builder.AddFluentEmail(connectionName: "Mail");
 
 var seedConfig = builder.Configuration.GetSection(SeedSettings.SectionName);

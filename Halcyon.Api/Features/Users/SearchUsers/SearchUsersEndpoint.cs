@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using Dapper;
 using Halcyon.Api.Common.Authentication;
-using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Users.SearchUsers;
 
@@ -24,11 +24,11 @@ public class SearchUsersEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         [AsParameters] SearchUsersRequest request,
-        IDbConnectionFactory connectionFactory,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        using var connection = connectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         var page = request.Page ?? 1;
         var size = request.Size ?? 10;

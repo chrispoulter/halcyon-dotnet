@@ -1,8 +1,8 @@
 ﻿using Dapper;
 using Halcyon.Api.Common.Authentication;
-using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Users.CreateUser;
 
@@ -21,12 +21,12 @@ public class CreateUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         CreateUserRequest request,
-        IDbConnectionFactory connectionFactory,
+        NpgsqlDataSource dataSource,
         IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
     )
     {
-        using var connection = connectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         var existing = await connection.ExecuteScalarAsync<bool>(
             """
@@ -46,7 +46,7 @@ public class CreateUserEndpoint : IEndpoint
         }
 
         var id = Guid.NewGuid();
-        var password = passwordHasher.HashPassword(request.Password);
+        var passwordHash = passwordHasher.HashPassword(request.Password);
 
         await connection.ExecuteAsync(
             """
@@ -60,7 +60,7 @@ public class CreateUserEndpoint : IEndpoint
             {
                 Id = id,
                 request.EmailAddress,
-                Password = password,
+                Password = passwordHash,
                 request.FirstName,
                 request.LastName,
                 request.DateOfBirth,

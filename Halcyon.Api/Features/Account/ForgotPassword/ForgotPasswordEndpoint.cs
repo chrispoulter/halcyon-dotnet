@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using Dapper;
 using FluentEmail.Core;
-using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Account.ForgotPassword;
 
@@ -21,12 +21,12 @@ public class ForgotPasswordEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         ForgotPasswordRequest request,
-        IDbConnectionFactory connectionFactory,
+        NpgsqlDataSource dataSource,
         IFluentEmail fluentEmail,
         CancellationToken cancellationToken = default
     )
     {
-        using var connection = connectionFactory.CreateConnection();
+        using var connection = dataSource.CreateConnection();
 
         var user = await connection.QuerySingleOrDefaultAsync<User>(
             """
