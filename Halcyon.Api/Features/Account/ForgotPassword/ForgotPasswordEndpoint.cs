@@ -4,7 +4,7 @@ using FluentEmail.Core;
 using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data.Users;
+using Halcyon.Api.Data;
 
 namespace Halcyon.Api.Features.Account.ForgotPassword;
 

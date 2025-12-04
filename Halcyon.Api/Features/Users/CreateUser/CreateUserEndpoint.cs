@@ -63,7 +63,7 @@ public class CreateUserEndpoint : IEndpoint
                 Password = password,
                 request.FirstName,
                 request.LastName,
-                DateOfBirth = request.DateOfBirth.ToString("YYYY-MM-DD"),
+                request.DateOfBirth,
                 request.Roles,
             }
         );

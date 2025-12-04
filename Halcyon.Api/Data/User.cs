@@ -1,7 +1,7 @@
 ﻿using Halcyon.Api.Common.Authentication;
 using NpgsqlTypes;
 
-namespace Halcyon.Api.Data.Users;
+namespace Halcyon.Api.Data;
 
 public class User : IJwtUser
 {

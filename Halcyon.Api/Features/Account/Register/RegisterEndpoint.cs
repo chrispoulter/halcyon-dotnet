@@ -75,7 +75,7 @@ public class RegisterEndpoint : IEndpoint
                 Password = passwordHash,
                 request.FirstName,
                 request.LastName,
-                DateOfBirth = request.DateOfBirth.ToString("YYYY-MM-DD"),
+                request.DateOfBirth,
             }
         );
 

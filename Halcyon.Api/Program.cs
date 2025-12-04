@@ -1,4 +1,5 @@
 using System.Reflection;
+using Dapper;
 using FluentValidation;
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Database;
@@ -12,15 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+SqlMapper.AddTypeHandler(new DateOnlyHandler());
+
 builder.Services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(
     builder.Configuration.GetConnectionString("Database")
 ));
-
 builder.AddFluentEmail(connectionName: "Mail");
 
 var seedConfig = builder.Configuration.GetSection(SeedSettings.SectionName);
 builder.Services.Configure<SeedSettings>(seedConfig);
-builder.Services.AddHostedService<DbUpMigrationHostedService>();
+builder.Services.AddMigration<UserSeeder>();
 
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddProblemDetails();

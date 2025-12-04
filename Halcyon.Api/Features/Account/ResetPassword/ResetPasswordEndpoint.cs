@@ -1,9 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Dapper;
-using Halcyon.Api.Data.Users;
+using Halcyon.Api.Data;
 
 namespace Halcyon.Api.Features.Account.ResetPassword;
 

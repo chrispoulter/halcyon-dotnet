@@ -3,7 +3,7 @@ using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
-using Halcyon.Api.Data.Users;
+using Halcyon.Api.Data;
 
 namespace Halcyon.Api.Features.Users.UpdateUser;
 
@@ -90,7 +90,7 @@ public class UpdateUserEndpoint : IEndpoint
                 request.EmailAddress,
                 request.FirstName,
                 request.LastName,
-                DateOfBirth = request.DateOfBirth.ToString("YYYY-MM-DD"),
+                request.DateOfBirth,
                 request.Roles,
                 user.Id,
             }
