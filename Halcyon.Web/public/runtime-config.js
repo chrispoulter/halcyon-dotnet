@@ -1,1 +1,1 @@
-// generated at runtime by entrypoint.sh
+// generated at runtime by generate-runtime-config.sh
