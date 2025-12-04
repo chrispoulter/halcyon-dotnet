@@ -13,9 +13,13 @@ export const useDeleteUser = (id: string) => {
 
     return useMutation({
         mutationFn: () =>
-            apiClient.delete<DeleteUserResponse>(`/users/${id}`, undefined, {
-                Authorization: `Bearer ${accessToken}`,
-            }),
+            apiClient
+                .delete(`users/${id}`, {
+                    context: {
+                        accessToken,
+                    },
+                })
+                .json<DeleteUserResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
 
