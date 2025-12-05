@@ -20,7 +20,7 @@ builder.AddFluentEmail(connectionName: "Mail");
 
 var seedConfig = builder.Configuration.GetSection(SeedSettings.SectionName);
 builder.Services.Configure<SeedSettings>(seedConfig);
-builder.Services.AddMigration<UserSeeder>();
+builder.Services.AddSeeder<UserSeeder>();
 
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddProblemDetails();

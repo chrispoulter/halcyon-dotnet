@@ -9,10 +9,9 @@ public static class MigrationExtensions
         return services;
     }
 
-    public static IServiceCollection AddMigration<TDbSeeder>(this IServiceCollection services)
+    public static IServiceCollection AddSeeder<TDbSeeder>(this IServiceCollection services)
         where TDbSeeder : class, IDbSeeder
     {
-        services.AddHostedService<MigrationBackgroundService>();
         services.AddScoped<IDbSeeder, TDbSeeder>();
 
         return services;

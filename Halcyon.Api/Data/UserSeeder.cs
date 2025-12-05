@@ -20,13 +20,11 @@ public class UserSeeder(
 
         foreach (var seedUser in _seedSettings.Users)
         {
-            var id = Guid.NewGuid();
-            var passwordHash = passwordHasher.HashPassword(seedUser.Password);
+            var password = passwordHasher.HashPassword(seedUser.Password);
 
             await connection.ExecuteAsync(
                 """
                 INSERT INTO users (
-                    id, 
                     email_address, 
                     password, 
                     password_reset_token, 
@@ -37,10 +35,9 @@ public class UserSeeder(
                     roles
                 )
                 VALUES (
-                    @Id, 
                     @EmailAddress, 
                     @Password, 
-                    null, 
+                    NULL, 
                     @FirstName, 
                     @LastName, 
                     @DateOfBirth, 
@@ -60,9 +57,8 @@ public class UserSeeder(
                 """,
                 new
                 {
-                    Id = id,
                     seedUser.EmailAddress,
-                    Password = passwordHash,
+                    Password = password,
                     seedUser.FirstName,
                     seedUser.LastName,
                     seedUser.DateOfBirth,
