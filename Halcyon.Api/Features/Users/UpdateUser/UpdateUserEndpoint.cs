@@ -29,7 +29,7 @@ public class UpdateUserEndpoint : IEndpoint
     {
         using var connection = dataSource.CreateConnection();
 
-        var user = await connection.QuerySingleOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
             """
             SELECT id AS Id, email_address AS EmailAddress
             FROM users

@@ -64,7 +64,7 @@ public class ChangePasswordEndpoint : IEndpoint
             );
         }
 
-        var passwordHash = passwordHasher.HashPassword(request.NewPassword);
+        var password = passwordHasher.HashPassword(request.NewPassword);
 
         await connection.ExecuteAsync(
             """
@@ -72,7 +72,7 @@ public class ChangePasswordEndpoint : IEndpoint
             SET password = @Password, password_reset_token = NULL
             WHERE id = @Id
             """,
-            new { Password = passwordHash, user.Id }
+            new { Password = password, user.Id }
         );
 
         return Results.Ok(new ChangePasswordResponse(user.Id));

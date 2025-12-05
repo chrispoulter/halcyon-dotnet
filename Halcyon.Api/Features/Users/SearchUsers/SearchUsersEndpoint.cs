@@ -1,5 +1,4 @@
-﻿using System.Data;
-using Dapper;
+﻿using Dapper;
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
@@ -30,13 +29,14 @@ public class SearchUsersEndpoint : IEndpoint
     {
         using var connection = dataSource.CreateConnection();
 
-        var page = request.Page ?? 1;
-        var size = request.Size ?? 10;
-        var offset = (page - 1) * size;
-
         var where = string.IsNullOrEmpty(request.Search)
             ? string.Empty
             : "WHERE search_vector @@ websearch_to_tsquery('english', @Search)";
+
+        var count = await connection.ExecuteScalarAsync<int>(
+            $@"SELECT COUNT(*) FROM users {where}",
+            new { request.Search }
+        );
 
         var orderBy = request.Sort switch
         {
@@ -46,27 +46,26 @@ public class SearchUsersEndpoint : IEndpoint
             _ => "first_name ASC, last_name ASC, id",
         };
 
-        var countSql = $@"SELECT COUNT(*) FROM users {where}";
-        var count = await connection.ExecuteScalarAsync<int>(countSql, new { request.Search });
+        var page = request.Page ?? 1;
+        var size = request.Size ?? 10;
+        var offset = (page - 1) * size;
 
-        var listSql =
+        var users = await connection.QueryAsync<SearchUserResponse>(
             $@"
             SELECT 
-                id, 
-                email_address, 
-                first_name, 
-                last_name, 
-                is_locked_out, 
-                roles
+                id AS Id, 
+                email_address AS EmailAddress, 
+                first_name AS FirstName, 
+                last_name AS LastName, 
+                is_locked_out AS IsLockedOut, 
+                roles AS Roles
             FROM
                 users
             {where}
             ORDER BY
                 {orderBy}
-            LIMIT @Size OFFSET @Offset";
-
-        var rows = await connection.QueryAsync(
-            listSql,
+            LIMIT @Size OFFSET @Offset
+            ",
             new
             {
                 request.Search,
@@ -74,16 +73,6 @@ public class SearchUsersEndpoint : IEndpoint
                 Offset = offset,
             }
         );
-
-        var users = rows.Select(u => new SearchUserResponse(
-                u.id,
-                u.email_address,
-                u.first_name,
-                u.last_name,
-                u.is_locked_out,
-                u.roles
-            ))
-            .ToList();
 
         var pageCount = (count + size - 1) / size;
         var hasNextPage = page < pageCount;

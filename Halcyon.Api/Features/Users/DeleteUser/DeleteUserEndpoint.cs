@@ -27,7 +27,7 @@ public class DeleteUserEndpoint : IEndpoint
     {
         using var connection = dataSource.CreateConnection();
 
-        var user = await connection.QuerySingleOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
             """
             SELECT id AS Id
             FROM users

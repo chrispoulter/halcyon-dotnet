@@ -45,19 +45,18 @@ public class CreateUserEndpoint : IEndpoint
             );
         }
 
-        var id = Guid.NewGuid();
-        var passwordHash = passwordHasher.HashPassword(request.Password);
+        var password = passwordHasher.HashPassword(request.Password);
 
-        await connection.ExecuteAsync(
+        var userId = await connection.ExecuteScalarAsync<Guid>(
             """
-            INSERT INTO users (id, email_address, password, first_name, last_name, date_of_birth, roles, is_locked_out) 
-            VALUES (@Id, @EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, @Roles, FALSE)
+            INSERT INTO users (email_address, password, first_name, last_name, date_of_birth, roles, is_locked_out) 
+            VALUES (@EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, @Roles, FALSE)
+            RETURNING id;
             """,
             new
             {
-                Id = id,
                 request.EmailAddress,
-                Password = passwordHash,
+                Password = password,
                 request.FirstName,
                 request.LastName,
                 request.DateOfBirth,
@@ -65,6 +64,6 @@ public class CreateUserEndpoint : IEndpoint
             }
         );
 
-        return Results.Ok(new CreateUserResponse(id));
+        return Results.Ok(new CreateUserResponse(userId));
     }
 }

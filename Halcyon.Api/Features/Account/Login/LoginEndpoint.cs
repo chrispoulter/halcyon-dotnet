@@ -30,7 +30,7 @@ public class LoginEndpoint : IEndpoint
         ArgumentNullException.ThrowIfNull(dataSource);
         using var connection = dataSource.CreateConnection();
 
-        var user = await connection.QuerySingleOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
             """
             SELECT
                 id AS Id,

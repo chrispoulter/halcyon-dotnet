@@ -2,6 +2,7 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
+using Halcyon.Api.Data;
 using Npgsql;
 
 namespace Halcyon.Api.Features.Account.Register;
@@ -44,25 +45,24 @@ public class RegisterEndpoint : IEndpoint
             );
         }
 
-        var id = Guid.NewGuid();
-        var passwordHash = passwordHasher.HashPassword(request.Password);
+        var password = passwordHasher.HashPassword(request.Password);
 
-        await connection.ExecuteAsync(
+        var userId = await connection.ExecuteScalarAsync<Guid>(
             """
-            INSERT INTO users (id, email_address, password, first_name, last_name, date_of_birth, is_locked_out)
-            VALUES (@Id, @EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, FALSE)
+            INSERT INTO users (email_address, password, first_name, last_name, date_of_birth, is_locked_out)
+            VALUES (@EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, FALSE)
+            RETURNING id;
             """,
             new
             {
-                Id = id,
                 request.EmailAddress,
-                Password = passwordHash,
+                Password = password,
                 request.FirstName,
                 request.LastName,
                 request.DateOfBirth,
             }
         );
 
-        return Results.Ok(new RegisterResponse(id));
+        return Results.Ok(new RegisterResponse(userId));
     }
 }

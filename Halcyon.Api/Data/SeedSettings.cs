@@ -4,7 +4,7 @@ public class SeedSettings
 {
     public static string SectionName { get; } = "Seed";
 
-    public required List<SeedUser> Users { get; set; }
+    public required IEnumerable<SeedUser> Users { get; set; }
 
     public class SeedUser
     {

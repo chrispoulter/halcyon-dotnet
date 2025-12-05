@@ -28,7 +28,7 @@ public class ForgotPasswordEndpoint : IEndpoint
     {
         using var connection = dataSource.CreateConnection();
 
-        var user = await connection.QuerySingleOrDefaultAsync<User>(
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
             """
             SELECT id AS Id, email_address AS EmailAddress, is_locked_out AS IsLockedOut
             FROM users 
@@ -39,7 +39,7 @@ public class ForgotPasswordEndpoint : IEndpoint
 
         if (user is not null && !user.IsLockedOut)
         {
-            var token = Guid.NewGuid();
+            var passwordResetToken = Guid.NewGuid();
 
             await connection.ExecuteAsync(
                 """
@@ -47,7 +47,7 @@ public class ForgotPasswordEndpoint : IEndpoint
                 SET password_reset_token = @Token 
                 WHERE id = @Id
                 """,
-                new { Token = token, user.Id }
+                new { Token = passwordResetToken, user.Id }
             );
 
             var assembly = Assembly.GetExecutingAssembly();
@@ -57,7 +57,7 @@ public class ForgotPasswordEndpoint : IEndpoint
                 .Subject("Reset Password // Halcyon")
                 .UsingTemplateFromEmbedded(
                     "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
-                    new { PasswordResetToken = token },
+                    new { PasswordResetToken = passwordResetToken },
                     assembly
                 )
                 .SendAsync(cancellationToken);
