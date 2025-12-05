@@ -50,11 +50,8 @@ public class CreateUserEndpoint : IEndpoint
 
         await connection.ExecuteAsync(
             """
-            INSERT INTO users (
-                id, email_address, password, first_name, last_name, date_of_birth, roles, is_locked_out
-            ) VALUES (
-                @Id, @EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, @Roles, FALSE
-            )
+            INSERT INTO users (id, email_address, password, first_name, last_name, date_of_birth, roles, is_locked_out) 
+            VALUES (@Id, @EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, @Roles, FALSE)
             """,
             new
             {

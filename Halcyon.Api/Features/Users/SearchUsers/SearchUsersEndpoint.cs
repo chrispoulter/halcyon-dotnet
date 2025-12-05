@@ -34,21 +34,19 @@ public class SearchUsersEndpoint : IEndpoint
         var size = request.Size ?? 10;
         var offset = (page - 1) * size;
 
-        var searchWhere = string.IsNullOrEmpty(request.Search)
+        var where = string.IsNullOrEmpty(request.Search)
             ? string.Empty
             : "WHERE search_vector @@ websearch_to_tsquery('english', @Search)";
 
-        var orderBy =
-            "ORDER BY "
-            + request.Sort switch
-            {
-                UserSort.EMAIL_ADDRESS_DESC => "email_address DESC, id",
-                UserSort.EMAIL_ADDRESS_ASC => "email_address ASC, id",
-                UserSort.NAME_DESC => "first_name DESC, last_name DESC, id",
-                _ => "first_name ASC, last_name ASC, id",
-            };
+        var orderBy = request.Sort switch
+        {
+            UserSort.EMAIL_ADDRESS_DESC => "email_address DESC, id",
+            UserSort.EMAIL_ADDRESS_ASC => "email_address ASC, id",
+            UserSort.NAME_DESC => "first_name DESC, last_name DESC, id",
+            _ => "first_name ASC, last_name ASC, id",
+        };
 
-        var countSql = $@"SELECT COUNT(*) FROM users {searchWhere}";
+        var countSql = $@"SELECT COUNT(*) FROM users {where}";
         var count = await connection.ExecuteScalarAsync<int>(countSql, new { request.Search });
 
         var listSql =
@@ -62,8 +60,9 @@ public class SearchUsersEndpoint : IEndpoint
                 roles
             FROM
                 users
-            {searchWhere}
-            {orderBy}
+            {where}
+            ORDER BY
+                {orderBy}
             LIMIT @Size OFFSET @Offset";
 
         var rows = await connection.QueryAsync(

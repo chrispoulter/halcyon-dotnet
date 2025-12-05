@@ -29,12 +29,9 @@ public class DeleteUserEndpoint : IEndpoint
 
         var user = await connection.QuerySingleOrDefaultAsync<User>(
             """
-            SELECT 
-                id AS Id
-            FROM
-                users
-            WHERE 
-                id = @Id
+            SELECT id AS Id
+            FROM users
+            WHERE id = @Id
             """,
             new { Id = id }
         );

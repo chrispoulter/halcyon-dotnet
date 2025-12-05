@@ -39,10 +39,8 @@ public class LoginEndpoint : IEndpoint
                 last_name AS LastName,
                 password AS Password,
                 roles AS Roles
-            FROM 
-                users
-            WHERE
-                email_address = @Email
+            FROM users
+            WHERE email_address = @Email
             """,
             new { Email = request.EmailAddress }
         );

@@ -28,13 +28,9 @@ public class DeleteProfileEndpoint : IEndpoint
 
         var user = await connection.QueryFirstOrDefaultAsync<User>(
             """
-            SELECT 
-                id AS Id,
-                is_locked_out AS IsLockedOut
-            FROM
-                users
-            WHERE 
-                id = @Id
+            SELECT id AS Id, is_locked_out AS IsLockedOut
+            FROM users
+            WHERE id = @Id
             """,
             new { currentUser.Id }
         );

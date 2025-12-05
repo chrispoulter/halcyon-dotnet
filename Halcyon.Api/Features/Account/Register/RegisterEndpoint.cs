@@ -49,24 +49,8 @@ public class RegisterEndpoint : IEndpoint
 
         await connection.ExecuteAsync(
             """
-            INSERT INTO users (
-                id,
-                email_address,
-                password,
-                first_name,
-                last_name,
-                date_of_birth,
-                is_locked_out
-            ) 
-            VALUES (
-                @Id,
-                @EmailAddress,
-                @Password,
-                @FirstName,
-                @LastName,
-                @DateOfBirth,
-                FALSE
-            )
+            INSERT INTO users (id, email_address, password, first_name, last_name, date_of_birth, is_locked_out)
+            VALUES (@Id, @EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, FALSE)
             """,
             new
             {

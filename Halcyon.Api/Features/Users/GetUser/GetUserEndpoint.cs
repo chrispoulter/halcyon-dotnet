@@ -36,10 +36,8 @@ public class GetUserEndpoint : IEndpoint
                 date_of_birth AS DateOfBirth,
                 is_locked_out AS IsLockedOut,
                 roles AS Roles
-            FROM 
-                users
-            WHERE 
-                id = @Id
+            FROM users
+            WHERE id = @Id
             """,
             new { Id = id }
         );

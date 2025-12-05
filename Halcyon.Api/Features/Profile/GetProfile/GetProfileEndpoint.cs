@@ -35,10 +35,8 @@ public class GetProfileEndpoint : IEndpoint
                 last_name AS LastName,
                 date_of_birth AS DateOfBirth,
                 is_locked_out AS IsLockedOut
-            FROM
-                users
-            WHERE
-                id = @Id
+            FROM users
+            WHERE id = @Id
             """,
             new { currentUser.Id }
         );

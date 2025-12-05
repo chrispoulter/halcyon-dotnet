@@ -30,14 +30,9 @@ public class ForgotPasswordEndpoint : IEndpoint
 
         var user = await connection.QuerySingleOrDefaultAsync<User>(
             """
-            SELECT
-                id AS Id,
-                email_address AS EmailAddress,
-                is_locked_out AS IsLockedOut
-            FROM
-                users 
-            WHERE
-                email_address = @Email
+            SELECT id AS Id, email_address AS EmailAddress, is_locked_out AS IsLockedOut
+            FROM users 
+            WHERE email_address = @Email
             """,
             new { Email = request.EmailAddress }
         );

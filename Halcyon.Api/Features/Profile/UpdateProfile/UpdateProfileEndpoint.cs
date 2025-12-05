@@ -31,14 +31,9 @@ public class UpdateProfileEndpoint : IEndpoint
 
         var user = await connection.QuerySingleOrDefaultAsync<User>(
             """
-            SELECT 
-                id AS Id,
-                email_address AS EmailAddress,
-                is_locked_out AS IsLockedOut
-            FROM 
-                users
-            WHERE 
-                id = @Id
+            SELECT id AS Id, email_address AS EmailAddress, is_locked_out AS IsLockedOut
+            FROM users
+            WHERE id = @Id
             """,
             new { currentUser.Id }
         );

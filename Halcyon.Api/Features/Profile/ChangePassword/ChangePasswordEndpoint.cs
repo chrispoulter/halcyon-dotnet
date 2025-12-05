@@ -31,14 +31,9 @@ public class ChangePasswordEndpoint : IEndpoint
 
         var user = await connection.QueryFirstOrDefaultAsync<User>(
             """
-            SELECT 
-                id AS Id,
-                password AS Password,
-                is_locked_out AS IsLockedOut
-            FROM 
-                users
-            WHERE 
-                id = @Id
+            SELECT id AS Id, password AS Password, is_locked_out AS IsLockedOut
+            FROM users
+            WHERE id = @Id
             """,
             new { currentUser.Id }
         );
@@ -74,8 +69,7 @@ public class ChangePasswordEndpoint : IEndpoint
         await connection.ExecuteAsync(
             """
             UPDATE users
-            SET password = @Password,
-                password_reset_token = NULL
+            SET password = @Password, password_reset_token = NULL
             WHERE id = @Id
             """,
             new { Password = passwordHash, user.Id }

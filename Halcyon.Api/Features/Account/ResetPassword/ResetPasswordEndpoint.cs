@@ -31,7 +31,8 @@ public class ResetPasswordEndpoint : IEndpoint
         var user = await connection.QuerySingleOrDefaultAsync<User>(
             """
             SELECT id AS Id, password_reset_token AS PasswordResetToken, is_locked_out AS IsLockedOut
-            FROM users WHERE email_address = @Email
+            FROM users
+            WHERE email_address = @Email
             """,
             new { Email = request.EmailAddress }
         );
@@ -49,8 +50,7 @@ public class ResetPasswordEndpoint : IEndpoint
         await connection.ExecuteAsync(
             """
             UPDATE users
-            SET password = @Password,
-                password_reset_token = NULL
+            SET password = @Password, password_reset_token = NULL
             WHERE id = @Id
             """,
             new { Password = passwordHash, user.Id }
