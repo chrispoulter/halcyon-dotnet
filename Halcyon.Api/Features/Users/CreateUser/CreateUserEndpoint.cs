@@ -49,8 +49,8 @@ public class CreateUserEndpoint : IEndpoint
 
         var userId = await connection.ExecuteScalarAsync<Guid>(
             """
-            INSERT INTO users (email_address, password, first_name, last_name, date_of_birth, roles, is_locked_out) 
-            VALUES (@EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, @Roles, FALSE)
+            INSERT INTO users (email_address, password, first_name, last_name, date_of_birth, roles) 
+            VALUES (@EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, @Roles)
             RETURNING id;
             """,
             new

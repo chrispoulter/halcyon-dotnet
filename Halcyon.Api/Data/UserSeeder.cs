@@ -41,7 +41,7 @@ public class UserSeeder(
                     @FirstName, 
                     @LastName, 
                     @DateOfBirth, 
-                    false, 
+                    FALSE, 
                     @Roles
                 ) 
                 ON CONFLICT (email_address) 

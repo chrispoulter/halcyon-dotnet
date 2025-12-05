@@ -2,7 +2,7 @@
 
 public static class MigrationExtensions
 {
-    public static IServiceCollection AddMigration(this IServiceCollection services)
+    public static IServiceCollection AddMigrations(this IServiceCollection services)
     {
         services.AddHostedService<MigrationBackgroundService>();
 

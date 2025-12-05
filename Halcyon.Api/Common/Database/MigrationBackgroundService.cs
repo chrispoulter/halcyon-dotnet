@@ -20,7 +20,7 @@ public class MigrationBackgroundService(
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {
-            throw new InvalidOperationException("Connection string 'Database' is not configured.");
+            throw new Exception("Connection string 'Database' is not configured.");
         }
 
         var upgrader = DeployChanges

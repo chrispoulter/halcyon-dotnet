@@ -16,7 +16,7 @@ public class DateOnlyHandler : SqlMapper.TypeHandler<DateOnly>
         return value switch
         {
             DateOnly dateOnly => dateOnly,
-            _ => throw new DataException("Invalid DateOnly value from database"),
+            _ => throw new Exception("Invalid DateOnly value from database"),
         };
     }
 }

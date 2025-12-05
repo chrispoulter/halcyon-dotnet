@@ -2,6 +2,7 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
+using Halcyon.Api.Data;
 using Npgsql;
 
 namespace Halcyon.Api.Features.Users.SearchUsers;
@@ -50,7 +51,7 @@ public class SearchUsersEndpoint : IEndpoint
         var size = request.Size ?? 10;
         var offset = (page - 1) * size;
 
-        var users = await connection.QueryAsync<SearchUserResponse>(
+        var data = await connection.QueryAsync<User>(
             $@"
             SELECT 
                 id AS Id, 
@@ -78,7 +79,16 @@ public class SearchUsersEndpoint : IEndpoint
         var hasNextPage = page < pageCount;
         var hasPreviousPage = page > 1 && page <= pageCount;
 
-        var result = new SearchUsersResponse(users, hasNextPage, hasPreviousPage);
+        var items = data.Select(u => new SearchUserResponse(
+            u.Id,
+            u.EmailAddress,
+            u.FirstName,
+            u.LastName,
+            u.IsLockedOut,
+            u.Roles
+        ));
+
+        var result = new SearchUsersResponse(items, hasNextPage, hasPreviousPage);
 
         return Results.Ok(result);
     }
