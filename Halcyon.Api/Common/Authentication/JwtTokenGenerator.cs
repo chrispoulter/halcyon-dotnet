@@ -21,19 +21,17 @@ public class JwtTokenGenerator(TimeProvider timeProvider, IOptions<JwtSettings> 
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(
-                [
-                    new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                    new(JwtRegisteredClaimNames.Email, user.EmailAddress),
-                    new(JwtRegisteredClaimNames.GivenName, user.FirstName),
-                    new(JwtRegisteredClaimNames.FamilyName, user.LastName),
-                    new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    .. (user.Roles ?? []).Select(role => new Claim(
-                        JwtClaimNames.Roles,
-                        role.ToString()
-                    )),
-                ]
-            ),
+            Subject = new ClaimsIdentity([
+                new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new(JwtRegisteredClaimNames.Email, user.EmailAddress),
+                new(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new(JwtRegisteredClaimNames.FamilyName, user.LastName),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                .. (user.Roles ?? []).Select(role => new Claim(
+                    JwtClaimNames.Roles,
+                    role.ToString()
+                )),
+            ]),
             Expires = timeProvider.GetUtcNow().AddSeconds(_jwtSettings.ExpiresIn).UtcDateTime,
             SigningCredentials = credentials,
             Issuer = _jwtSettings.Issuer,
