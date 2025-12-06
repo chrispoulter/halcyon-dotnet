@@ -18,11 +18,6 @@ public class MigrationBackgroundService(
 
         var connectionString = configuration.GetConnectionString("Database");
 
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            throw new Exception("Connection string 'Database' is not configured.");
-        }
-
         var upgrader = DeployChanges
             .To.PostgresqlDatabase(connectionString)
             .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
