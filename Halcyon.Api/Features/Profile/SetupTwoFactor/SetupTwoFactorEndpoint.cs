@@ -1,7 +1,6 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
@@ -18,7 +17,6 @@ public class SetupTwoFactorEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
-        [FromBody] SetupTwoFactorRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
         IConfiguration configuration,
@@ -35,14 +33,6 @@ public class SetupTwoFactorEndpoint : IEndpoint
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 title: "User not found."
-            );
-        }
-
-        if (request?.Version is not null && request.Version != user.Version)
-        {
-            return Results.Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Data has been modified since entities were loaded."
             );
         }
 

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
-type VerifyTwoFactorRequest = { code: string; version?: number };
+type VerifyTwoFactorRequest = { code: string };
 
 type VerifyTwoFactorResponse = {
     id: string;
@@ -16,13 +16,14 @@ export const useVerifyTwoFactor = () => {
 
     return useMutation({
         mutationFn: (request: VerifyTwoFactorRequest) =>
-            apiClient.put<VerifyTwoFactorResponse>(
-                '/profile/verify-two-factor',
-                request,
-                {
-                    Authorization: `Bearer ${accessToken}`,
-                }
-            ),
+            apiClient
+                .put('/profile/verify-two-factor', {
+                    json: request,
+                    context: {
+                        accessToken,
+                    },
+                })
+                .json<VerifyTwoFactorResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });

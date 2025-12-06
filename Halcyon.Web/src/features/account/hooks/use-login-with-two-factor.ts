@@ -14,9 +14,8 @@ type LoginWithTwoFactorResponse = {
 export const useLoginWithTwoFactor = () => {
     return useMutation({
         mutationFn: (request: LoginWithTwoFactorRequest) =>
-            apiClient.post<LoginWithTwoFactorResponse>(
-                '/account/login-two-factor',
-                request
-            ),
+            apiClient
+                .post('/account/login-two-factor', { json: request })
+                .json<LoginWithTwoFactorResponse>(),
     });
 };
