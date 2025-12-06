@@ -1,5 +1,4 @@
 using System.Reflection;
-using Dapper;
 using FluentValidation;
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Database;
