@@ -13,5 +13,5 @@ public record SearchUserResponse(
     string LastName,
     bool IsTwoFactorEnabled,
     bool IsLockedOut,
-    List<string>? Roles
+    IEnumerable<string>? Roles
 );

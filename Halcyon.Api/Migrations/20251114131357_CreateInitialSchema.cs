@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using NpgsqlTypes;
 
@@ -29,7 +28,7 @@ namespace Halcyon.Api.Migrations
                         nullable: false,
                         defaultValue: false
                     ),
-                    roles = table.Column<List<string>>(type: "text[]", nullable: true),
+                    roles = table.Column<string[]>(type: "text[]", nullable: true),
                     search_vector = table
                         .Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
                         .Annotation("Npgsql:TsVectorConfig", "english")
