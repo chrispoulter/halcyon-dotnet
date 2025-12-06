@@ -1,8 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Account.ResetPassword;
 
@@ -20,14 +21,20 @@ public class ResetPasswordEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         ResetPasswordRequest request,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(
-            u => u.EmailAddress == request.EmailAddress,
-            cancellationToken
+        using var connection = dataSource.CreateConnection();
+
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
+            """
+            SELECT id AS Id, password_reset_token AS PasswordResetToken, is_locked_out AS IsLockedOut
+            FROM users
+            WHERE email_address = @Email
+            """,
+            new { Email = request.EmailAddress }
         );
 
         if (user is null || user.IsLockedOut || request.Token != user.PasswordResetToken)
@@ -38,10 +45,16 @@ public class ResetPasswordEndpoint : IEndpoint
             );
         }
 
-        user.Password = passwordHasher.HashPassword(request.NewPassword);
-        user.PasswordResetToken = null;
+        var passwordHash = passwordHasher.HashPassword(request.NewPassword);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await connection.ExecuteAsync(
+            """
+            UPDATE users
+            SET password = @Password, password_reset_token = NULL
+            WHERE id = @Id
+            """,
+            new { Password = passwordHash, user.Id }
+        );
 
         return Results.Ok(new ResetPasswordResponse(user.Id));
     }

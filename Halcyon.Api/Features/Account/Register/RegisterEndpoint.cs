@@ -1,9 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
-using Halcyon.Api.Data.Users;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Account.Register;
 
@@ -21,14 +21,20 @@ public class RegisterEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         RegisterRequest request,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
     )
     {
-        var existing = await dbContext.Users.AnyAsync(
-            u => u.EmailAddress == request.EmailAddress,
-            cancellationToken
+        using var connection = dataSource.CreateConnection();
+
+        var existing = await connection.ExecuteScalarAsync<bool>(
+            """
+            SELECT EXISTS(
+                SELECT 1 FROM users WHERE email_address = @Email
+            )
+            """,
+            new { Email = request.EmailAddress }
         );
 
         if (existing)
@@ -39,19 +45,24 @@ public class RegisterEndpoint : IEndpoint
             );
         }
 
-        var user = new User
-        {
-            EmailAddress = request.EmailAddress,
-            Password = passwordHasher.HashPassword(request.Password),
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            DateOfBirth = request.DateOfBirth,
-        };
+        var password = passwordHasher.HashPassword(request.Password);
 
-        dbContext.Users.Add(user);
+        var userId = await connection.ExecuteScalarAsync<Guid>(
+            """
+            INSERT INTO users (email_address, password, first_name, last_name, date_of_birth, is_locked_out)
+            VALUES (@EmailAddress, @Password, @FirstName, @LastName, @DateOfBirth, FALSE)
+            RETURNING id;
+            """,
+            new
+            {
+                request.EmailAddress,
+                Password = password,
+                request.FirstName,
+                request.LastName,
+                request.DateOfBirth,
+            }
+        );
 
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return Results.Ok(new RegisterResponse(user.Id));
+        return Results.Ok(new RegisterResponse(userId));
     }
 }

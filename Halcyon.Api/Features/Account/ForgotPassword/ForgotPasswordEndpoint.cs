@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
+using Dapper;
 using FluentEmail.Core;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Account.ForgotPassword;
 
@@ -20,21 +21,34 @@ public class ForgotPasswordEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         ForgotPasswordRequest request,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         IFluentEmail fluentEmail,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(
-            u => u.EmailAddress == request.EmailAddress,
-            cancellationToken
+        using var connection = dataSource.CreateConnection();
+
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
+            """
+            SELECT id AS Id, email_address AS EmailAddress, is_locked_out AS IsLockedOut
+            FROM users 
+            WHERE email_address = @Email
+            """,
+            new { Email = request.EmailAddress }
         );
 
         if (user is not null && !user.IsLockedOut)
         {
-            user.PasswordResetToken = Guid.NewGuid();
+            var passwordResetToken = Guid.NewGuid();
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            await connection.ExecuteAsync(
+                """
+                UPDATE users 
+                SET password_reset_token = @Token 
+                WHERE id = @Id
+                """,
+                new { Token = passwordResetToken, user.Id }
+            );
 
             var assembly = Assembly.GetExecutingAssembly();
 
@@ -43,7 +57,7 @@ public class ForgotPasswordEndpoint : IEndpoint
                 .Subject("Reset Password // Halcyon")
                 .UsingTemplateFromEmbedded(
                     "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
-                    new { user.PasswordResetToken },
+                    new { PasswordResetToken = passwordResetToken },
                     assembly
                 )
                 .SendAsync(cancellationToken);

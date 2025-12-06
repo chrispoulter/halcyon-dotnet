@@ -1,8 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Users.UpdateUser;
 
@@ -22,11 +23,20 @@ public class UpdateUserEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         Guid id,
         UpdateUserRequest request,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        using var connection = dataSource.CreateConnection();
+
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
+            """
+            SELECT id AS Id, email_address AS EmailAddress
+            FROM users
+            WHERE id = @Id
+            """,
+            new { Id = id }
+        );
 
         if (user is null)
         {
@@ -43,9 +53,13 @@ public class UpdateUserEndpoint : IEndpoint
             )
         )
         {
-            var existing = await dbContext.Users.AnyAsync(
-                u => u.EmailAddress == request.EmailAddress,
-                cancellationToken
+            var existing = await connection.ExecuteScalarAsync<bool>(
+                """
+                SELECT EXISTS(
+                    SELECT 1 FROM users WHERE email_address = @Email
+                )
+                """,
+                new { Email = request.EmailAddress }
             );
 
             if (existing)
@@ -57,13 +71,26 @@ public class UpdateUserEndpoint : IEndpoint
             }
         }
 
-        user.EmailAddress = request.EmailAddress;
-        user.FirstName = request.FirstName;
-        user.LastName = request.LastName;
-        user.DateOfBirth = request.DateOfBirth;
-        user.Roles = request.Roles;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await connection.ExecuteAsync(
+            """
+            UPDATE users
+            SET email_address = @EmailAddress,
+                first_name = @FirstName,
+                last_name = @LastName,
+                date_of_birth = @DateOfBirth,
+                roles = @Roles
+            WHERE id = @Id
+            """,
+            new
+            {
+                request.EmailAddress,
+                request.FirstName,
+                request.LastName,
+                request.DateOfBirth,
+                request.Roles,
+                user.Id,
+            }
+        );
 
         return Results.Ok(new UpdateUserResponse(user.Id));
     }

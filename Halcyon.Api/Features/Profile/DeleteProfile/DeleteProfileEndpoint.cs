@@ -1,7 +1,8 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Profile.DeleteProfile;
 
@@ -19,13 +20,19 @@ public class DeleteProfileEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         CurrentUser currentUser,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(
-            u => u.Id == currentUser.Id,
-            cancellationToken
+        using var connection = dataSource.CreateConnection();
+
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
+            """
+            SELECT id AS Id, is_locked_out AS IsLockedOut
+            FROM users
+            WHERE id = @Id
+            """,
+            new { currentUser.Id }
         );
 
         if (user is null || user.IsLockedOut)
@@ -36,9 +43,12 @@ public class DeleteProfileEndpoint : IEndpoint
             );
         }
 
-        dbContext.Users.Remove(user);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await connection.ExecuteAsync(
+            """
+            DELETE FROM users WHERE id = @Id
+            """,
+            new { user.Id }
+        );
 
         return Results.Ok(new DeleteProfileResponse(user.Id));
     }

@@ -1,25 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Halcyon.Api.Common.Database;
+﻿namespace Halcyon.Api.Common.Database;
 
 public static class MigrationExtensions
 {
-    public static IServiceCollection AddMigration<TDbContext>(this IServiceCollection services)
-        where TDbContext : DbContext
+    public static IServiceCollection AddMigrations(this IServiceCollection services)
     {
-        services.AddHostedService<MigrationBackgroundService<TDbContext>>();
+        services.AddHostedService<MigrationBackgroundService>();
 
         return services;
     }
 
-    public static IServiceCollection AddMigration<TDbContext, TDbSeeder>(
-        this IServiceCollection services
-    )
-        where TDbContext : DbContext
-        where TDbSeeder : class, IDbSeeder<TDbContext>
+    public static IServiceCollection AddSeeder<TDbSeeder>(this IServiceCollection services)
+        where TDbSeeder : class, IDbSeeder
     {
-        services.AddHostedService<MigrationBackgroundService<TDbContext>>();
-        services.AddScoped<IDbSeeder<TDbContext>, TDbSeeder>();
+        services.AddScoped<IDbSeeder, TDbSeeder>();
 
         return services;
     }

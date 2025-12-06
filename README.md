@@ -6,8 +6,8 @@ A .NET Core project template ðŸ‘· Built with a sense of peace and tranquillity ð
 
 - .NET
   [https://dotnet.microsoft.com/](https://dotnet.microsoft.com/)
-- Entity Framework
-  [https://learn.microsoft.com/en-us/ef](https://learn.microsoft.com/en-us/ef)
+- Dapper
+  [https://github.com/DapperLib/Dapper](https://github.com/DapperLib/Dapper)
 - FluentValidation
   [https://fluentvalidation.net/](https://fluentvalidation.net/)
 - FluentEmail

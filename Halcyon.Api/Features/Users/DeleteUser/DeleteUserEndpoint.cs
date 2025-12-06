@@ -1,7 +1,8 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Users.DeleteUser;
 
@@ -20,11 +21,20 @@ public class DeleteUserEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         Guid id,
         CurrentUser currentUser,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        using var connection = dataSource.CreateConnection();
+
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
+            """
+            SELECT id AS Id
+            FROM users
+            WHERE id = @Id
+            """,
+            new { Id = id }
+        );
 
         if (user is null)
         {
@@ -42,9 +52,13 @@ public class DeleteUserEndpoint : IEndpoint
             );
         }
 
-        dbContext.Users.Remove(user);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await connection.ExecuteAsync(
+            """
+            DELETE FROM users 
+            WHERE id = @Id
+            """,
+            new { Id = id }
+        );
 
         return Results.Ok(new DeleteUserResponse(user.Id));
     }

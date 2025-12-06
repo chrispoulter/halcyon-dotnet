@@ -1,42 +1,45 @@
-﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using DbUp;
 
 namespace Halcyon.Api.Common.Database;
 
-public class MigrationBackgroundService<TDbContext>(
+public class MigrationBackgroundService(
     IServiceProvider serviceProvider,
-    ILogger<MigrationBackgroundService<TDbContext>> logger
+    ILogger<MigrationBackgroundService> logger,
+    IConfiguration configuration
 ) : BackgroundService
-    where TDbContext : DbContext
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         if (logger.IsEnabled(LogLevel.Information))
         {
-            logger.LogInformation("Migrating database for {DbContext}", typeof(TDbContext).Name);
+            logger.LogInformation("Migrating database");
         }
 
-        using var scope = serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
+        var connectionString =
+            configuration.GetConnectionString("Database")
+            ?? throw new InvalidOperationException("Database connection string is not configured");
 
-        try
-        {
-            await dbContext.Database.MigrateAsync(cancellationToken);
-        }
-        catch (Exception ex)
+        var upgrader = DeployChanges
+            .To.PostgresqlDatabase(connectionString)
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+            .LogToConsole()
+            .Build();
+
+        var result = upgrader.PerformUpgrade();
+
+        if (!result.Successful)
         {
             if (logger.IsEnabled(LogLevel.Error))
             {
-                logger.LogError(
-                    ex,
-                    "An error occurred while migrating database for {DbContext}",
-                    typeof(TDbContext).Name
-                );
+                logger.LogError(result.Error, "An error occurred while migrating database");
             }
 
             return;
         }
 
-        var dbSeeders = scope.ServiceProvider.GetServices<IDbSeeder<TDbContext>>();
+        using var scope = serviceProvider.CreateScope();
+        var dbSeeders = scope.ServiceProvider.GetServices<IDbSeeder>();
 
         if (!dbSeeders.Any())
         {
@@ -47,11 +50,7 @@ public class MigrationBackgroundService<TDbContext>(
         {
             if (logger.IsEnabled(LogLevel.Information))
             {
-                logger.LogInformation(
-                    "Seeding database for {DbContext} with {DbSeeder}",
-                    typeof(TDbContext).Name,
-                    seeder.GetType().Name
-                );
+                logger.LogInformation("Seeding database with {DbSeeder}", seeder.GetType().Name);
             }
 
             try
@@ -64,8 +63,7 @@ public class MigrationBackgroundService<TDbContext>(
                 {
                     logger.LogError(
                         ex,
-                        "An error occurred while seeding database for {DbContext} with {DbSeeder}",
-                        typeof(TDbContext).Name,
+                        "An error occurred while seeding database with {DbSeeder}",
                         seeder.GetType().Name
                     );
                 }

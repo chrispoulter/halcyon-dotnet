@@ -1,8 +1,9 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Users.SearchUsers;
 
@@ -23,63 +24,71 @@ public class SearchUsersEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         [AsParameters] SearchUsersRequest request,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        var query = dbContext.Users.AsNoTracking().AsQueryable();
+        using var connection = dataSource.CreateConnection();
 
-        if (!string.IsNullOrEmpty(request.Search))
+        var where = string.IsNullOrEmpty(request.Search)
+            ? string.Empty
+            : "WHERE search_vector @@ websearch_to_tsquery('english', @Search)";
+
+        var count = await connection.ExecuteScalarAsync<int>(
+            $@"SELECT COUNT(*) FROM users {where}",
+            new { request.Search }
+        );
+
+        var orderBy = request.Sort switch
         {
-            query = query.Where(u =>
-                u.SearchVector.Matches(EF.Functions.WebSearchToTsQuery("english", request.Search))
-            );
-        }
-
-        var count = await query.CountAsync(cancellationToken);
-
-        query = request.Sort switch
-        {
-            UserSort.EMAIL_ADDRESS_DESC => query
-                .OrderByDescending(r => r.EmailAddress)
-                .ThenBy(r => r.Id),
-
-            UserSort.EMAIL_ADDRESS_ASC => query.OrderBy(r => r.EmailAddress).ThenBy(r => r.Id),
-
-            UserSort.NAME_DESC => query
-                .OrderByDescending(r => r.FirstName)
-                .ThenByDescending(r => r.LastName)
-                .ThenBy(r => r.Id),
-
-            _ => query.OrderBy(r => r.FirstName).ThenBy(r => r.LastName).ThenBy(r => r.Id),
+            UserSort.EMAIL_ADDRESS_DESC => "email_address DESC, id",
+            UserSort.EMAIL_ADDRESS_ASC => "email_address ASC, id",
+            UserSort.NAME_DESC => "first_name DESC, last_name DESC, id",
+            _ => "first_name ASC, last_name ASC, id",
         };
 
         var page = request.Page ?? 1;
         var size = request.Size ?? 10;
+        var offset = (page - 1) * size;
 
-        if (page > 1)
-        {
-            query = query.Skip((page - 1) * size);
-        }
-
-        query = query.Take(size);
-
-        var users = await query
-            .Select(u => new SearchUserResponse(
-                u.Id,
-                u.EmailAddress,
-                u.FirstName,
-                u.LastName,
-                u.IsLockedOut,
-                u.Roles
-            ))
-            .ToListAsync(cancellationToken);
+        var data = await connection.QueryAsync<User>(
+            $@"
+            SELECT 
+                id AS Id, 
+                email_address AS EmailAddress, 
+                first_name AS FirstName, 
+                last_name AS LastName, 
+                is_locked_out AS IsLockedOut, 
+                roles AS Roles
+            FROM
+                users
+            {where}
+            ORDER BY
+                {orderBy}
+            LIMIT @Size OFFSET @Offset
+            ",
+            new
+            {
+                request.Search,
+                Size = size,
+                Offset = offset,
+            }
+        );
 
         var pageCount = (count + size - 1) / size;
         var hasNextPage = page < pageCount;
         var hasPreviousPage = page > 1 && page <= pageCount;
 
-        var result = new SearchUsersResponse(users, hasNextPage, hasPreviousPage);
+        var items = data.Select(u => new SearchUserResponse(
+            u.Id,
+            u.EmailAddress,
+            u.FirstName,
+            u.LastName,
+            u.IsLockedOut,
+            u.Roles
+        ));
+
+        var result = new SearchUsersResponse(items, hasNextPage, hasPreviousPage);
 
         return Results.Ok(result);
     }

@@ -1,7 +1,7 @@
 ﻿namespace Halcyon.Api.Features.Users.SearchUsers;
 
 public record SearchUsersResponse(
-    List<SearchUserResponse>? Items,
+    IEnumerable<SearchUserResponse>? Items,
     bool HasNextPage,
     bool HasPreviousPage
 );

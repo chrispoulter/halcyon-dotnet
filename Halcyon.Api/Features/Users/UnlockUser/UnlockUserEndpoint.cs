@@ -1,7 +1,8 @@
-﻿using Halcyon.Api.Common.Authentication;
+﻿using Dapper;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Halcyon.Api.Features.Users.UnlockUser;
 
@@ -19,11 +20,20 @@ public class UnlockUserEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         Guid id,
-        HalcyonDbContext dbContext,
+        NpgsqlDataSource dataSource,
         CancellationToken cancellationToken = default
     )
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        using var connection = dataSource.CreateConnection();
+
+        var user = await connection.QueryFirstOrDefaultAsync<User>(
+            """
+            SELECT id AS Id
+            FROM users
+            WHERE id = @Id
+            """,
+            new { Id = id }
+        );
 
         if (user is null)
         {
@@ -33,10 +43,15 @@ public class UnlockUserEndpoint : IEndpoint
             );
         }
 
-        user.IsLockedOut = false;
+        await connection.ExecuteAsync(
+            """
+            UPDATE users 
+            SET is_locked_out = FALSE 
+            WHERE id = @Id
+            """,
+            new { user.Id }
+        );
 
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return Results.Ok(new UnlockUserResponse(user.Id));
+        return Results.Ok(new UnlockUserResponse(id));
     }
 }
