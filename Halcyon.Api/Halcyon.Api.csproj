@@ -19,7 +19,7 @@
       Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets"
       Version="1.22.1"
     />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.11.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.11.1" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Features\**\*.html" />
