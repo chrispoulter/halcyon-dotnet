@@ -71,7 +71,7 @@ public class UpdateProfileEndpoint : IEndpoint
             }
         }
 
-        var rows = await connection.ExecuteAsync(
+        await connection.ExecuteAsync(
             """
             UPDATE users
             SET email_address = @EmailAddress,

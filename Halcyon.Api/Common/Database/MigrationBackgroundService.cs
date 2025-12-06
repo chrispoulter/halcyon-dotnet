@@ -16,7 +16,9 @@ public class MigrationBackgroundService(
             logger.LogInformation("Migrating database");
         }
 
-        var connectionString = configuration.GetConnectionString("Database");
+        var connectionString =
+            configuration.GetConnectionString("Database")
+            ?? throw new InvalidOperationException("Database connection string is not configured");
 
         var upgrader = DeployChanges
             .To.PostgresqlDatabase(connectionString)

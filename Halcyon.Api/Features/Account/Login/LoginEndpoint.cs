@@ -27,7 +27,6 @@ public class LoginEndpoint : IEndpoint
         CancellationToken cancellationToken = default
     )
     {
-        ArgumentNullException.ThrowIfNull(dataSource);
         using var connection = dataSource.CreateConnection();
 
         var user = await connection.QueryFirstOrDefaultAsync<User>(
