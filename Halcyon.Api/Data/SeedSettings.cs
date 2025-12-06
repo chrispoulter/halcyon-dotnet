@@ -18,6 +18,6 @@ public class SeedSettings
 
         public DateOnly DateOfBirth { get; set; }
 
-        public required List<string> Roles { get; set; }
+        public required IEnumerable<string> Roles { get; set; }
     }
 }

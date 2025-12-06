@@ -12,5 +12,5 @@ public record SearchUserResponse(
     string FirstName,
     string LastName,
     bool IsLockedOut,
-    List<string>? Roles
+    IEnumerable<string>? Roles
 );

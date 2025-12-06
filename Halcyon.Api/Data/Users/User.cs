@@ -21,7 +21,7 @@ public class User : IJwtUser
 
     public bool IsLockedOut { get; set; }
 
-    public List<string>? Roles { get; set; }
+    public IEnumerable<string>? Roles { get; set; }
 
     public NpgsqlTsVector SearchVector { get; } = null!;
 }

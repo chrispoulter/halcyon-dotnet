@@ -9,7 +9,7 @@ public record CreateUserRequest(
     string FirstName,
     string LastName,
     DateOnly DateOfBirth,
-    List<string>? Roles
+    IEnumerable<string>? Roles
 );
 
 public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
