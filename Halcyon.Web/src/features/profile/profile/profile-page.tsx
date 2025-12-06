@@ -93,10 +93,7 @@ export function ProfilePage() {
                             </Link>
                         </Button>
 
-                        <DisableTwoFactorButton
-                            profile={profile}
-                            disabled={isFetching}
-                        />
+                        <DisableTwoFactorButton disabled={isFetching} />
                     </>
                 )}
             </div>

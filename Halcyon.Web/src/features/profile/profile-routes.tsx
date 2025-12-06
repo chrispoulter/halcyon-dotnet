@@ -15,7 +15,10 @@ export const profileRoutes: RouteObject[] = [
             { path: 'update-profile', Component: UpdateProfilePage },
             { path: 'change-password', Component: ChangePasswordPage },
             { path: 'setup-two-factor', Component: SetupTwoFactorPage },
-            { path: 'generate-recovery-codes', Component: GenerateRecoveryCodesPage },
+            {
+                path: 'generate-recovery-codes',
+                Component: GenerateRecoveryCodesPage,
+            },
         ],
     },
 ];

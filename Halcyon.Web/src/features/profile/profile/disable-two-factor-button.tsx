@@ -11,17 +11,14 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
-import type { GetProfileResponse } from '@/features/profile/hooks/use-get-profile';
 import { useDisableTwoFactor } from '@/features/profile/hooks/use-disable-two-factor';
 
 type DisableTwoFactorButtonProps = {
-    profile: GetProfileResponse;
     disabled?: boolean;
     className?: string;
 };
 
 export function DisableTwoFactorButton({
-    profile,
     disabled,
     className,
 }: DisableTwoFactorButtonProps) {
@@ -29,18 +26,11 @@ export function DisableTwoFactorButton({
         useDisableTwoFactor();
 
     function onDisable() {
-        disableTwoFactor(
-            {
-                version: profile.version,
-            },
-            {
-                onSuccess: () =>
-                    toast.success(
-                        'Two-factor authentication has been disabled.'
-                    ),
-                onError: (error) => toast.error(error.message),
-            }
-        );
+        disableTwoFactor(undefined, {
+            onSuccess: () =>
+                toast.success('Two-factor authentication has been disabled.'),
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (

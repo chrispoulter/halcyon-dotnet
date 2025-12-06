@@ -21,9 +21,7 @@ export function SetupTwoFactorPage() {
         isFetching,
         isSuccess,
         error,
-    } = useSetupTwoFactor({
-        // version: profile?.version,
-    });
+    } = useSetupTwoFactor();
 
     const { mutate: verifyTwoFactor, isPending: isSaving } =
         useVerifyTwoFactor();
@@ -37,21 +35,13 @@ export function SetupTwoFactorPage() {
     }
 
     function onSubmit(data: SetupTwoFactorFormValues) {
-        verifyTwoFactor(
-            {
-                ...data,
-                // version: profile?.version,
+        verifyTwoFactor(data, {
+            onSuccess: () => {
+                toast.success('Two-factor authentication has been configured.');
+                navigate('/profile');
             },
-            {
-                onSuccess: () => {
-                    toast.success(
-                        'Two-factor authentication has been configured.'
-                    );
-                    navigate('/profile');
-                },
-                onError: (error) => toast.error(error.message),
-            }
-        );
+            onError: (error) => toast.error(error.message),
+        });
     }
 
     return (

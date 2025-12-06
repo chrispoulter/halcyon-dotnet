@@ -12,9 +12,7 @@ export function GenerateRecoveryCodesPage() {
         // isFetching,
         isSuccess,
         error,
-    } = useGenerateRecoveryCodes({
-        // version: profile?.version,
-    });
+    } = useGenerateRecoveryCodes();
 
     if (isPending) {
         return <GenerateRecoveryCodesLoading />;
