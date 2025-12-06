@@ -27,6 +27,11 @@ export function UserCard({ user }: UserCardProps) {
                         Locked
                     </Badge>
                 )}
+                {user.isTwoFactorEnabled && (
+                    <Badge variant="outline" className="w-full sm:w-auto">
+                        Two Factor
+                    </Badge>
+                )}
                 {user.roles?.map((role) => (
                     <Badge
                         key={role}

@@ -70,6 +70,7 @@ public class SearchUsersEndpoint : IEndpoint
                 u.EmailAddress,
                 u.FirstName,
                 u.LastName,
+                u.IsTwoFactorEnabled,
                 u.IsLockedOut,
                 u.Roles
             ))

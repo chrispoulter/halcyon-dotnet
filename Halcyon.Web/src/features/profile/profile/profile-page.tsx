@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
 import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
+import { DisableTwoFactorButton } from '@/features/profile/profile/disable-two-factor-button';
 import { DeleteAccountButton } from '@/features/profile/profile/delete-account-button';
 import { ProfileLoading } from '@/features/profile/profile/profile-loading';
 import { toDisplay } from '@/lib/dates';
@@ -72,6 +73,30 @@ export function ProfilePage() {
             <Button asChild className="w-full sm:w-auto">
                 <Link to="/profile/change-password">Change Password</Link>
             </Button>
+
+            <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
+                Two-Factor Authentication
+            </h2>
+
+            <div className="flex flex-col-reverse gap-2 sm:flex-row">
+                <Button>
+                    <Link to="/profile/setup-two-factor">
+                        Set Up Authenticator App
+                    </Link>
+                </Button>
+
+                {profile.isTwoFactorEnabled && (
+                    <>
+                        <Button asChild>
+                            <Link to="/profile/generate-recovery-codes">
+                                Generate Recovery Codes
+                            </Link>
+                        </Button>
+
+                        <DisableTwoFactorButton disabled={isFetching} />
+                    </>
+                )}
+            </div>
 
             <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
                 Settings

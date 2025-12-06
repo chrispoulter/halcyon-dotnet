@@ -5,5 +5,6 @@ public record GetProfileResponse(
     string EmailAddress,
     string FirstName,
     string LastName,
-    DateOnly DateOfBirth
+    DateOnly DateOfBirth,
+    bool IsTwoFactorEnabled
 );
