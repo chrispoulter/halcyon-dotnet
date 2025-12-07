@@ -8,8 +8,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("users");
-
-        builder.Property(u => u.Id).HasColumnName("id");
+        builder
+            .Property(u => u.Id)
+            .HasColumnName("id")
+            .HasDefaultValueSql("gen_random_uuid()")
+            .ValueGeneratedOnAdd();
         builder.Property(u => u.EmailAddress).HasColumnName("email_address").IsRequired();
         builder.Property(u => u.Password).HasColumnName("password");
         builder.Property(u => u.PasswordResetToken).HasColumnName("password_reset_token");
