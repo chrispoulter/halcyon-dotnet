@@ -16,7 +16,11 @@ namespace Halcyon.Api.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(
+                        type: "uuid",
+                        nullable: false,
+                        defaultValueSql: "gen_random_uuid()"
+                    ),
                     email_address = table.Column<string>(type: "text", nullable: false),
                     password = table.Column<string>(type: "text", nullable: true),
                     password_reset_token = table.Column<Guid>(type: "uuid", nullable: true),
