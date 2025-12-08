@@ -40,7 +40,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "No 2FA setup in progress."
+                title: "Two factor authentication configuration not found."
             );
         }
 
@@ -50,29 +50,32 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             totpSize: 6
         );
 
-        var totpVerified = totp.VerifyTotp(
+        var verified = totp.VerifyTotp(
             request.Code,
             out _,
             VerificationWindow.RfcSpecifiedNetworkDelay
         );
 
-        if (!totpVerified)
+        if (!verified)
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Invalid code."
+                title: "Invalid authenticator code."
             );
         }
+
+        var recoveryCodes = Enumerable
+            .Range(0, 10)
+            .Select(_ => Guid.NewGuid().ToString("N"))
+            .ToList();
 
         user.TwoFactorSecret = user.TwoFactorTempSecret;
         user.TwoFactorTempSecret = null;
         user.IsTwoFactorEnabled = true;
-
-        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")).ToList();
-        user.TwoFactorRecoveryCodes = codes;
+        user.TwoFactorRecoveryCodes = recoveryCodes;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new VerifyTwoFactorResponse(user.Id, codes));
+        return Results.Ok(new VerifyTwoFactorResponse(user.Id, recoveryCodes));
     }
 }

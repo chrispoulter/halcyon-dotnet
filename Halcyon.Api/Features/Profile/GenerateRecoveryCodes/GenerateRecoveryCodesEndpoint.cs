@@ -38,15 +38,19 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Two-factor authentication is not enabled."
+                title: "Two factor authentication is not enabled."
             );
         }
 
-        var codes = Enumerable.Range(0, 8).Select(_ => Guid.NewGuid().ToString("N")).ToList();
-        user.TwoFactorRecoveryCodes = codes;
+        var recoveryCodes = Enumerable
+            .Range(0, 10)
+            .Select(_ => Guid.NewGuid().ToString("N"))
+            .ToList();
+
+        user.TwoFactorRecoveryCodes = recoveryCodes;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new GenerateRecoveryCodesResponse(user.Id, codes));
+        return Results.Ok(new GenerateRecoveryCodesResponse(user.Id, recoveryCodes));
     }
 }

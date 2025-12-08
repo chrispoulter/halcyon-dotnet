@@ -15,6 +15,6 @@ public class LoginWithTwoFactorRequestValidator : AbstractValidator<LoginWithTwo
             .WithName("Email Address");
 
         RuleFor(x => x.Password).NotEmpty().WithName("Password");
-        RuleFor(x => x.Code).NotEmpty().Length(6).Matches("^[0-9]{6}$").WithName("Authenticator Code");
+        RuleFor(x => x.Code).NotEmpty().Matches("^[0-9]{6}$").WithName("Authenticator Code");
     }
 }

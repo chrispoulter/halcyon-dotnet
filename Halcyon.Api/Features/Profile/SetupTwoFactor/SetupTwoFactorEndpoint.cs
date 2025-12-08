@@ -41,15 +41,14 @@ public class SetupTwoFactorEndpoint : IEndpoint
 
         var issuer = configuration["TwoFactor:Issuer"] ?? "Halcyon";
         var label = $"{issuer}:{user.EmailAddress}";
-        var otpAuthUri =
+        var otpauthUri =
             $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={secret}&issuer={Uri.EscapeDataString(issuer)}&digits=6&period=30";
 
         user.TwoFactorTempSecret = secret;
-        user.IsTwoFactorEnabled = false;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new SetupTwoFactorResponse(user.Id, secret, otpAuthUri);
+        var response = new SetupTwoFactorResponse(user.Id, otpauthUri, secret);
 
         return Results.Ok(response);
     }
