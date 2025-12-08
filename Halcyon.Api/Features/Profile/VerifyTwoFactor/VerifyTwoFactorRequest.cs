@@ -1,5 +1,4 @@
 using FluentValidation;
-using Halcyon.Api.Features.Account.LoginWithTwoFactor;
 
 namespace Halcyon.Api.Features.Profile.VerifyTwoFactor;
 
@@ -9,6 +8,6 @@ public class VerifyTwoFactorRequestValidator : AbstractValidator<VerifyTwoFactor
 {
     public VerifyTwoFactorRequestValidator()
     {
-        RuleFor(x => x.Code).NotEmpty().Matches("^[0-9]{6}$").WithName("Authenticator Code");
+        RuleFor(x => x.Code).NotEmpty().Matches("^[0-9]{6}$").WithName("Verification Code");
     }
 }

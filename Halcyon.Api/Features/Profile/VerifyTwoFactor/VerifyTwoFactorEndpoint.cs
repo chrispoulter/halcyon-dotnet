@@ -69,9 +69,9 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             .Select(_ => Guid.NewGuid().ToString("N"))
             .ToList();
 
+        user.IsTwoFactorEnabled = true;
         user.TwoFactorSecret = user.TwoFactorTempSecret;
         user.TwoFactorTempSecret = null;
-        user.IsTwoFactorEnabled = true;
         user.TwoFactorRecoveryCodes = recoveryCodes;
 
         await dbContext.SaveChangesAsync(cancellationToken);
