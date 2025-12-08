@@ -19,6 +19,6 @@ public class LoginWithRecoveryCodeRequestValidator : AbstractValidator<LoginWith
             .WithName("Email Address");
 
         RuleFor(x => x.Password).NotEmpty().WithName("Password");
-        RuleFor(x => x.RecoveryCode).NotEmpty().WithName("Password");
+        RuleFor(x => x.RecoveryCode).NotEmpty().WithName("Recovery Code");
     }
 }

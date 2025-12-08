@@ -67,6 +67,14 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
             );
         }
 
+        if (user.IsLockedOut)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "This account has been locked out, please try again later."
+            );
+        }
+
         user.TwoFactorRecoveryCodes =
         [
             .. recoveryCodes.Where(code => code != request.RecoveryCode),

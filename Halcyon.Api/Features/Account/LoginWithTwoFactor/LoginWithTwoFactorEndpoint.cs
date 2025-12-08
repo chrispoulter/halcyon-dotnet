@@ -51,7 +51,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Two-factor authentication is not enabled."
+                title: "Two factor authentication is not enabled."
             );
         }
 
@@ -67,7 +67,15 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Invalid code."
+                title: "Invalid authenticator code."
+            );
+        }
+
+        if (user.IsLockedOut)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "This account has been locked out, please try again later."
             );
         }
 
