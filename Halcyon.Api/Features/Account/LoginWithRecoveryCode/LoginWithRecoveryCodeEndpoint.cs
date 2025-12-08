@@ -57,9 +57,20 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
 
         var recoveryCodes = user.TwoFactorRecoveryCodes ?? [];
 
-        var matchedRecoveryCode = recoveryCodes.Any(code => code == request.RecoveryCode);
+        string? matchedRecoveryCode = null;
 
-        if (!matchedRecoveryCode)
+        foreach (var code in recoveryCodes)
+        {
+            var recoveryCodeVerified = passwordHasher.VerifyPassword(request.RecoveryCode, code);
+
+            if (recoveryCodeVerified)
+            {
+                matchedRecoveryCode = code;
+                break;
+            }
+        }
+
+        if (string.IsNullOrEmpty(matchedRecoveryCode))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -75,10 +86,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
             );
         }
 
-        user.TwoFactorRecoveryCodes =
-        [
-            .. recoveryCodes.Where(code => code != request.RecoveryCode),
-        ];
+        user.TwoFactorRecoveryCodes = [.. recoveryCodes.Where(code => code != matchedRecoveryCode)];
 
         await dbContext.SaveChangesAsync(cancellationToken);
 

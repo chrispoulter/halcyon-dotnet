@@ -18,6 +18,7 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
+        IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
     )
     {
@@ -42,12 +43,10 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
             );
         }
 
-        var recoveryCodes = Enumerable
-            .Range(0, 10)
-            .Select(_ => Guid.NewGuid().ToString("N"))
-            .ToList();
+        var recoveryCodes = Enumerable.Range(0, 10).Select(_ => Guid.NewGuid().ToString("N"));
+        var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword);
 
-        user.TwoFactorRecoveryCodes = recoveryCodes;
+        user.TwoFactorRecoveryCodes = hashedRecoveryCodes;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 

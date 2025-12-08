@@ -19,7 +19,7 @@ public class User : IJwtUser
 
     public string? TwoFactorTempSecret { get; set; }
 
-    public List<string>? TwoFactorRecoveryCodes { get; set; }
+    public IEnumerable<string>? TwoFactorRecoveryCodes { get; set; }
 
     public string FirstName { get; set; } = null!;
 

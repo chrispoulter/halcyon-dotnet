@@ -1,6 +1,7 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
@@ -20,6 +21,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         VerifyTwoFactorRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
+        IPasswordHasher passwordHasher,
         CancellationToken cancellationToken = default
     )
     {
@@ -64,10 +66,8 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var recoveryCodes = Enumerable
-            .Range(0, 10)
-            .Select(_ => Guid.NewGuid().ToString("N"))
-            .ToList();
+        var recoveryCodes = Enumerable.Range(0, 10).Select(_ => Guid.NewGuid().ToString("N"));
+        var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword);
 
         user.IsTwoFactorEnabled = true;
         user.TwoFactorSecret = user.TwoFactorTempSecret;

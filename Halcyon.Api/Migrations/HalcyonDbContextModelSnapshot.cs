@@ -82,7 +82,7 @@ namespace Halcyon.Api.Migrations
                         .HasAnnotation("Npgsql:TsVectorConfig", "english")
                         .HasAnnotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "EmailAddress" });
 
-                    b.PrimitiveCollection<List<string>>("TwoFactorRecoveryCodes")
+                    b.PrimitiveCollection<string[]>("TwoFactorRecoveryCodes")
                         .HasColumnType("text[]")
                         .HasColumnName("two_factor_recovery_codes");
 
