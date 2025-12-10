@@ -9,7 +9,6 @@ export type GetUserResponse = {
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-    isTwoFactorEnabled?: boolean;
     isLockedOut?: boolean;
     roles?: Role[];
 };

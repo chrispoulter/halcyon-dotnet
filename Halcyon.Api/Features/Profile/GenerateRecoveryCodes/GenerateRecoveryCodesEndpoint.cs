@@ -40,7 +40,7 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Two factor authentication is not enabled."
+                title: "Two-factor authentication is not configured."
             );
         }
 

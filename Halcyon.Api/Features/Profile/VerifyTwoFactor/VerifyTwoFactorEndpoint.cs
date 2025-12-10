@@ -43,7 +43,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Two factor authentication configuration not found."
+                title: "Two-factor authentication is not configured."
             );
         }
 

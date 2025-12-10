@@ -22,7 +22,6 @@ export type SearchUsersResponse = {
         emailAddress: string;
         firstName: string;
         lastName: string;
-        isTwoFactorEnabled?: boolean;
         isLockedOut?: boolean;
         roles?: Role[];
     }[];

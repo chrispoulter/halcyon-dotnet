@@ -41,7 +41,6 @@ public class GetUserEndpoint : IEndpoint
             user.FirstName,
             user.LastName,
             user.DateOfBirth,
-            user.IsTwoFactorEnabled,
             user.IsLockedOut,
             user.Roles
         );

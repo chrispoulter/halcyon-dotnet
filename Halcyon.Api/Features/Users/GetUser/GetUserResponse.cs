@@ -6,7 +6,6 @@ public record GetUserResponse(
     string FirstName,
     string LastName,
     DateOnly DateOfBirth,
-    bool IsTwoFactorEnabled,
     bool IsLockedOut,
     IEnumerable<string>? Roles
 );
