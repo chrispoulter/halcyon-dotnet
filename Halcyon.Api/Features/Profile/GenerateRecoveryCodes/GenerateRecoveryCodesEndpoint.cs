@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
@@ -43,7 +44,10 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
             );
         }
 
-        var recoveryCodes = Enumerable.Range(0, 10).Select(_ => Guid.NewGuid().ToString("N"));
+        var recoveryCodes = Enumerable
+            .Range(0, 10)
+            .Select(_ => Convert.ToHexString(RandomNumberGenerator.GetBytes(5)).ToUpperInvariant());
+
         var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword);
 
         user.TwoFactorRecoveryCodes = hashedRecoveryCodes;
