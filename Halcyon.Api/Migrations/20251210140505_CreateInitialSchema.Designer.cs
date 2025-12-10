@@ -13,7 +13,7 @@ using NpgsqlTypes;
 namespace Halcyon.Api.Migrations
 {
     [DbContext(typeof(HalcyonDbContext))]
-    [Migration("20251207093306_CreateInitialSchema")]
+    [Migration("20251210140505_CreateInitialSchema")]
     partial class CreateInitialSchema
     {
         /// <inheritdoc />
@@ -63,8 +63,8 @@ namespace Halcyon.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password");
 
-                    b.Property<Guid?>("PasswordResetToken")
-                        .HasColumnType("uuid")
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("text")
                         .HasColumnName("password_reset_token");
 
                     b.PrimitiveCollection<string[]>("Roles")

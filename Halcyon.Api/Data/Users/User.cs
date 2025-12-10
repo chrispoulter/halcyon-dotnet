@@ -11,7 +11,7 @@ public class User : IJwtUser
 
     public string? Password { get; set; }
 
-    public Guid? PasswordResetToken { get; set; }
+    public string? PasswordResetToken { get; set; }
 
     public string FirstName { get; set; } = null!;
 
