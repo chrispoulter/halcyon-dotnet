@@ -60,8 +60,8 @@ namespace Halcyon.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password");
 
-                    b.Property<Guid?>("PasswordResetToken")
-                        .HasColumnType("uuid")
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("text")
                         .HasColumnName("password_reset_token");
 
                     b.PrimitiveCollection<string[]>("Roles")

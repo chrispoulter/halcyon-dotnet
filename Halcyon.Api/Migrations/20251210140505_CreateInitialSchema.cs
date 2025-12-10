@@ -23,7 +23,7 @@ namespace Halcyon.Api.Migrations
                     ),
                     email_address = table.Column<string>(type: "text", nullable: false),
                     password = table.Column<string>(type: "text", nullable: true),
-                    password_reset_token = table.Column<Guid>(type: "uuid", nullable: true),
+                    password_reset_token = table.Column<string>(type: "text", nullable: true),
                     first_name = table.Column<string>(type: "text", nullable: false),
                     last_name = table.Column<string>(type: "text", nullable: false),
                     date_of_birth = table.Column<DateOnly>(type: "date", nullable: false),
