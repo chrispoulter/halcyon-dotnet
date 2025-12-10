@@ -63,14 +63,13 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
             );
         }
 
-        var normalizedInputCode = request.RecoveryCode.ToUpper();
         var recoveryCodes = user.TwoFactorRecoveryCodes ?? [];
 
         string? matchedRecoveryCode = null;
 
         foreach (var code in recoveryCodes)
         {
-            var recoveryCodeVerified = passwordHasher.VerifyPassword(normalizedInputCode, code);
+            var recoveryCodeVerified = passwordHasher.VerifyPassword(request.RecoveryCode, code);
 
             if (recoveryCodeVerified)
             {
