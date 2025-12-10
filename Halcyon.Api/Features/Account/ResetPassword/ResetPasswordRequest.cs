@@ -8,7 +8,7 @@ public class ResetPasswordRequestValidator : AbstractValidator<ResetPasswordRequ
 {
     public ResetPasswordRequestValidator()
     {
-        RuleFor(x => x.Token).NotEmpty();
+        RuleFor(x => x.Token).NotEmpty().Matches("^[A-F0-9]{32}$");
         RuleFor(x => x.EmailAddress).NotEmpty().EmailAddress().WithName("Email Address");
 
         RuleFor(x => x.NewPassword)

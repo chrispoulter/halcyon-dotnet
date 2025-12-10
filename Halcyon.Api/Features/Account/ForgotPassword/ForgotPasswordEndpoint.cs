@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Security.Cryptography;
 using FluentEmail.Core;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
@@ -32,7 +33,9 @@ public class ForgotPasswordEndpoint : IEndpoint
 
         if (user is not null && !user.IsLockedOut)
         {
-            user.PasswordResetToken = Guid.NewGuid().ToString("N");
+            user.PasswordResetToken = Convert
+                .ToHexString(RandomNumberGenerator.GetBytes(16))
+                .ToUpperInvariant();
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
