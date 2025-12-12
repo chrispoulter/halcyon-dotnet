@@ -47,7 +47,7 @@ export function RecoveryCodesDialog({
 
                 <div className="bg-muted flex flex-col rounded px-2 py-1 font-mono font-semibold">
                     {codes?.map((code) => (
-                        <span key={code}>{code}</span>
+                        <code key={code}>{code}</code>
                     ))}
                 </div>
 
