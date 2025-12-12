@@ -45,12 +45,9 @@ export function RecoveryCodesDialog({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
-                <div className="bg-muted rounded px-3 py-1 font-mono font-semibold">
+                <div className="bg-muted flex flex-col rounded px-2 py-1 font-mono font-semibold">
                     {codes?.map((code) => (
-                        <>
-                            {code}
-                            <br />
-                        </>
+                        <span key={code}>{code}</span>
                     ))}
                 </div>
 
