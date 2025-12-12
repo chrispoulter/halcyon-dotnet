@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function SetupTwoFactorLoading() {
+export function EnableAuthenticatorLoading() {
     return (
         <main className="mx-auto max-w-screen-sm space-y-6 p-6">
             <Skeleton className="h-14 w-3/4" />

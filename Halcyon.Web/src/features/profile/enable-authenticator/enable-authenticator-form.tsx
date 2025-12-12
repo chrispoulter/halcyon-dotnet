@@ -5,30 +5,28 @@ import { TextField } from '@/components/form/text-field';
 import { LoadingButton } from '@/components/loading-button';
 
 const schema = z.object({
-    code: z
-        .string({ message: 'Verification code must be a valid string' })
-        .min(1, 'Verification code is a required field'),
+    verificationCode: z
+        .string({ message: 'Verification Code must be a valid string' })
+        .regex(/^[0-9]{6}$/, 'Verification Code is not in the correct format'),
 });
 
-export type SetupTwoFactorFormValues = z.infer<typeof schema>;
+export type EnableAuthenticatorFormValues = z.infer<typeof schema>;
 
-type SetupTwoFactorFormProps = {
-    onSubmit: (values: SetupTwoFactorFormValues) => void;
+type EnableAuthenticatorFormProps = {
     loading?: boolean;
-    disabled?: boolean;
+    onSubmit: (values: EnableAuthenticatorFormValues) => void;
     children?: React.ReactNode;
 };
 
-export function SetupTwoFactorForm({
-    onSubmit,
+export function EnableAuthenticatorForm({
     loading,
-    disabled,
+    onSubmit,
     children,
-}: SetupTwoFactorFormProps) {
-    const form = useForm<SetupTwoFactorFormValues>({
+}: EnableAuthenticatorFormProps) {
+    const form = useForm<EnableAuthenticatorFormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
-            code: '',
+            verificationCode: '',
         },
     });
 
@@ -40,25 +38,19 @@ export function SetupTwoFactorForm({
         >
             <TextField
                 control={form.control}
-                name="code"
+                name="verificationCode"
                 label="Verification Code"
-                type="text"
                 maxLength={6}
-                pattern="\d{6}"
                 inputMode="numeric"
+                pattern="[0-9]{6}"
                 autoComplete="one-time-code"
                 required
-                disabled={disabled}
+                disabled={loading}
             />
 
             <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
                 {children}
-
-                <LoadingButton
-                    type="submit"
-                    loading={loading}
-                    disabled={disabled}
-                >
+                <LoadingButton type="submit" loading={loading}>
                     Submit
                 </LoadingButton>
             </div>

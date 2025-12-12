@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
 import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
+import { GenerateRecoveryCodesButton } from '@/features/profile/profile/generate-recovery-codes-button';
 import { DisableTwoFactorButton } from '@/features/profile/profile/disable-two-factor-button';
 import { DeleteAccountButton } from '@/features/profile/profile/delete-account-button';
 import { ProfileLoading } from '@/features/profile/profile/profile-loading';
@@ -78,22 +79,21 @@ export function ProfilePage() {
                 Two-Factor Authentication
             </h2>
 
-            <div className="flex flex-col-reverse gap-2 sm:flex-row">
-                <Button>
-                    <Link to="/profile/setup-two-factor">
-                        Set Up Authenticator App
+            <p className="leading-7">
+                Enhance the security of your account by enabling two-factor
+                authentication.
+            </p>
+
+            <div className="flex flex-col gap-2 sm:flex-row">
+                <Button asChild>
+                    <Link to="/profile/enable-authenticator">
+                        Configure Authenticator App
                     </Link>
                 </Button>
-
                 {profile.isTwoFactorEnabled && (
                     <>
-                        <Button asChild>
-                            <Link to="/profile/generate-recovery-codes">
-                                Generate Recovery Codes
-                            </Link>
-                        </Button>
-
-                        <DisableTwoFactorButton disabled={isFetching} />
+                        <GenerateRecoveryCodesButton />
+                        <DisableTwoFactorButton />
                     </>
                 )}
             </div>

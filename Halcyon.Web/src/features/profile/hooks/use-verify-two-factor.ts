@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
-type VerifyTwoFactorRequest = { code: string };
+type VerifyTwoFactorRequest = { verificationCode: string };
 
 type VerifyTwoFactorResponse = {
     id: string;

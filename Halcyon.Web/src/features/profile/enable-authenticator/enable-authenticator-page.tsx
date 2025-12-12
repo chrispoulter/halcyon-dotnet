@@ -1,19 +1,24 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
-import {
-    SetupTwoFactorForm,
-    type SetupTwoFactorFormValues,
-} from '@/features/profile/setup-two-factor/setup-two-factor-form';
-import { SetupTwoFactorLoading } from '@/features/profile/setup-two-factor/setup-two-factor-loading';
 import { useSetupTwoFactor } from '@/features/profile/hooks/use-setup-two-factor';
 import { useVerifyTwoFactor } from '@/features/profile/hooks/use-verify-two-factor';
+import { RecoveryCodesDialog } from '@/features/profile/generate-recovery-codes/recovery-codes-dialog';
+import { EnableAuthenticatorLoading } from '@/features/profile/enable-authenticator/enable-authenticator-loading';
+import {
+    type EnableAuthenticatorFormValues,
+    EnableAuthenticatorForm,
+} from '@/features/profile/enable-authenticator/enable-authenticator-form';
 
-export function SetupTwoFactorPage() {
+export function EnableAuthenticatorPage() {
     const navigate = useNavigate();
+
+    const [recoveryCodes, setRecoveryCodes] = useState<string[] | undefined>();
+    const [showDialog, setShowDialog] = useState(false);
 
     const {
         data: setupTwoFactor,
@@ -23,21 +28,23 @@ export function SetupTwoFactorPage() {
         error,
     } = useSetupTwoFactor();
 
-    const { mutate: verifyTwoFactor, isPending: isSaving } =
+    const { mutate: verifyTwoFactor, isPending: isVerifying } =
         useVerifyTwoFactor();
 
     if (isPending) {
-        return <SetupTwoFactorLoading />;
+        return <EnableAuthenticatorLoading />;
     }
 
     if (!isSuccess) {
         return <QueryError error={error} />;
     }
 
-    function onSubmit(data: SetupTwoFactorFormValues) {
-        verifyTwoFactor(data, {
-            onSuccess: () => {
-                toast.success('Two-factor authentication has been configured.');
+    function onSubmit(values: EnableAuthenticatorFormValues) {
+        verifyTwoFactor(values, {
+            onSuccess: (data) => {
+                toast.success('Two-factor authentication has been enabled.');
+                setRecoveryCodes(data.recoveryCodes);
+                setShowDialog(true);
                 navigate('/profile');
             },
             onError: (error) => toast.error(error.message),
@@ -46,10 +53,10 @@ export function SetupTwoFactorPage() {
 
     return (
         <main className="mx-auto max-w-screen-sm space-y-6 p-6">
-            <Metadata title="Two-Factor Authentication" />
+            <Metadata title="Configure Authenticator App" />
 
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
-                Two-Factor Authentication
+                Configure Authenticator App
             </h1>
 
             <p className="leading-7">
@@ -94,29 +101,33 @@ export function SetupTwoFactorPage() {
                     <code className="bg-muted rounded p-1 font-mono font-semibold">
                         {setupTwoFactor.secret}
                     </code>{' '}
-                    into your two factor authenticator app. Spaces and casing do
+                    into your two-factor authenticator app. Spaces and casing do
                     not matter.
                     <QRCodeSVG
                         value={setupTwoFactor.otpAuthUri}
+                        width={180}
+                        height={180}
                         className="mt-2 rounded border bg-white p-1"
                     />
                 </li>
                 <li>
                     Once you have scanned the QR code or input the key above,
-                    your two factor authentication app will provide you with a
+                    your two-factor authentication app will provide you with a
                     unique code. Enter the code in the confirmation box below.
                 </li>
             </ol>
 
-            <SetupTwoFactorForm
-                onSubmit={onSubmit}
-                loading={isSaving}
-                disabled={isFetching || isSaving}
-            >
+            <EnableAuthenticatorForm onSubmit={onSubmit} loading={isVerifying}>
                 <Button asChild variant="outline">
                     <Link to="/profile">Cancel</Link>
                 </Button>
-            </SetupTwoFactorForm>
+            </EnableAuthenticatorForm>
+
+            <RecoveryCodesDialog
+                open={showDialog}
+                onOpenChange={setShowDialog}
+                codes={recoveryCodes}
+            />
         </main>
     );
 }
