@@ -40,7 +40,7 @@ public class LoginEndpoint : IEndpoint
 
         var verified = passwordHasher.VerifyPassword(request.Password, user.Password);
 
-        if (!verified )
+        if (!verified)
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,

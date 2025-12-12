@@ -51,7 +51,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
             $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={user.TwoFactorTempSecret}&issuer={Uri.EscapeDataString(issuer)}&digits=6&period=30";
 
         return Results.Ok(
-            new SetupTwoFactorResponse(user.Id, otpauthUri, user.TwoFactorTempSecret)
+            new SetupTwoFactorResponse(user.Id, user.TwoFactorTempSecret, otpauthUri)
         );
     }
 }
