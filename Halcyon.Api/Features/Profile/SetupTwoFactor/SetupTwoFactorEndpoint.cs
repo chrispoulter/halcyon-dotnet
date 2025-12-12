@@ -10,7 +10,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPut("/profile/setup-two-factor", HandleAsync)
+        app.MapGet("/profile/setup-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<SetupTwoFactorResponse>()
             .WithTags(Tags.Profile);
@@ -36,20 +36,22 @@ public class SetupTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var rawKey = KeyGeneration.GenerateRandomKey(20);
-        var secret = Base32Encoding.ToString(rawKey);
+        if (string.IsNullOrEmpty(user.TwoFactorTempSecret))
+        {
+            var rawKey = KeyGeneration.GenerateRandomKey(20);
+            var secret = Base32Encoding.ToString(rawKey);
+
+            user.TwoFactorTempSecret = secret;
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
 
         var issuer = configuration["TwoFactor:Issuer"] ?? "Halcyon";
         var label = $"{issuer}:{user.EmailAddress}";
         var otpauthUri =
-            $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={secret}&issuer={Uri.EscapeDataString(issuer)}&digits=6&period=30";
+            $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={user.TwoFactorTempSecret}&issuer={Uri.EscapeDataString(issuer)}&digits=6&period=30";
 
-        user.TwoFactorTempSecret = secret;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        var response = new SetupTwoFactorResponse(user.Id, otpauthUri, secret);
-
-        return Results.Ok(response);
+        return Results.Ok(
+            new SetupTwoFactorResponse(user.Id, otpauthUri, user.TwoFactorTempSecret)
+        );
     }
 }
