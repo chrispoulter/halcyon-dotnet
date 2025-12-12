@@ -38,9 +38,9 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        var passwordVerified = passwordHasher.VerifyPassword(request.Password, user.Password);
+        var verified = passwordHasher.VerifyPassword(request.Password, user.Password);
 
-        if (!passwordVerified)
+        if (!verified )
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
