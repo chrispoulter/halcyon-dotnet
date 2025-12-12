@@ -14,7 +14,9 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         app.MapPost("/account/login-two-factor", HandleAsync)
             .AddValidationFilter<LoginWithTwoFactorRequest>()
             .Produces<LoginWithTwoFactorResponse>()
-            .WithTags(Tags.Account);
+            .WithTags(Tags.Account)
+            .WithSummary("Login with Two-Factor")
+            .WithDescription("Authenticate a user and return a JWT token using an authenticator code."); ;
     }
 
     private static async Task<IResult> HandleAsync(

@@ -13,7 +13,9 @@ public class SetupTwoFactorEndpoint : IEndpoint
         app.MapGet("/profile/setup-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<SetupTwoFactorResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Setup Two-Factor")
+            .WithDescription("Setup two-factor authentication for the current user.");
     }
 
     private static async Task<IResult> HandleAsync(

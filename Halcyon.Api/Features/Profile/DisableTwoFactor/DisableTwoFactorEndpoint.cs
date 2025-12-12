@@ -12,7 +12,9 @@ public class DisableTwoFactorEndpoint : IEndpoint
         app.MapPut("/profile/disable-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<DisableTwoFactorResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Disable Two-Factor")
+            .WithDescription("Disable two-factor authentication for the current user.");
     }
 
     private static async Task<IResult> HandleAsync(

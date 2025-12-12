@@ -15,7 +15,9 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         app.MapPut("/profile/verify-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<VerifyTwoFactorResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Verify Two-Factor")
+            .WithDescription("Verify two-factor authentication for the current user.");
     }
 
     private static async Task<IResult> HandleAsync(

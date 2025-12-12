@@ -13,7 +13,9 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
         app.MapPost("/account/login-recovery-code", HandleAsync)
             .AddValidationFilter<LoginWithRecoveryCodeRequest>()
             .Produces<LoginWithRecoveryCodeResponse>()
-            .WithTags(Tags.Account);
+            .WithTags(Tags.Account)
+            .WithSummary("Login with Recovery Code")
+            .WithDescription("Authenticate a user and return a JWT token using a recovery code.");
     }
 
     private static async Task<IResult> HandleAsync(

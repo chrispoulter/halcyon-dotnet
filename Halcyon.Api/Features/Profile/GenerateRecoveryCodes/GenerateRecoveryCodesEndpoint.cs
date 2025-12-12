@@ -13,7 +13,9 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
         app.MapPut("/profile/generate-recovery-codes", HandleAsync)
             .RequireAuthorization()
             .Produces<GenerateRecoveryCodesResponse>()
-            .WithTags(Tags.Profile);
+            .WithTags(Tags.Profile)
+            .WithSummary("Generate Recovery Codes")
+            .WithDescription("Generate new recovery codes for the current user.");
     }
 
     private static async Task<IResult> HandleAsync(
