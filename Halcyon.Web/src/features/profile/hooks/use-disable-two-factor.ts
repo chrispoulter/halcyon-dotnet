@@ -12,7 +12,7 @@ export const useDisableTwoFactor = () => {
     return useMutation({
         mutationFn: () =>
             apiClient
-                .put('/profile/disable-two-factor', {
+                .put('profile/disable-two-factor', {
                     context: {
                         accessToken,
                     },

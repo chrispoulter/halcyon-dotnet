@@ -17,7 +17,7 @@ export const useVerifyTwoFactor = () => {
     return useMutation({
         mutationFn: (request: VerifyTwoFactorRequest) =>
             apiClient
-                .put('/profile/verify-two-factor', {
+                .put('profile/verify-two-factor', {
                     json: request,
                     context: {
                         accessToken,

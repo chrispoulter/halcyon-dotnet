@@ -15,7 +15,7 @@ export const useGenerateRecoveryCodes = () => {
     return useMutation({
         mutationFn: () =>
             apiClient
-                .put('/profile/generate-recovery-codes', {
+                .put('profile/generate-recovery-codes', {
                     context: {
                         accessToken,
                     },

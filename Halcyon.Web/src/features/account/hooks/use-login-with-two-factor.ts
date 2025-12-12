@@ -15,7 +15,7 @@ export const useLoginWithTwoFactor = () => {
     return useMutation({
         mutationFn: (request: LoginWithTwoFactorRequest) =>
             apiClient
-                .post('/account/login-two-factor', { json: request })
+                .post('account/login-two-factor', { json: request })
                 .json<LoginWithTwoFactorResponse>(),
     });
 };

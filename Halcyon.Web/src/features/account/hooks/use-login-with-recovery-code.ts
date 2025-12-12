@@ -15,7 +15,7 @@ export const useLoginWithRecoveryCode = () => {
     return useMutation({
         mutationFn: (request: LoginWithRecoveryCodeRequest) =>
             apiClient
-                .post('/account/login-recovery-code', { json: request })
+                .post('account/login-recovery-code', { json: request })
                 .json<LoginWithRecoveryCodeResponse>(),
     });
 };
