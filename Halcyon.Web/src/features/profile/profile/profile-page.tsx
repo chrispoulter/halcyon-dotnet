@@ -92,8 +92,8 @@ export function ProfilePage() {
                 </Button>
                 {profile.isTwoFactorEnabled && (
                     <>
-                        <GenerateRecoveryCodesButton />
-                        <DisableTwoFactorButton />
+                        <GenerateRecoveryCodesButton disabled={isFetching} />
+                        <DisableTwoFactorButton disabled={isFetching} />
                     </>
                 )}
             </div>

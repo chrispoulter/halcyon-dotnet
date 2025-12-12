@@ -33,7 +33,7 @@ export function LoginPage() {
         stage: 'Login',
     });
 
-    const { mutate: login, isPending: isLoginSaving } = useLogin();
+    const { mutate: login, isPending: isSaving } = useLogin();
 
     const { mutate: loginWithTwoFactor, isPending: isTwoFactorSaving } =
         useLoginWithTwoFactor();
@@ -185,10 +185,7 @@ export function LoginPage() {
                         Enter your email address below to login to your account.
                     </p>
 
-                    <LoginForm
-                        loading={isLoginSaving}
-                        onSubmit={onLoginSubmit}
-                    />
+                    <LoginForm loading={isSaving} onSubmit={onLoginSubmit} />
 
                     <div className="space-y-2">
                         <p className="text-muted-foreground text-sm">

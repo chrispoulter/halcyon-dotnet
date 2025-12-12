@@ -16,10 +16,12 @@ import { useGenerateRecoveryCodes } from '@/features/profile/hooks/use-generate-
 import { RecoveryCodesDialog } from '@/features/profile/generate-recovery-codes/recovery-codes-dialog';
 
 type GenerateRecoveryCodesButtonProps = {
+    disabled?: boolean;
     className?: string;
 };
 
 export function GenerateRecoveryCodesButton({
+    disabled,
     className,
 }: GenerateRecoveryCodesButtonProps) {
     const [recoveryCodes, setRecoveryCodes] = useState<string[] | undefined>();
@@ -43,7 +45,11 @@ export function GenerateRecoveryCodesButton({
         <>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <LoadingButton loading={isGenerating} className={className}>
+                    <LoadingButton
+                        loading={isGenerating}
+                        disabled={disabled}
+                        className={className}
+                    >
                         Generate Recovery Codes
                     </LoadingButton>
                 </AlertDialogTrigger>
@@ -60,7 +66,7 @@ export function GenerateRecoveryCodesButton({
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                            disabled={isGenerating}
+                            disabled={disabled || isGenerating}
                             onClick={onGenerate}
                         >
                             Continue
