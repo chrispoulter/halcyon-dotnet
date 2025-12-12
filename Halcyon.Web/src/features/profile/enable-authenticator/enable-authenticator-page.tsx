@@ -101,10 +101,9 @@ export function EnableAuthenticatorPage() {
                     <code className="bg-muted rounded p-1 font-mono font-semibold">
                         {setupTwoFactor.secret}
                     </code>{' '}
-                    into your two-factor authenticator app. Spaces and casing do
-                    not matter.
+                    into your two-factor authenticator app.
                     <QRCodeSVG
-                        value={setupTwoFactor.otpAuthUri}
+                        value={setupTwoFactor.otpauthUri}
                         width={180}
                         height={180}
                         className="mt-2 rounded border bg-white p-1"
