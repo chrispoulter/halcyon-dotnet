@@ -2,7 +2,11 @@ using FluentValidation;
 
 namespace Halcyon.Api.Features.Account.LoginWithTwoFactor;
 
-public record LoginWithTwoFactorRequest(string EmailAddress, string Password, string Code);
+public record LoginWithTwoFactorRequest(
+    string EmailAddress,
+    string Password,
+    string AuthenticatorCode
+);
 
 public class LoginWithTwoFactorRequestValidator : AbstractValidator<LoginWithTwoFactorRequest>
 {
@@ -15,6 +19,10 @@ public class LoginWithTwoFactorRequestValidator : AbstractValidator<LoginWithTwo
             .WithName("Email Address");
 
         RuleFor(x => x.Password).NotEmpty().WithName("Password");
-        RuleFor(x => x.Code).NotEmpty().Matches("^[0-9]{6}$").WithName("Authenticator Code");
+
+        RuleFor(x => x.AuthenticatorCode)
+            .NotEmpty()
+            .Matches("^[0-9]{6}$")
+            .WithName("Authenticator Code");
     }
 }

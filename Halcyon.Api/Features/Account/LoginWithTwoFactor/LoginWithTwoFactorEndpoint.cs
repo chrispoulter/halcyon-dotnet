@@ -16,7 +16,10 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
             .Produces<LoginWithTwoFactorResponse>()
             .WithTags(Tags.Account)
             .WithSummary("Login with Two-Factor")
-            .WithDescription("Authenticate a user and return a JWT token using an authenticator code."); ;
+            .WithDescription(
+                "Authenticate a user and return a JWT token using an authenticator code."
+            );
+        ;
     }
 
     private static async Task<IResult> HandleAsync(
@@ -68,7 +71,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret), step: 30, totpSize: 6);
 
         var totpVerified = totp.VerifyTotp(
-            request.Code,
+            request.AuthenticatorCode,
             out _,
             VerificationWindow.RfcSpecifiedNetworkDelay
         );

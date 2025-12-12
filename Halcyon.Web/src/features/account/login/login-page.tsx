@@ -62,7 +62,7 @@ export function LoginPage() {
         loginWithTwoFactor(
             {
                 ...state.loginFormValues!,
-                twoFactorCode: data.twoFactorCode,
+                authenticatorCode: data.authenticatorCode,
             },
             {
                 onSuccess: (data) => {
