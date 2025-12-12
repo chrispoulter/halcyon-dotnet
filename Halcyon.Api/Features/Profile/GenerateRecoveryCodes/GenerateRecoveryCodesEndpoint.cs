@@ -50,7 +50,7 @@ public class GenerateRecoveryCodesEndpoint : IEndpoint
             .Range(0, 10)
             .Select(_ => Convert.ToHexString(RandomNumberGenerator.GetBytes(5)).ToUpperInvariant());
 
-        var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword);
+        var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword).ToList();
 
         user.TwoFactorRecoveryCodes = hashedRecoveryCodes;
 

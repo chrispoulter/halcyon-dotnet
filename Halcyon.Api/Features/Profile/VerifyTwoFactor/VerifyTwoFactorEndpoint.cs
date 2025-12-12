@@ -56,7 +56,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         );
 
         var verified = totp.VerifyTotp(
-            request.Code,
+            request.VerificationCode,
             out _,
             VerificationWindow.RfcSpecifiedNetworkDelay
         );
@@ -73,7 +73,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             .Range(0, 10)
             .Select(_ => Convert.ToHexString(RandomNumberGenerator.GetBytes(5)).ToUpperInvariant());
 
-        var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword);
+        var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword).ToList();
 
         user.IsTwoFactorEnabled = true;
         user.TwoFactorSecret = user.TwoFactorTempSecret;
