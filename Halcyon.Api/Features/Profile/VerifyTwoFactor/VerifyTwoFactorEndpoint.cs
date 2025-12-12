@@ -76,7 +76,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         user.IsTwoFactorEnabled = true;
         user.TwoFactorSecret = user.TwoFactorTempSecret;
         user.TwoFactorTempSecret = null;
-        user.TwoFactorRecoveryCodes = recoveryCodes;
+        user.TwoFactorRecoveryCodes = hashedRecoveryCodes;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 

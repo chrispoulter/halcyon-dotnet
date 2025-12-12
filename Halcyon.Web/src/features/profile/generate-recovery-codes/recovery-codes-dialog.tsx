@@ -22,10 +22,15 @@ export function RecoveryCodesDialog({
     onOpenChange,
     codes,
 }: RecoveryCodesDialogProps) {
-    async function onCopyToClipboard() {
+    function onCopyToClipboard() {
         const text = codes?.join('\n') || '';
-        await navigator.clipboard.writeText(text);
-        toast.success('Recovery codes copied to clipboard.');
+
+        navigator.clipboard
+            .writeText(text)
+            .then(() => toast.success('Recovery codes copied to clipboard.'))
+            .catch(() =>
+                toast.error('Failed to copy recovery codes to clipboard.')
+            );
     }
 
     return (

@@ -41,7 +41,7 @@ export function LoginWithRecoveryCodeForm({
                 name="recoveryCode"
                 label="Recovery Code"
                 maxLength={10}
-                pattern="[A-F][0-9]{10}"
+                pattern="[A-F0-9]{10}"
                 autoComplete="off"
                 required
                 disabled={loading}
