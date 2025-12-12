@@ -25,6 +25,7 @@ export function GenerateRecoveryCodesButton({
     className,
 }: GenerateRecoveryCodesButtonProps) {
     const [recoveryCodes, setRecoveryCodes] = useState<string[] | undefined>();
+
     const [showDialog, setShowDialog] = useState(false);
 
     const { mutate: generateRecoveryCodes, isPending: isGenerating } =

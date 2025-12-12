@@ -18,7 +18,9 @@ export function EnableAuthenticatorPage() {
     const navigate = useNavigate();
 
     const [recoveryCodes, setRecoveryCodes] = useState<string[] | undefined>();
-    const [showDialog, setShowDialog] = useState(false);
+
+    const [showRecoveryCodesDialog, setShowRecoveryCodesDialog] =
+        useState(false);
 
     const {
         data: setupTwoFactor,
@@ -44,11 +46,18 @@ export function EnableAuthenticatorPage() {
             onSuccess: (data) => {
                 toast.success('Two-factor authentication has been enabled.');
                 setRecoveryCodes(data.recoveryCodes);
-                setShowDialog(true);
-                navigate('/profile');
+                setShowRecoveryCodesDialog(true);
             },
             onError: (error) => toast.error(error.message),
         });
+    }
+
+    function onRecoveryCodeDialogChange(open: boolean) {
+        setShowRecoveryCodesDialog(open);
+
+        if (!open) {
+            navigate('/profile');
+        }
     }
 
     return (
@@ -127,8 +136,8 @@ export function EnableAuthenticatorPage() {
             </EnableAuthenticatorForm>
 
             <RecoveryCodesDialog
-                open={showDialog}
-                onOpenChange={setShowDialog}
+                open={showRecoveryCodesDialog}
+                onOpenChange={onRecoveryCodeDialogChange}
                 codes={recoveryCodes}
             />
         </main>
