@@ -22,9 +22,7 @@ export const useResetPassword = () => {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({
-                queryKey: ['user', data.id],
-            });
+            queryClient.invalidateQueries({ queryKey: ['user', data.id] });
         },
     });
 };
