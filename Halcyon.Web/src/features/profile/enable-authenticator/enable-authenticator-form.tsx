@@ -13,14 +13,16 @@ const schema = z.object({
 export type EnableAuthenticatorFormValues = z.infer<typeof schema>;
 
 type EnableAuthenticatorFormProps = {
-    loading?: boolean;
     onSubmit: (values: EnableAuthenticatorFormValues) => void;
+    loading?: boolean;
+    disabled?: boolean;
     children?: React.ReactNode;
 };
 
 export function EnableAuthenticatorForm({
-    loading,
     onSubmit,
+    loading,
+    disabled,
     children,
 }: EnableAuthenticatorFormProps) {
     const form = useForm<EnableAuthenticatorFormValues>({
@@ -45,12 +47,16 @@ export function EnableAuthenticatorForm({
                 pattern="[0-9]{6}"
                 autoComplete="one-time-code"
                 required
-                disabled={loading}
+                disabled={disabled}
             />
 
             <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
                 {children}
-                <LoadingButton type="submit" loading={loading}>
+                <LoadingButton
+                    type="submit"
+                    loading={loading}
+                    disabled={disabled}
+                >
                     Submit
                 </LoadingButton>
             </div>

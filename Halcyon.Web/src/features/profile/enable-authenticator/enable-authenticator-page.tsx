@@ -117,7 +117,11 @@ export function EnableAuthenticatorPage() {
                 </li>
             </ol>
 
-            <EnableAuthenticatorForm onSubmit={onSubmit} loading={isVerifying}>
+            <EnableAuthenticatorForm
+                onSubmit={onSubmit}
+                disabled={isFetching || isVerifying}
+                loading={isVerifying}
+            >
                 <Button asChild variant="outline">
                     <Link to="/profile">Cancel</Link>
                 </Button>
