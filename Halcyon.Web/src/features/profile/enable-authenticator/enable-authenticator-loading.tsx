@@ -6,21 +6,21 @@ export function EnableAuthenticatorLoading() {
             <Skeleton className="h-14 w-3/4" />
             <Skeleton className="h-14" />
 
+            <div className="space-y-2">
+                <Skeleton className="h-14" />
+                <Skeleton className="h-14" />
+                <Skeleton className="h-32 w-32" />
+                <Skeleton className="h-14" />
+            </div>
+
             <div className="space-y-6">
                 <Skeleton className="h-14" />
-
-                <div className="flex flex-col gap-6 sm:flex-row">
-                    <Skeleton className="h-14 w-full" />
-                    <Skeleton className="h-14 w-full" />
-                </div>
 
                 <div className="flex flex-col justify-end gap-2 sm:flex-row">
                     <Skeleton className="h-10 w-full sm:w-32" />
                     <Skeleton className="h-10 w-full sm:w-32" />
                 </div>
             </div>
-
-            <Skeleton className="h-5 w-64" />
         </main>
     );
 }
