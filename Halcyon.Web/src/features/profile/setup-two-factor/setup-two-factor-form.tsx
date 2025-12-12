@@ -13,7 +13,7 @@ const schema = z.object({
 export type SetupTwoFactorFormValues = z.infer<typeof schema>;
 
 type SetupTwoFactorFormProps = {
-    onSubmit: (data: SetupTwoFactorFormValues) => void;
+    onSubmit: (values: SetupTwoFactorFormValues) => void;
     loading?: boolean;
     disabled?: boolean;
     children?: React.ReactNode;

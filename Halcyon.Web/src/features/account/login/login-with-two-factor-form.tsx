@@ -1,20 +1,20 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { LoadingButton } from '@/components/loading-button';
 import { TextField } from '@/components/form/text-field';
+import { LoadingButton } from '@/components/loading-button';
 
 const schema = z.object({
-    code: z
-        .string({ message: 'Authenticator code must be a valid string' })
-        .min(1, 'Authenticator code is a required field'),
+    twoFactorCode: z
+        .string({ message: 'Authenticator Code must be a valid string' })
+        .regex(/^[0-9]{6}$/, 'Authenticator Code is not in the correct format'),
 });
 
 export type LoginWithTwoFactorFormValues = z.infer<typeof schema>;
 
 type LoginWithTwoFactorFormProps = {
     loading?: boolean;
-    onSubmit: (data: LoginWithTwoFactorFormValues) => void;
+    onSubmit: (values: LoginWithTwoFactorFormValues) => void;
     children?: React.ReactNode;
 };
 
@@ -26,7 +26,7 @@ export function LoginWithTwoFactorForm({
     const form = useForm<LoginWithTwoFactorFormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
-            code: '',
+            twoFactorCode: '',
         },
     });
 
@@ -38,12 +38,11 @@ export function LoginWithTwoFactorForm({
         >
             <TextField
                 control={form.control}
-                name="code"
+                name="twoFactorCode"
                 label="Authenticator Code"
-                type="text"
                 maxLength={6}
-                pattern="\d{6}"
                 inputMode="numeric"
+                pattern="[0-9]{6}"
                 autoComplete="one-time-code"
                 required
                 disabled={loading}

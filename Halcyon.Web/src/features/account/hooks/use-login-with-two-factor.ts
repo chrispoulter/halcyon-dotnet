@@ -4,7 +4,7 @@ import { apiClient } from '@/lib/api-client';
 type LoginWithTwoFactorRequest = {
     emailAddress: string;
     password: string;
-    code: string;
+    twoFactorCode: string;
 };
 
 type LoginWithTwoFactorResponse = {

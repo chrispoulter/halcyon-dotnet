@@ -6,16 +6,15 @@ import { LoadingButton } from '@/components/loading-button';
 
 const schema = z.object({
     recoveryCode: z
-        .string({ message: 'Recovery code must be a valid string' })
-        .min(1, 'Recovery code is a required field')
-        .regex(/^\d{6}$/, 'Recovery code must be exactly 6 digits'),
+        .string({ message: 'Recovery Code must be a valid string' })
+        .regex(/^[A-F0-9]{10}$/, 'Recovery Code is not in the correct format'),
 });
 
 export type LoginWithRecoveryCodeFormValues = z.infer<typeof schema>;
 
 type LoginWithRecoveryCodeFormProps = {
     loading?: boolean;
-    onSubmit: (data: LoginWithRecoveryCodeFormValues) => void;
+    onSubmit: (values: LoginWithRecoveryCodeFormValues) => void;
     children?: React.ReactNode;
 };
 
@@ -41,7 +40,8 @@ export function LoginWithRecoveryCodeForm({
                 control={form.control}
                 name="recoveryCode"
                 label="Recovery Code"
-                maxLength={50}
+                maxLength={10}
+                pattern="[A-F][0-9]{10}"
                 autoComplete="off"
                 required
                 disabled={loading}
