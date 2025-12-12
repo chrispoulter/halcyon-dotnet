@@ -20,6 +20,7 @@ export const useDisableTwoFactor = () => {
                 .json<DisableTwoFactorResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
+            queryClient.invalidateQueries({ queryKey: ['two-factor'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({ queryKey: ['user', data.id] });
         },

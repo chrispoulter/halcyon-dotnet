@@ -12,7 +12,7 @@ export const useSetupTwoFactor = () => {
     const { accessToken } = useAuth();
 
     return useQuery({
-        queryKey: ['twofactor'],
+        queryKey: ['two-factor'],
         queryFn: () =>
             apiClient
                 .put('/profile/setup-two-factor', {

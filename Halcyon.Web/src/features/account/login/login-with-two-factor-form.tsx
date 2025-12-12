@@ -50,6 +50,7 @@ export function LoginWithTwoFactorForm({
 
             <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
                 {children}
+
                 <LoadingButton type="submit" loading={loading}>
                     Submit
                 </LoadingButton>

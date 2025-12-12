@@ -26,10 +26,9 @@ export const useVerifyTwoFactor = () => {
                 .json<VerifyTwoFactorResponse>(),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
+            queryClient.invalidateQueries({ queryKey: ['two-factor'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({
-                queryKey: ['user', data.id],
-            });
+            queryClient.invalidateQueries({ queryKey: ['user', data.id] });
         },
     });
 };
