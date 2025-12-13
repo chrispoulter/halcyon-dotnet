@@ -58,6 +58,9 @@ In the `Halcyon.Api` directory of the project, create a new `appsettings.Develop
     "Audience": "HalcyonClient",
     "ExpiresIn": 3600
   },
+  "TwoFactor": {
+    "Issuer": "Halcyon"
+  },
   "Seed": {
     "Users": [
       {

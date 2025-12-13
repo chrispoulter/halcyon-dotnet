@@ -1,7 +1,9 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using OtpNet;
 
 namespace Halcyon.Api.Features.Profile.SetupTwoFactor;
@@ -21,7 +23,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
-        IConfiguration configuration,
+        IOptions<TwoFactorSettings> twoFactorSettings,
         CancellationToken cancellationToken = default
     )
     {
@@ -47,10 +49,12 @@ public class SetupTwoFactorEndpoint : IEndpoint
             await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        var issuer = configuration["TwoFactor:Issuer"] ?? "Halcyon";
-        var label = $"{issuer}:{user.EmailAddress}";
-        var otpauthUri =
-            $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={user.TwoFactorTempSecret}&issuer={Uri.EscapeDataString(issuer)}&digits=6&period=30";
+        var otpauthUri = new OtpUri(
+            OtpType.Totp,
+            user.TwoFactorTempSecret,
+            user.EmailAddress,
+            twoFactorSettings.Value.Issuer
+        ).ToString();
 
         return Results.Ok(
             new SetupTwoFactorResponse(user.Id, user.TwoFactorTempSecret, otpauthUri)
