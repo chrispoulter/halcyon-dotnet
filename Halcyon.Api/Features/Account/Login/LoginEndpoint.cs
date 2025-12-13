@@ -56,9 +56,12 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        var token = jwtTokenGenerator.GenerateJwtToken(user);
-        var result = new LoginResponse(token);
+        if (user.IsTwoFactorEnabled)
+        {
+            return Results.Ok(new LoginResponse(true, null));
+        }
 
-        return Results.Ok(result);
+        var token = jwtTokenGenerator.GenerateJwtToken(user);
+        return Results.Ok(new LoginResponse(false, token));
     }
 }
