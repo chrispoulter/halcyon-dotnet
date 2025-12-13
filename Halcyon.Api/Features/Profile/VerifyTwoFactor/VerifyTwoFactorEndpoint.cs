@@ -71,7 +71,8 @@ public class VerifyTwoFactorEndpoint : IEndpoint
 
         var recoveryCodes = Enumerable
             .Range(0, 10)
-            .Select(_ => Convert.ToHexString(RandomNumberGenerator.GetBytes(5)).ToUpperInvariant());
+            .Select(_ => Convert.ToHexString(RandomNumberGenerator.GetBytes(5)).ToUpperInvariant())
+            .ToList();
 
         var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword).ToList();
 
