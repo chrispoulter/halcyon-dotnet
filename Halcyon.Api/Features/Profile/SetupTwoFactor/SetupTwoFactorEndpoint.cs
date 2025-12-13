@@ -1,7 +1,6 @@
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OtpNet;
@@ -49,15 +48,13 @@ public class SetupTwoFactorEndpoint : IEndpoint
             await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        var otpauthUri = new OtpUri(
+        var otpauth = new OtpUri(
             OtpType.Totp,
             user.TwoFactorTempSecret,
             user.EmailAddress,
             twoFactorSettings.Value.Issuer
         ).ToString();
 
-        return Results.Ok(
-            new SetupTwoFactorResponse(user.Id, user.TwoFactorTempSecret, otpauthUri)
-        );
+        return Results.Ok(new SetupTwoFactorResponse(user.Id, user.TwoFactorTempSecret, otpauth));
     }
 }

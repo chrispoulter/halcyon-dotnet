@@ -112,7 +112,7 @@ export function EnableAuthenticatorPage() {
                     </code>{' '}
                     into your two-factor authenticator app.
                     <QRCodeSVG
-                        value={setupTwoFactor.otpauthUri}
+                        value={setupTwoFactor.otpauth}
                         width={180}
                         height={180}
                         className="mt-2 rounded border bg-white p-1"

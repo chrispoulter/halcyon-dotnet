@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 type SetupTwoFactorResponse = {
     id: string;
     secret: string;
-    otpauthUri: string;
+    otpauth: string;
 };
 
 export const useSetupTwoFactor = () => {
