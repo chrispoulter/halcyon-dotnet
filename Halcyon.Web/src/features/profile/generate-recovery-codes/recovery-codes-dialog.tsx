@@ -55,9 +55,7 @@ export function RecoveryCodesDialog({
                     <Button variant="outline" onClick={onCopyToClipboard}>
                         <ClipboardCopy /> Copy
                     </Button>
-                    <AlertDialogAction onClick={() => onOpenChange(false)}>
-                        Continue
-                    </AlertDialogAction>
+                    <AlertDialogAction>Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
