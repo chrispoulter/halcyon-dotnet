@@ -39,8 +39,10 @@ export function GenerateRecoveryCodesButton({
         });
     }
 
-    function onOpenChange() {
-        setRecoveryCodes(undefined);
+    function onOpenChange(open: boolean) {
+        if (!open) {
+            setRecoveryCodes(undefined);
+        }
     }
 
     return (

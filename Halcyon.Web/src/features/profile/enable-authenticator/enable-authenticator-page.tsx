@@ -48,8 +48,10 @@ export function EnableAuthenticatorPage() {
         });
     }
 
-    function onOpenChange() {
-        navigate('/profile');
+    function onOpenChange(open: boolean) {
+        if (!open) {
+            navigate('/profile');
+        }
     }
 
     return (
