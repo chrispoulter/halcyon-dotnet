@@ -19,7 +19,6 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
             .WithDescription(
                 "Authenticate a user and return a JWT token using an authenticator code."
             );
-        ;
     }
 
     private static async Task<IResult> HandleAsync(
@@ -38,7 +37,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Invalid credentials."
+                title: "The credentials provided were invalid."
             );
         }
 
@@ -48,7 +47,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Invalid credentials."
+                title: "The credentials provided were invalid."
             );
         }
 

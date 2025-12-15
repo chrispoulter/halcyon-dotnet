@@ -35,7 +35,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Invalid credentials."
+                title: "The credentials provided were invalid."
             );
         }
 
@@ -45,7 +45,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
-                title: "Invalid credentials."
+                title: "The credentials provided were invalid."
             );
         }
 
