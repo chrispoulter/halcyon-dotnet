@@ -119,8 +119,7 @@ export function LoginPage() {
 
                     <div className="space-y-2">
                         <p className="text-muted-foreground text-sm">
-                            Don&apos;t have access to your authenticator device?
-                            You can{' '}
+                            Don&apos;t have access to your authenticator device?{' '}
                             <Button
                                 variant="link"
                                 onClick={() =>
