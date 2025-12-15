@@ -31,13 +31,6 @@ namespace Halcyon.Api.Migrations
                 type: "text",
                 nullable: true
             );
-
-            migrationBuilder.AddColumn<string>(
-                name: "two_factor_temp_secret",
-                table: "users",
-                type: "text",
-                nullable: true
-            );
         }
 
         /// <inheritdoc />
@@ -48,8 +41,6 @@ namespace Halcyon.Api.Migrations
             migrationBuilder.DropColumn(name: "two_factor_recovery_codes", table: "users");
 
             migrationBuilder.DropColumn(name: "two_factor_secret", table: "users");
-
-            migrationBuilder.DropColumn(name: "two_factor_temp_secret", table: "users");
         }
     }
 }

@@ -39,22 +39,22 @@ public class SetupTwoFactorEndpoint : IEndpoint
             );
         }
 
-        if (string.IsNullOrEmpty(user.TwoFactorTempSecret))
+        if (string.IsNullOrEmpty(user.TwoFactorSecret))
         {
             var rawKey = KeyGeneration.GenerateRandomKey(20);
             var secret = Base32Encoding.ToString(rawKey);
 
-            user.TwoFactorTempSecret = secret;
+            user.TwoFactorSecret = secret;
             await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         var otpauth = new OtpUri(
             OtpType.Totp,
-            user.TwoFactorTempSecret,
+            user.TwoFactorSecret,
             user.EmailAddress,
             twoFactorSettings.Value.Issuer
         ).ToString();
 
-        return Results.Ok(new SetupTwoFactorResponse(user.Id, user.TwoFactorTempSecret, otpauth));
+        return Results.Ok(new SetupTwoFactorResponse(user.Id, user.TwoFactorSecret, otpauth));
     }
 }

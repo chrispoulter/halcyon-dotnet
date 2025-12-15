@@ -17,8 +17,6 @@ public class User : IJwtUser
 
     public string? TwoFactorSecret { get; set; }
 
-    public string? TwoFactorTempSecret { get; set; }
-
     public IEnumerable<string>? TwoFactorRecoveryCodes { get; set; }
 
     public string FirstName { get; set; } = null!;

@@ -38,7 +38,6 @@ public class DisableTwoFactorEndpoint : IEndpoint
 
         user.IsTwoFactorEnabled = false;
         user.TwoFactorSecret = null;
-        user.TwoFactorTempSecret = null;
         user.TwoFactorRecoveryCodes = null;
 
         await dbContext.SaveChangesAsync(cancellationToken);

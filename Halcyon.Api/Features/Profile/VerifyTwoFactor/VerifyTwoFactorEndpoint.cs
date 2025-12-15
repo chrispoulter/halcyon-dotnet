@@ -2,7 +2,6 @@ using System.Security.Cryptography;
 using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
@@ -41,7 +40,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
-        if (string.IsNullOrEmpty(user.TwoFactorTempSecret))
+        if (string.IsNullOrEmpty(user.TwoFactorSecret))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -49,11 +48,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var totp = new Totp(
-            Base32Encoding.ToBytes(user.TwoFactorTempSecret),
-            step: 30,
-            totpSize: 6
-        );
+        var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret));
 
         var verified = totp.VerifyTotp(
             request.VerificationCode,
@@ -77,8 +72,6 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword).ToList();
 
         user.IsTwoFactorEnabled = true;
-        user.TwoFactorSecret = user.TwoFactorTempSecret;
-        user.TwoFactorTempSecret = null;
         user.TwoFactorRecoveryCodes = hashedRecoveryCodes;
 
         await dbContext.SaveChangesAsync(cancellationToken);

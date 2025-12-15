@@ -90,10 +90,6 @@ namespace Halcyon.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("two_factor_secret");
 
-                    b.Property<string>("TwoFactorTempSecret")
-                        .HasColumnType("text")
-                        .HasColumnName("two_factor_temp_secret");
-
                     b.HasKey("Id")
                         .HasName("pk_users");
 

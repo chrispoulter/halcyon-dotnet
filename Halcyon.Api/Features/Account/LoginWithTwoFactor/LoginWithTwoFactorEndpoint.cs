@@ -67,7 +67,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret), step: 30, totpSize: 6);
+        var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret));
 
         var totpVerified = totp.VerifyTotp(
             request.AuthenticatorCode,
