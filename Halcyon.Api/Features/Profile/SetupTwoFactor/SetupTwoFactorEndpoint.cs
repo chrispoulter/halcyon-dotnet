@@ -11,7 +11,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/profile/setup-two-factor", HandleAsync)
+        app.MapPut("/profile/setup-two-factor", HandleAsync)
             .RequireAuthorization()
             .Produces<SetupTwoFactorResponse>()
             .WithTags(Tags.Profile)

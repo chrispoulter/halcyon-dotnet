@@ -15,7 +15,7 @@ export const useSetupTwoFactor = () => {
         queryKey: ['two-factor'],
         queryFn: () =>
             apiClient
-                .get('profile/setup-two-factor', {
+                .put('profile/setup-two-factor', {
                     context: {
                         accessToken,
                     },
