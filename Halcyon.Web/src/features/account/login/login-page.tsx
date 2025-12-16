@@ -130,7 +130,7 @@ export function LoginPage() {
                                 }
                                 className="underline underline-offset-4"
                             >
-                                login with a recovery code
+                                Login with a recovery code
                             </Button>
                             .
                         </p>
