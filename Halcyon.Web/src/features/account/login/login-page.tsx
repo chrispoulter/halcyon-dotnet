@@ -110,6 +110,7 @@ export function LoginPage() {
                         onSubmit={onTwoFactorSubmit}
                     >
                         <Button
+                            type="button"
                             variant="outline"
                             onClick={() => setState({ stage: 'Login' })}
                         >
@@ -120,8 +121,8 @@ export function LoginPage() {
                     <div className="space-y-2">
                         <p className="text-muted-foreground text-sm">
                             Don&apos;t have access to your authenticator device?{' '}
-                            <Button
-                                variant="link"
+                            <Link
+                                to=""
                                 onClick={() =>
                                     setState((prev) => ({
                                         ...prev,
@@ -131,7 +132,7 @@ export function LoginPage() {
                                 className="underline underline-offset-4"
                             >
                                 Login with a recovery code
-                            </Button>
+                            </Link>
                             .
                         </p>
                     </div>
@@ -157,6 +158,7 @@ export function LoginPage() {
                         onSubmit={onRecoveryCodeSubmit}
                     >
                         <Button
+                            type="button"
                             variant="outline"
                             onClick={() =>
                                 setState((prev) => ({
