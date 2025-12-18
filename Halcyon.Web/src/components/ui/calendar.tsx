@@ -4,7 +4,11 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
 } from 'lucide-react';
-import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
+import {
+    DayPicker,
+    getDefaultClassNames,
+    type DayButton,
+} from 'react-day-picker';
 import { format } from 'date-fns';
 
 import { cn } from '@/lib/utils';

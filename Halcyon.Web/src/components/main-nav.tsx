@@ -36,7 +36,7 @@ export function MainNav() {
                 !roles || roles.some((value) => user?.roles?.includes(value))
         )
         .map(({ href, label }) => (
-            <Button key={href} asChild variant="link">
+            <Button key={href} asChild variant="ghost">
                 <Link to={href} onClick={() => setOpen(false)}>
                     {label}
                 </Link>

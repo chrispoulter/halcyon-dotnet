@@ -32,7 +32,7 @@ export function Pager({
                     <PaginationItem>
                         <PaginationPrevious
                             disabled={disabled}
-                            onClick={() => onPreviousPage()}
+                            onClick={onPreviousPage}
                         />
                     </PaginationItem>
                 )}
@@ -40,7 +40,7 @@ export function Pager({
                     <PaginationItem>
                         <PaginationNext
                             disabled={disabled}
-                            onClick={() => onNextPage()}
+                            onClick={onNextPage}
                         />
                     </PaginationItem>
                 )}
