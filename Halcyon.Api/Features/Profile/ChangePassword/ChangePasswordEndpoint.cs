@@ -23,7 +23,7 @@ public class ChangePasswordEndpoint : IEndpoint
         ChangePasswordRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
-        IPasswordHasher passwordHasher,
+        ISecretHasher secretHasher,
         CancellationToken cancellationToken = default
     )
     {
@@ -48,7 +48,7 @@ public class ChangePasswordEndpoint : IEndpoint
             );
         }
 
-        var verified = passwordHasher.VerifyPassword(request.CurrentPassword, user.Password);
+        var verified = secretHasher.VerifyHash(request.CurrentPassword, user.Password);
 
         if (!verified)
         {
@@ -58,7 +58,7 @@ public class ChangePasswordEndpoint : IEndpoint
             );
         }
 
-        user.Password = passwordHasher.HashPassword(request.NewPassword);
+        user.Password = secretHasher.GenerateHash(request.NewPassword);
         user.PasswordResetToken = null;
 
         await dbContext.SaveChangesAsync(cancellationToken);

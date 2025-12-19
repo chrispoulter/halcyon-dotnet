@@ -7,7 +7,7 @@ namespace Halcyon.Api.Data;
 
 public class HalcyonDbSeeder(
     HalcyonDbContext dbContext,
-    IPasswordHasher passwordHasher,
+    ISecretHasher secretHasher,
     IOptions<SeedSettings> seedSettings
 ) : IDbSeeder<HalcyonDbContext>
 {
@@ -32,7 +32,7 @@ public class HalcyonDbSeeder(
             }
 
             user.EmailAddress = seedUser.EmailAddress;
-            user.Password = passwordHasher.HashPassword(seedUser.Password);
+            user.Password = secretHasher.GenerateHash(seedUser.Password);
             user.FirstName = seedUser.FirstName;
             user.LastName = seedUser.LastName;
             user.DateOfBirth = seedUser.DateOfBirth;
