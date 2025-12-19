@@ -2,7 +2,7 @@
 
 public interface ISecretHasher
 {
-    string GenerateHash(string str);
+    string GenerateHash(string value);
 
-    bool VerifyHash(string str, string hash);
+    bool VerifyHash(string value, string hash);
 }
