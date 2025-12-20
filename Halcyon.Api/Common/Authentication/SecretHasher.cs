@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Halcyon.Api.Common.Authentication;
 
-public class PasswordHasher : IPasswordHasher
+public class SecretHasher : ISecretHasher
 {
     private readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA256;
 
@@ -13,12 +13,12 @@ public class PasswordHasher : IPasswordHasher
 
     private const int Iterations = 10000;
 
-    public string HashPassword(string password)
+    public string GenerateHash(string value)
     {
         var salt = RandomNumberGenerator.GetBytes(SaltSize);
 
         var key = Rfc2898DeriveBytes.Pbkdf2(
-            password: Encoding.UTF8.GetBytes(password),
+            password: Encoding.UTF8.GetBytes(value),
             salt: salt,
             iterations: Iterations,
             hashAlgorithm: Algorithm,
@@ -31,9 +31,9 @@ public class PasswordHasher : IPasswordHasher
         return $"{saltBase64}.{keyBase64}";
     }
 
-    public bool VerifyPassword(string password, string hashedPassword)
+    public bool VerifyHash(string value, string hash)
     {
-        var parts = hashedPassword.Split('.', 2);
+        var parts = hash.Split('.', 2);
         if (parts.Length != 2)
         {
             return false;
@@ -43,7 +43,7 @@ public class PasswordHasher : IPasswordHasher
         var key = Convert.FromBase64String(parts[1]);
 
         var keyToCheck = Rfc2898DeriveBytes.Pbkdf2(
-            password: Encoding.UTF8.GetBytes(password),
+            password: Encoding.UTF8.GetBytes(value),
             salt: salt,
             iterations: Iterations,
             hashAlgorithm: Algorithm,

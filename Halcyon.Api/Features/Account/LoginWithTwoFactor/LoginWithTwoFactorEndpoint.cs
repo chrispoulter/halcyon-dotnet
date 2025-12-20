@@ -24,7 +24,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         LoginWithTwoFactorRequest request,
         HalcyonDbContext dbContext,
-        IPasswordHasher passwordHasher,
+        ISecretHasher secretHasher,
         IJwtTokenGenerator jwtTokenGenerator,
         CancellationToken cancellationToken = default
     )
@@ -41,7 +41,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var verified = passwordHasher.VerifyPassword(request.Password, user.Password);
+        var verified = secretHasher.VerifyHash(request.Password, user.Password);
 
         if (!verified)
         {

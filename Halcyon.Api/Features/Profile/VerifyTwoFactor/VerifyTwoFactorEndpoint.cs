@@ -23,7 +23,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         VerifyTwoFactorRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
-        IPasswordHasher passwordHasher,
+        ISecretHasher secretHasher,
         CancellationToken cancellationToken = default
     )
     {
@@ -69,7 +69,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             .Select(_ => Convert.ToHexString(RandomNumberGenerator.GetBytes(5)).ToUpperInvariant())
             .ToList();
 
-        var hashedRecoveryCodes = recoveryCodes.Select(passwordHasher.HashPassword).ToList();
+        var hashedRecoveryCodes = recoveryCodes.Select(secretHasher.GenerateHash).ToList();
 
         user.IsTwoFactorEnabled = true;
         user.TwoFactorRecoveryCodes = hashedRecoveryCodes;

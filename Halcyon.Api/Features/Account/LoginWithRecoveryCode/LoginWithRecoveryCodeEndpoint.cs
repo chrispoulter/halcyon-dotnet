@@ -21,7 +21,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         LoginWithRecoveryCodeRequest request,
         HalcyonDbContext dbContext,
-        IPasswordHasher passwordHasher,
+        ISecretHasher secretHasher,
         IJwtTokenGenerator jwtTokenGenerator,
         CancellationToken cancellationToken = default
     )
@@ -39,7 +39,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
             );
         }
 
-        var verified = passwordHasher.VerifyPassword(request.Password, user.Password);
+        var verified = secretHasher.VerifyHash(request.Password, user.Password);
 
         if (!verified)
         {
@@ -71,7 +71,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
 
         foreach (var code in recoveryCodes)
         {
-            var recoveryCodeVerified = passwordHasher.VerifyPassword(request.RecoveryCode, code);
+            var recoveryCodeVerified = secretHasher.VerifyHash(request.RecoveryCode, code);
 
             if (recoveryCodeVerified)
             {

@@ -21,7 +21,7 @@ public class ResetPasswordEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ResetPasswordRequest request,
         HalcyonDbContext dbContext,
-        IPasswordHasher passwordHasher,
+        ISecretHasher secretHasher,
         CancellationToken cancellationToken = default
     )
     {
@@ -30,7 +30,7 @@ public class ResetPasswordEndpoint : IEndpoint
             cancellationToken
         );
 
-        if (user is null || user.IsLockedOut || request.Token != user.PasswordResetToken)
+        if (user is null || user.IsLockedOut || string.IsNullOrEmpty(user.PasswordResetToken))
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -38,7 +38,17 @@ public class ResetPasswordEndpoint : IEndpoint
             );
         }
 
-        user.Password = passwordHasher.HashPassword(request.NewPassword);
+        var verified = secretHasher.VerifyHash(request.Token, user.PasswordResetToken);
+
+        if (!verified)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Invalid token."
+            );
+        }
+
+        user.Password = secretHasher.GenerateHash(request.NewPassword);
         user.PasswordResetToken = null;
 
         await dbContext.SaveChangesAsync(cancellationToken);
