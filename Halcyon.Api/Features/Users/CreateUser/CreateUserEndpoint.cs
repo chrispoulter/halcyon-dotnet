@@ -23,7 +23,7 @@ public class CreateUserEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         CreateUserRequest request,
         HalcyonDbContext dbContext,
-        IPasswordHasher passwordHasher,
+        ISecretHasher secretHasher,
         CancellationToken cancellationToken = default
     )
     {
@@ -43,7 +43,7 @@ public class CreateUserEndpoint : IEndpoint
         var user = new User
         {
             EmailAddress = request.EmailAddress,
-            Password = passwordHasher.HashPassword(request.Password),
+            Password = secretHasher.GenerateHash(request.Password),
             FirstName = request.FirstName,
             LastName = request.LastName,
             DateOfBirth = request.DateOfBirth,

@@ -7,7 +7,7 @@ public static class SecurityExtensions
         var jwtConfig = builder.Configuration.GetSection(JwtSettings.SectionName);
         builder.Services.Configure<JwtSettings>(jwtConfig);
         builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        builder.Services.AddSingleton<ISecretHasher, SecretHasher>();
 
         return builder;
     }
