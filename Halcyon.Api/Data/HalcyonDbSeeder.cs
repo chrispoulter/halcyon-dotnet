@@ -15,15 +15,21 @@ public class HalcyonDbSeeder(
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        var emailAddresses = _seedSettings.Users.Select(u => u.EmailAddress);
+        var normalizedEmailAddresses = _seedSettings.Users.Select(u =>
+            u.EmailAddress.ToLowerInvariant()
+        );
 
         var users = await dbContext
-            .Users.Where(u => emailAddresses.Contains(u.EmailAddress))
+            .Users.Where(u => normalizedEmailAddresses.Contains(u.NormalizedEmailAddress))
             .ToListAsync(cancellationToken);
 
         foreach (var seedUser in _seedSettings.Users)
         {
-            var user = users.FirstOrDefault(u => u.EmailAddress == seedUser.EmailAddress);
+            var normalizedEmailAddress = seedUser.EmailAddress.ToLowerInvariant();
+
+            var user = users.FirstOrDefault(u =>
+                u.NormalizedEmailAddress == normalizedEmailAddress
+            );
 
             if (user is null)
             {

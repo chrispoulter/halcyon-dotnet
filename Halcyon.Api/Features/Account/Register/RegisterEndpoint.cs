@@ -26,8 +26,10 @@ public class RegisterEndpoint : IEndpoint
         CancellationToken cancellationToken = default
     )
     {
+        var normalizedEmailAddress = request.EmailAddress.ToLowerInvariant();
+
         var existing = await dbContext.Users.AnyAsync(
-            u => u.EmailAddress == request.EmailAddress,
+            u => u.NormalizedEmailAddress == normalizedEmailAddress,
             cancellationToken
         );
 
