@@ -13,7 +13,7 @@ using NpgsqlTypes;
 namespace Halcyon.Api.Migrations
 {
     [DbContext(typeof(HalcyonDbContext))]
-    [Migration("20251212102626_AddTwoFactor")]
+    [Migration("20251223112054_AddTwoFactor")]
     partial class AddTwoFactor
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Halcyon.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -65,6 +65,13 @@ namespace Halcyon.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("last_name");
 
+                    b.Property<string>("NormalizedEmailAddress")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("text")
+                        .HasColumnName("normalized_email_address")
+                        .HasComputedColumnSql("lower(email_address)", true);
+
                     b.Property<string>("Password")
                         .HasColumnType("text")
                         .HasColumnName("password");
@@ -96,7 +103,7 @@ namespace Halcyon.Api.Migrations
                     b.HasKey("Id")
                         .HasName("pk_users");
 
-                    b.HasIndex(new[] { "EmailAddress" }, "ix_users_email_address")
+                    b.HasIndex(new[] { "NormalizedEmailAddress" }, "ix_users_normalized_email_address")
                         .IsUnique();
 
                     b.HasIndex(new[] { "SearchVector" }, "ix_users_search_vector");

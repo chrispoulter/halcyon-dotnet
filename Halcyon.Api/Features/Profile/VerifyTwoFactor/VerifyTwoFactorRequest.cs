@@ -8,6 +8,9 @@ public class VerifyTwoFactorRequestValidator : AbstractValidator<VerifyTwoFactor
 {
     public VerifyTwoFactorRequestValidator()
     {
-        RuleFor(x => x.VerificationCode).NotEmpty().Matches("^[0-9]{6}$").WithName("Verification Code");
+        RuleFor(x => x.VerificationCode)
+            .NotEmpty()
+            .Matches("^[0-9]{6}$")
+            .WithName("Verification Code");
     }
 }
