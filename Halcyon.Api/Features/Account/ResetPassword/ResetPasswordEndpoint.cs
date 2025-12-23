@@ -25,8 +25,10 @@ public class ResetPasswordEndpoint : IEndpoint
         CancellationToken cancellationToken = default
     )
     {
+        var normalizedEmailAddress = request.EmailAddress.ToLowerInvariant();
+
         var user = await dbContext.Users.FirstOrDefaultAsync(
-            u => u.EmailAddress == request.EmailAddress,
+            u => u.NormalizedEmailAddress == normalizedEmailAddress,
             cancellationToken
         );
 

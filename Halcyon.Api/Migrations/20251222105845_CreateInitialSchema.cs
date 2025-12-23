@@ -22,6 +22,12 @@ namespace Halcyon.Api.Migrations
                         defaultValueSql: "gen_random_uuid()"
                     ),
                     email_address = table.Column<string>(type: "text", nullable: false),
+                    normalized_email_address = table.Column<string>(
+                        type: "text",
+                        nullable: false,
+                        computedColumnSql: "lower(email_address)",
+                        stored: true
+                    ),
                     password = table.Column<string>(type: "text", nullable: true),
                     password_reset_token = table.Column<string>(type: "text", nullable: true),
                     first_name = table.Column<string>(type: "text", nullable: false),
@@ -48,9 +54,9 @@ namespace Halcyon.Api.Migrations
             );
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_email_address",
+                name: "ix_users_normalized_email_address",
                 table: "users",
-                column: "email_address",
+                column: "normalized_email_address",
                 unique: true
             );
 
