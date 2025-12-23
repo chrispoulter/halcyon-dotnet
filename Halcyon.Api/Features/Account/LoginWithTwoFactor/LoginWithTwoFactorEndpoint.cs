@@ -29,9 +29,14 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         CancellationToken cancellationToken = default
     )
     {
+        var normalizedEmailAddress = request.EmailAddress.ToLowerInvariant();
+
         var user = await dbContext
             .Users.AsNoTracking()
-            .FirstOrDefaultAsync(u => u.EmailAddress == request.EmailAddress, cancellationToken);
+            .FirstOrDefaultAsync(
+                u => u.NormalizedEmailAddress == normalizedEmailAddress,
+                cancellationToken
+            );
 
         if (user is null || user.Password is null)
         {
