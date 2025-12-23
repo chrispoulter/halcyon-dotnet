@@ -36,15 +36,12 @@ public class UpdateUserEndpoint : IEndpoint
             );
         }
 
-        if (
-            !request.EmailAddress.Equals(
-                user.EmailAddress,
-                StringComparison.InvariantCultureIgnoreCase
-            )
-        )
+        var normalizedEmailAddress = request.EmailAddress.ToLowerInvariant();
+
+        if (!normalizedEmailAddress.Equals(user.NormalizedEmailAddress))
         {
             var existing = await dbContext.Users.AnyAsync(
-                u => u.EmailAddress == request.EmailAddress,
+                u => u.NormalizedEmailAddress == normalizedEmailAddress,
                 cancellationToken
             );
 

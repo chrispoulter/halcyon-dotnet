@@ -8,12 +8,19 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("users");
+
         builder
             .Property(u => u.Id)
             .HasColumnName("id")
             .HasDefaultValueSql("gen_random_uuid()")
             .ValueGeneratedOnAdd();
+
         builder.Property(u => u.EmailAddress).HasColumnName("email_address").IsRequired();
+        builder
+            .Property(u => u.NormalizedEmailAddress)
+            .HasColumnName("normalized_email_address")
+            .HasComputedColumnSql("lower(email_address)", stored: true);
+
         builder.Property(u => u.Password).HasColumnName("password");
         builder.Property(u => u.PasswordResetToken).HasColumnName("password_reset_token");
         builder
@@ -44,7 +51,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         );
 
         builder.HasKey(u => u.Id).HasName("pk_users");
-        builder.HasIndex(u => u.EmailAddress, "ix_users_email_address").IsUnique();
+        builder
+            .HasIndex(u => u.NormalizedEmailAddress, "ix_users_normalized_email_address")
+            .IsUnique();
         builder.HasIndex(u => u.SearchVector, "ix_users_search_vector").HasMethod("gin");
     }
 }

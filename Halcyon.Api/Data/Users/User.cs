@@ -9,6 +9,8 @@ public class User : IJwtUser
 
     public string EmailAddress { get; set; } = null!;
 
+    public string NormalizedEmailAddress { get; } = null!;
+
     public string? Password { get; set; }
 
     public string? PasswordResetToken { get; set; }
