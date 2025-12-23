@@ -15,6 +15,12 @@ public class User : IJwtUser
 
     public string? PasswordResetToken { get; set; }
 
+    public bool IsTwoFactorEnabled { get; set; }
+
+    public string? TwoFactorSecret { get; set; }
+
+    public IEnumerable<string>? TwoFactorRecoveryCodes { get; set; }
+
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;

@@ -1,25 +1,25 @@
-﻿using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Halcyon.Api.Features.Account.Login;
+namespace Halcyon.Api.Features.Account.LoginWithRecoveryCode;
 
-public class LoginEndpoint : IEndpoint
+public class LoginWithRecoveryCodeEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/account/login", HandleAsync)
-            .AddValidationFilter<LoginRequest>()
-            .Produces<LoginResponse>()
+        app.MapPost("/account/login-recovery-code", HandleAsync)
+            .AddValidationFilter<LoginWithRecoveryCodeRequest>()
+            .Produces<LoginWithRecoveryCodeResponse>()
             .WithTags(Tags.Account)
-            .WithSummary("Login")
-            .WithDescription("Authenticate a user and return a JWT token.");
+            .WithSummary("Login with Recovery Code")
+            .WithDescription("Authenticate a user and return a JWT token using a recovery code.");
     }
 
     private static async Task<IResult> HandleAsync(
-        LoginRequest request,
+        LoginWithRecoveryCodeRequest request,
         HalcyonDbContext dbContext,
         ISecretHasher secretHasher,
         IJwtTokenGenerator jwtTokenGenerator,
@@ -61,12 +61,42 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        if (user.IsTwoFactorEnabled)
+        if (!user.IsTwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
         {
-            return Results.Ok(new LoginResponse(true, null));
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Two-factor authentication is not configured."
+            );
         }
 
+        var recoveryCodes = user.TwoFactorRecoveryCodes ?? [];
+
+        string? matchedRecoveryCode = null;
+
+        foreach (var code in recoveryCodes)
+        {
+            var recoveryCodeVerified = secretHasher.VerifyHash(request.RecoveryCode, code);
+
+            if (recoveryCodeVerified)
+            {
+                matchedRecoveryCode = code;
+                break;
+            }
+        }
+
+        if (string.IsNullOrEmpty(matchedRecoveryCode))
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Invalid recovery code."
+            );
+        }
+
+        user.TwoFactorRecoveryCodes = [.. recoveryCodes.Where(code => code != matchedRecoveryCode)];
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+
         var token = jwtTokenGenerator.GenerateJwtToken(user);
-        return Results.Ok(new LoginResponse(false, token));
+        return Results.Ok(new LoginWithRecoveryCodeResponse(token));
     }
 }

@@ -15,6 +15,15 @@ export function ProfileLoading() {
 
             <Skeleton className="h-10 w-1/2" />
             <Skeleton className="h-14" />
+
+            <div className="flex flex-col gap-2 sm:flex-row">
+                <Skeleton className="h-10 w-full sm:w-32" />
+                <Skeleton className="h-10 w-full sm:w-32" />
+                <Skeleton className="h-10 w-full sm:w-32" />
+            </div>
+
+            <Skeleton className="h-10 w-1/2" />
+            <Skeleton className="h-14" />
             <Skeleton className="h-10 w-full sm:w-32" />
         </main>
     );
