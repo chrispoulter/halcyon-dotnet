@@ -79,8 +79,6 @@ public class SearchUsersEndpoint : IEndpoint
         var hasNextPage = page < pageCount;
         var hasPreviousPage = page > 1 && page <= pageCount;
 
-        var result = new SearchUsersResponse(users, hasNextPage, hasPreviousPage);
-
-        return Results.Ok(result);
+        return Results.Ok(new SearchUsersResponse(users, hasNextPage, hasPreviousPage));
     }
 }
