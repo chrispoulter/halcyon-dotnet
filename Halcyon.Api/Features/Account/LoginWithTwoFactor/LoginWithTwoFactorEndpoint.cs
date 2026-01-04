@@ -24,7 +24,8 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         LoginWithTwoFactorRequest request,
         HalcyonDbContext dbContext,
-        ISecretHasher secretHasher,
+        IHashService hashService,
+        IEncryptionService encryptionService,
         IJwtTokenGenerator jwtTokenGenerator,
         CancellationToken cancellationToken = default
     )
@@ -46,7 +47,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var verified = secretHasher.VerifyHash(request.Password, user.Password);
+        var verified = hashService.VerifyHash(request.Password, user.Password);
 
         if (!verified)
         {
@@ -72,7 +73,9 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret));
+        var decryptedSecret = encryptionService.DecryptSecret(user.TwoFactorSecret);
+
+        var totp = new Totp(Base32Encoding.ToBytes(decryptedSecret));
 
         var totpVerified = totp.VerifyTotp(
             request.AuthenticatorCode,

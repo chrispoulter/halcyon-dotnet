@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Halcyon.Api.Common.Authentication;
 
-public class SecretHasher : ISecretHasher
+public class HashService : IHashService
 {
     private readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA256;
 

@@ -23,7 +23,8 @@ public class VerifyTwoFactorEndpoint : IEndpoint
         VerifyTwoFactorRequest request,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
-        ISecretHasher secretHasher,
+        IHashService hashService,
+        IEncryptionService encryptionService,
         CancellationToken cancellationToken = default
     )
     {
@@ -48,7 +49,9 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var totp = new Totp(Base32Encoding.ToBytes(user.TwoFactorSecret));
+        var decryptedSecret = encryptionService.DecryptSecret(user.TwoFactorSecret);
+
+        var totp = new Totp(Base32Encoding.ToBytes(decryptedSecret));
 
         var verified = totp.VerifyTotp(
             request.VerificationCode,
@@ -69,7 +72,7 @@ public class VerifyTwoFactorEndpoint : IEndpoint
             .Select(_ => Convert.ToHexString(RandomNumberGenerator.GetBytes(5)).ToUpperInvariant())
             .ToList();
 
-        var hashedRecoveryCodes = recoveryCodes.Select(secretHasher.GenerateHash).ToList();
+        var hashedRecoveryCodes = recoveryCodes.Select(hashService.GenerateHash).ToList();
 
         user.IsTwoFactorEnabled = true;
         user.TwoFactorRecoveryCodes = hashedRecoveryCodes;

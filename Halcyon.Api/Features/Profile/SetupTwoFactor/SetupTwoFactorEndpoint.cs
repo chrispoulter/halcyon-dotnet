@@ -22,6 +22,7 @@ public class SetupTwoFactorEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
+        IEncryptionService encryptionService,
         IOptions<TwoFactorSettings> twoFactorSettings,
         CancellationToken cancellationToken = default
     )
@@ -39,22 +40,28 @@ public class SetupTwoFactorEndpoint : IEndpoint
             );
         }
 
+        string? secret = null;
+
         if (string.IsNullOrEmpty(user.TwoFactorSecret))
         {
             var rawKey = KeyGeneration.GenerateRandomKey(20);
-            var secret = Base32Encoding.ToString(rawKey);
+            secret = Base32Encoding.ToString(rawKey);
 
-            user.TwoFactorSecret = secret;
+            user.TwoFactorSecret = encryptionService.EncryptSecret(secret);
             await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        else
+        {
+            secret = encryptionService.DecryptSecret(user.TwoFactorSecret);
         }
 
         var otpauth = new OtpUri(
             OtpType.Totp,
-            user.TwoFactorSecret,
+            secret,
             user.EmailAddress,
             twoFactorSettings.Value.Issuer
         ).ToString();
 
-        return Results.Ok(new SetupTwoFactorResponse(user.Id, user.TwoFactorSecret, otpauth));
+        return Results.Ok(new SetupTwoFactorResponse(user.Id, secret, otpauth));
     }
 }
