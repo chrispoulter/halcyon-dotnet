@@ -28,7 +28,7 @@ services:
       Email__SiteUrl: http://localhost:5173
       Email__NoReplyAddress: noreply@example.com
       Jwt__SecurityKey: super_secret_key_that_should_be_changed
-      Encryption__Key: c3VwZXJfc2VjcmV0X2tleV90aGF0X3Nob3VsZF9iZV9jaGFuZ2Vk
+      Encryption__Key: GZqvNnVvKJw5j7N3mZ9PZ2P+7nGk8Hk9c1Z6xZr8L2U=
       Seed__Users__0__EmailAddress: system.administrator@example.com
       Seed__Users__0__Password: super_secret_password_that_should_be_changed
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error

@@ -62,7 +62,7 @@ In the `Halcyon.Api` directory of the project, create a new `appsettings.Develop
     "Issuer": "Halcyon"
   },
   "Encryption": {
-    "Key": "c3VwZXJfc2VjcmV0X2tleV90aGF0X3Nob3VsZF9iZV9jaGFuZ2Vk"
+    "Key": "GZqvNnVvKJw5j7N3mZ9PZ2P+7nGk8Hk9c1Z6xZr8L2U="
   },
   "Seed": {
     "Users": [
