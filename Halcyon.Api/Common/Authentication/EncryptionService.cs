@@ -6,7 +6,7 @@ namespace Halcyon.Api.Common.Authentication;
 
 public class EncryptionService(IOptions<EncryptionSettings> options) : IEncryptionService
 {
-    private const int NonceSize = 12; 
+    private const int NonceSize = 12;
     private const int TagSize = 16;
 
     private readonly byte[] Key = Convert.FromBase64String(options.Value.Key);
