@@ -28,12 +28,10 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
     {
         var normalizedEmailAddress = request.EmailAddress.ToLowerInvariant();
 
-        var user = await dbContext
-            .Users.AsNoTracking()
-            .FirstOrDefaultAsync(
-                u => u.NormalizedEmailAddress == normalizedEmailAddress,
-                cancellationToken
-            );
+        var user = await dbContext.Users.FirstOrDefaultAsync(
+            u => u.NormalizedEmailAddress == normalizedEmailAddress,
+            cancellationToken
+        );
 
         if (user is null || user.Password is null)
         {
