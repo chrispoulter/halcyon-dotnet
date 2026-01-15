@@ -10,6 +10,7 @@
     <File Path=".gitattributes" />
     <File Path=".github/workflows/ci.yml" />
     <File Path=".gitignore" />
+    <File Path="AGENTS.md" />
     <File Path="azure.yaml" />
     <File Path="docker-compose.yml" />
     <File Path="global.json" />
