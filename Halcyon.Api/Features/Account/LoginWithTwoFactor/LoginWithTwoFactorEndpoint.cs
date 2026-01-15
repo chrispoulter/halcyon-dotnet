@@ -26,7 +26,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
         HalcyonDbContext dbContext,
         IHashService hashService,
         IEncryptionService encryptionService,
-        IJwtTokenGenerator jwtTokenGenerator,
+        IJwtService jwtService,
         CancellationToken cancellationToken = default
     )
     {
@@ -91,7 +91,7 @@ public class LoginWithTwoFactorEndpoint : IEndpoint
             );
         }
 
-        var token = jwtTokenGenerator.GenerateJwtToken(user);
+        var token = jwtService.GenerateJwtToken(user);
         return Results.Ok(new LoginWithTwoFactorResponse(token));
     }
 }

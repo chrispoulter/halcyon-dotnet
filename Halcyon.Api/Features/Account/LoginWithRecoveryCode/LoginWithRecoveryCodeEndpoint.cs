@@ -22,7 +22,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
         LoginWithRecoveryCodeRequest request,
         HalcyonDbContext dbContext,
         IHashService hashService,
-        IJwtTokenGenerator jwtTokenGenerator,
+        IJwtService jwtService,
         CancellationToken cancellationToken = default
     )
     {
@@ -94,7 +94,7 @@ public class LoginWithRecoveryCodeEndpoint : IEndpoint
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var token = jwtTokenGenerator.GenerateJwtToken(user);
+        var token = jwtService.GenerateJwtToken(user);
         return Results.Ok(new LoginWithRecoveryCodeResponse(token));
     }
 }
