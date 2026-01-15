@@ -6,8 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Halcyon.Api.Common.Authentication;
 
-public class JwtTokenGenerator(TimeProvider timeProvider, IOptions<JwtSettings> jwtSettings)
-    : IJwtTokenGenerator
+public class JwtService(TimeProvider timeProvider, IOptions<JwtSettings> jwtSettings) : IJwtService
 {
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 

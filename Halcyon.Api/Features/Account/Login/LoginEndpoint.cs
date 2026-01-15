@@ -22,7 +22,7 @@ public class LoginEndpoint : IEndpoint
         LoginRequest request,
         HalcyonDbContext dbContext,
         IHashService hashService,
-        IJwtTokenGenerator jwtTokenGenerator,
+        IJwtService jwtService,
         CancellationToken cancellationToken = default
     )
     {
@@ -66,7 +66,7 @@ public class LoginEndpoint : IEndpoint
             return Results.Ok(new LoginResponse(true, null));
         }
 
-        var token = jwtTokenGenerator.GenerateJwtToken(user);
+        var token = jwtService.GenerateJwtToken(user);
         return Results.Ok(new LoginResponse(false, token));
     }
 }
