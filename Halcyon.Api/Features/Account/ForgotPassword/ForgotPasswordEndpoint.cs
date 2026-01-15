@@ -23,7 +23,7 @@ public class ForgotPasswordEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ForgotPasswordRequest request,
         HalcyonDbContext dbContext,
-        ISecretHasher secretHasher,
+        IHashService hashService,
         IFluentEmail fluentEmail,
         CancellationToken cancellationToken = default
     )
@@ -41,7 +41,7 @@ public class ForgotPasswordEndpoint : IEndpoint
                 .ToHexString(RandomNumberGenerator.GetBytes(16))
                 .ToUpperInvariant();
 
-            user.PasswordResetToken = secretHasher.GenerateHash(passwordResetToken);
+            user.PasswordResetToken = hashService.GenerateHash(passwordResetToken);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 

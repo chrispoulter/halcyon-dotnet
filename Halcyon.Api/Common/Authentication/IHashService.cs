@@ -1,6 +1,6 @@
 ﻿namespace Halcyon.Api.Common.Authentication;
 
-public interface ISecretHasher
+public interface IHashService
 {
     string GenerateHash(string value);
 

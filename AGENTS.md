@@ -14,10 +14,12 @@
 - `npm install` (from `Halcyon.Web/`) installs frontend dependencies.
 - `npm run dev` starts the Vite dev server on `http://localhost:5173`.
 - `npm run build`, `npm run lint`, `npm run format` build, lint, and format the frontend.
+- Verify changes by running `dotnet build` for backend work or `npm run build` from `Halcyon.Web/` for frontend work.
 
 ## Coding Style & Naming Conventions
 - C# formatting uses CSharpier (`.csharpierrc`): 4-space indentation, 100-char line width.
 - Frontend formatting uses Prettier and linting uses ESLint (`Halcyon.Web/`).
+- Ensure updates follow CSharpier/Prettier formatting and ESLint rules for the areas touched.
 - Use PascalCase for C# types/methods, camelCase for locals, and kebab-case for feature folders.
 - Keep feature endpoints grouped under `Halcyon.Api/Features/<Area>/<Feature>/`.
 

@@ -21,7 +21,7 @@ public class LoginEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         LoginRequest request,
         HalcyonDbContext dbContext,
-        ISecretHasher secretHasher,
+        IHashService hashService,
         IJwtTokenGenerator jwtTokenGenerator,
         CancellationToken cancellationToken = default
     )
@@ -43,7 +43,7 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        var verified = secretHasher.VerifyHash(request.Password, user.Password);
+        var verified = hashService.VerifyHash(request.Password, user.Password);
 
         if (!verified)
         {

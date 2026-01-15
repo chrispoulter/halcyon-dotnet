@@ -22,7 +22,7 @@ public class RegisterEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         RegisterRequest request,
         HalcyonDbContext dbContext,
-        ISecretHasher secretHasher,
+        IHashService hashService,
         CancellationToken cancellationToken = default
     )
     {
@@ -44,7 +44,7 @@ public class RegisterEndpoint : IEndpoint
         var user = new User
         {
             EmailAddress = request.EmailAddress,
-            Password = secretHasher.GenerateHash(request.Password),
+            Password = hashService.GenerateHash(request.Password),
             FirstName = request.FirstName,
             LastName = request.LastName,
             DateOfBirth = request.DateOfBirth,
