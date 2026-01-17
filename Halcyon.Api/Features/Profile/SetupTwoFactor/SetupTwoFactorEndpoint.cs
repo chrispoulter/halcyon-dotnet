@@ -1,0 +1,67 @@
+using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Infrastructure;
+using Halcyon.Api.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using OtpNet;
+
+namespace Halcyon.Api.Features.Profile.SetupTwoFactor;
+
+public class SetupTwoFactorEndpoint : IEndpoint
+{
+    public void MapEndpoints(IEndpointRouteBuilder app)
+    {
+        app.MapPut("/profile/setup-two-factor", HandleAsync)
+            .RequireAuthorization()
+            .Produces<SetupTwoFactorResponse>()
+            .WithTags(Tags.Profile)
+            .WithSummary("Setup Two-Factor")
+            .WithDescription("Setup two-factor authentication for the current user.");
+    }
+
+    private static async Task<IResult> HandleAsync(
+        CurrentUser currentUser,
+        HalcyonDbContext dbContext,
+        IEncryptionService encryptionService,
+        IOptions<TwoFactorSettings> twoFactorSettings,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var user = await dbContext.Users.FirstOrDefaultAsync(
+            u => u.Id == currentUser.Id,
+            cancellationToken
+        );
+
+        if (user is null || user.IsLockedOut)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "User not found."
+            );
+        }
+
+        string? secret = null;
+
+        if (string.IsNullOrEmpty(user.TwoFactorSecret))
+        {
+            var rawKey = KeyGeneration.GenerateRandomKey(20);
+            secret = Base32Encoding.ToString(rawKey);
+
+            user.TwoFactorSecret = encryptionService.EncryptSecret(secret);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        else
+        {
+            secret = encryptionService.DecryptSecret(user.TwoFactorSecret);
+        }
+
+        var otpauth = new OtpUri(
+            OtpType.Totp,
+            secret,
+            user.EmailAddress,
+            twoFactorSettings.Value.Issuer
+        ).ToString();
+
+        return Results.Ok(new SetupTwoFactorResponse(user.Id, secret, otpauth));
+    }
+}

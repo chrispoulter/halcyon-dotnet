@@ -35,11 +35,15 @@ public class HalcyonDbSeeder(
 
             user.EmailAddress = seedUser.EmailAddress;
             user.Password = hashService.GenerateHash(seedUser.Password);
+            user.PasswordResetToken = null;
+            user.IsTwoFactorEnabled = false;
+            user.TwoFactorSecret = null;
+            user.TwoFactorRecoveryCodes = null;
             user.FirstName = seedUser.FirstName;
             user.LastName = seedUser.LastName;
             user.DateOfBirth = seedUser.DateOfBirth;
-            user.Roles = seedUser.Roles;
             user.IsLockedOut = false;
+            user.Roles = seedUser.Roles;
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);

@@ -37,6 +37,9 @@ public static class AuthenticationExtensions
                 };
             });
 
+        var twoFactorConfig = builder.Configuration.GetSection(TwoFactorSettings.SectionName);
+        builder.Services.Configure<TwoFactorSettings>(twoFactorConfig);
+
         builder.Services.AddAuthorization();
 
         return builder;
