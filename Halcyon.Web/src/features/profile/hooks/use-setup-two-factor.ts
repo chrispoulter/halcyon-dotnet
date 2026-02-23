@@ -2,28 +2,24 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/components/auth-provider';
 import { apiClient } from '@/lib/api-client';
 
-export type GetProfileResponse = {
+type SetupTwoFactorResponse = {
     id: string;
-    emailAddress: string;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: string;
-    isTwoFactorEnabled: boolean;
+    secret: string;
+    otpauth: string;
 };
 
-export const useGetProfile = () => {
+export const useSetupTwoFactor = () => {
     const { accessToken } = useAuth();
 
     return useQuery({
-        queryKey: ['profile'],
-        queryFn: ({ signal }) =>
+        queryKey: ['two-factor'],
+        queryFn: () =>
             apiClient
-                .get('profile', {
+                .put('profile/setup-two-factor', {
                     context: {
                         accessToken,
                     },
-                    signal,
                 })
-                .json<GetProfileResponse>(),
+                .json<SetupTwoFactorResponse>(),
     });
 };

@@ -1,27 +1,31 @@
-﻿using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using OtpNet;
 
-namespace Halcyon.Api.Features.Account.Login;
+namespace Halcyon.Api.Features.Account.LoginWithTwoFactor;
 
-public class LoginEndpoint : IEndpoint
+public class LoginWithTwoFactorEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/account/login", HandleAsync)
-            .AddValidationFilter<LoginRequest>()
-            .Produces<LoginResponse>()
+        app.MapPost("/account/login-two-factor", HandleAsync)
+            .AddValidationFilter<LoginWithTwoFactorRequest>()
+            .Produces<LoginWithTwoFactorResponse>()
             .WithTags(Tags.Account)
-            .WithSummary("Login")
-            .WithDescription("Authenticate a user and return a JWT token.");
+            .WithSummary("Login with Two-Factor")
+            .WithDescription(
+                "Authenticate a user and return a JWT token using an authenticator code."
+            );
     }
 
     private static async Task<IResult> HandleAsync(
-        LoginRequest request,
+        LoginWithTwoFactorRequest request,
         HalcyonDbContext dbContext,
         IHashService hashService,
+        IEncryptionService encryptionService,
         IJwtService jwtService,
         CancellationToken cancellationToken = default
     )
@@ -61,12 +65,33 @@ public class LoginEndpoint : IEndpoint
             );
         }
 
-        if (user.IsTwoFactorEnabled)
+        if (!user.IsTwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
         {
-            return Results.Ok(new LoginResponse(true, null));
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Two-factor authentication is not configured."
+            );
+        }
+
+        var decryptedSecret = encryptionService.DecryptSecret(user.TwoFactorSecret);
+
+        var totp = new Totp(Base32Encoding.ToBytes(decryptedSecret));
+
+        var totpVerified = totp.VerifyTotp(
+            request.AuthenticatorCode,
+            out _,
+            VerificationWindow.RfcSpecifiedNetworkDelay
+        );
+
+        if (!totpVerified)
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Invalid authenticator code."
+            );
         }
 
         var token = jwtService.GenerateJwtToken(user);
-        return Results.Ok(new LoginResponse(false, token));
+        return Results.Ok(new LoginWithTwoFactorResponse(token));
     }
 }

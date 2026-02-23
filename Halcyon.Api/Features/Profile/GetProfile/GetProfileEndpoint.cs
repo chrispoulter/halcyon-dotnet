@@ -40,7 +40,8 @@ public class GetProfileEndpoint : IEndpoint
             user.EmailAddress,
             user.FirstName,
             user.LastName,
-            user.DateOfBirth
+            user.DateOfBirth,
+            user.IsTwoFactorEnabled
         );
 
         return Results.Ok(result);

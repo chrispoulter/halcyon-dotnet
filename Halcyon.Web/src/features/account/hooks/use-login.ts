@@ -7,7 +7,8 @@ type LoginRequest = {
 };
 
 type LoginResponse = {
-    accessToken: string;
+    requiresTwoFactor: boolean;
+    accessToken?: string;
 };
 
 export const useLogin = () => {
