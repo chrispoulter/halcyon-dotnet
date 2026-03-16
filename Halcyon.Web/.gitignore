@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
+.eslintcache
 .env*
 !.env.example
