@@ -58,6 +58,12 @@ In the `Halcyon.Api` directory of the project, create a new `appsettings.Develop
     "Audience": "HalcyonClient",
     "ExpiresIn": 3600
   },
+  "TwoFactor": {
+    "Issuer": "Halcyon"
+  },
+  "Encryption": {
+    "Key": "GZqvNnVvKJw5j7N3mZ9PZ2P+7nGk8Hk9c1Z6xZr8L2U="
+  },
   "Seed": {
     "Users": [
       {
