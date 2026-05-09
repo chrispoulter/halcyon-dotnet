@@ -364,6 +364,7 @@ FodyWeavers.xsd
 
 .idea
 .azure
+.claude
 aspire-output
 appSettings.*.json
 .env*

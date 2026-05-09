@@ -1,14 +1,14 @@
-import ky from 'ky';
+import ky, { HTTPError } from 'ky';
 
 type ProblemDetails = {
     title: string;
 };
 
 export const apiClient = ky.create({
-    prefixUrl: '/api',
+    prefix: '/api',
     hooks: {
         beforeRequest: [
-            (request, options) => {
+            ({ request, options }) => {
                 const { accessToken } = options.context;
 
                 if (accessToken) {
@@ -20,15 +20,11 @@ export const apiClient = ky.create({
             },
         ],
         beforeError: [
-            async (error) => {
-                const { response } = error;
-                const contentType = response.headers.get('content-type');
-
-                if (contentType?.includes('application/problem+json')) {
-                    const body = await response.json<ProblemDetails>();
-                    error.message = body.title;
+            async ({ error }) => {
+                if (error instanceof HTTPError) {
+                    const body = error.data as ProblemDetails;
+                    error.message = body?.title || error.message;
                 }
-
                 return error;
             },
         ],

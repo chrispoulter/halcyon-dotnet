@@ -1,4 +1,5 @@
 **/.azure
+**/.claude
 **/.dockerignore
 **/.env*
 **/.git
