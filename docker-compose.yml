@@ -20,8 +20,9 @@ services:
       dockerfile: ./Halcyon.Api/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_HTTP_PORTS: 8080
-      ASPNETCORE_HTTPS_PORTS: 8081
+      ASPNETCORE_URLS: https://+:8081;http://+:8080
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: password
       ConnectionStrings__Database: Host=host.docker.internal;Port=5432;Database=halcyon-dotnet;Username=postgres;Password=password
       ConnectionStrings__Mail: Endpoint=smtp://host.docker.internal:1025
       Email__SiteUrl: http://localhost:5173
@@ -34,10 +35,7 @@ services:
       - 5257:8080
       - 7257:8081
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${USERPROFILE}/.aspnet/https:/https:ro
     depends_on:
       postgres:
         condition: service_healthy
