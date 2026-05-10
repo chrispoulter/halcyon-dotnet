@@ -18,9 +18,6 @@ export default defineConfig(({ mode }) => {
             alias: {
                 '@': path.resolve(__dirname, './src'),
             },
-        },
-        server: {
-            port: parseInt(env.VITE_PORT),
-        },
+        }
     };
 });
