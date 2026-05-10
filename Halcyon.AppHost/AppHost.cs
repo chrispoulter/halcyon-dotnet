@@ -23,13 +23,11 @@ var api = builder
     .WaitFor(mailpit);
 
 var web = builder
-    .AddJavaScriptApp("web", "../Halcyon.Web")
-    .WithEnvironment("BROWSER", "none")
-    .WithHttpEndpoint(env: "VITE_PORT", port: 5173)
-    .WithExternalHttpEndpoints()
+    .AddViteApp("web", "../Halcyon.Web")
+    .WithEndpoint("http", e => e.Port = 5173)
+    .WithEnvironment("VITE_API_URL", api.GetEndpoint("http"))
     .WithReference(api)
-    .WaitFor(api)
-    .PublishAsDockerFile();
+    .WaitFor(api);
 
 api.WithEnvironment("Email__SiteUrl", web.GetEndpoint("http"));
 

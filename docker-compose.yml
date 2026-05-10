@@ -7,12 +7,11 @@ services:
       context: ./Halcyon.Web
       dockerfile: Dockerfile
     environment:
-      VITE_PORT: 5173
-      API_HTTP: https://host.docker.internal:7257
+      VITE_API_URL: https://localhost:7257
       # VITE_RUNTIME_VALUE_1: DOCKER_RUNTIME_VALUE_1
       # VITE_RUNTIME_VALUE_2: DOCKER_RUNTIME_VALUE_2
     ports:
-      - 5173:5173
+      - 5173:80
 
   halcyon-dotnet-api:
     image: halcyon-dotnet-api:latest
