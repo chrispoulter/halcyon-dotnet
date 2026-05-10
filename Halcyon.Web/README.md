@@ -46,7 +46,7 @@ For local development, you'll need to create a `.env.local` file in the root of 
 
 ```
 VITE_PORT=5173
-API_HTTP=https://localhost:7257
+VITE_API_URL=https://localhost:7257
 
 # VITE_RUNTIME_VALUE_1=ENV_RUNTIME_VALUE_1
 # VITE_RUNTIME_VALUE_2=ENV_RUNTIME_VALUE_2

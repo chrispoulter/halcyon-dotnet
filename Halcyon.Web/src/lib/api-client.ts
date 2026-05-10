@@ -1,11 +1,12 @@
 import ky, { HTTPError } from 'ky';
+import { config } from './config';
 
 type ProblemDetails = {
     title: string;
 };
 
 export const apiClient = ky.create({
-    prefix: '/api',
+    prefix: config.VITE_API_URL,
     hooks: {
         beforeRequest: [
             ({ request, options }) => {

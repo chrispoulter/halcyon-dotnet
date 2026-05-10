@@ -16,6 +16,7 @@
     <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="README.md" />
+    <File Path="TODO.md" />
   </Folder>
   <Project Path="Halcyon.Api/Halcyon.Api.csproj" />
   <Project Path="Halcyon.AppHost/Halcyon.AppHost.csproj" />
