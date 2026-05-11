@@ -1,5 +1,5 @@
 import ky, { HTTPError } from 'ky';
-import { config } from './config';
+import { config } from '@/lib/config';
 
 type ProblemDetails = {
     title: string;
