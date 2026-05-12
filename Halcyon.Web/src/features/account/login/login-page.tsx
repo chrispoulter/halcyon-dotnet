@@ -40,7 +40,7 @@ export function LoginPage() {
             <LoginForm loading={isSaving} onSubmit={onSubmit} />
 
             <div className="space-y-2">
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                     Not already a member?{' '}
                     <Link
                         to="/account/register"
@@ -49,7 +49,7 @@ export function LoginPage() {
                         Register now
                     </Link>
                 </p>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                     Forgotten your password?{' '}
                     <Link
                         to="/account/forgot-password"

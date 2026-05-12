@@ -5,7 +5,7 @@ export function HomePage() {
                 Welcome!
             </h1>
 
-            <p className="text-muted-foreground text-xl">
+            <p className="text-xl text-muted-foreground">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
                 semper diam at erat pulvinar, at pulvinar felis blandit.
                 Vestibulum volutpat tellus diam, consequat gravida libero
@@ -17,7 +17,7 @@ export function HomePage() {
                 Fusce condimentum
             </h2>
 
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
                 Fusce vitae commodo metus. Pellentesque a eleifend dolor. Morbi
                 et finibus elit, accumsan sodales turpis. Nulla bibendum
                 pulvinar enim vitae malesuada. Nullam nulla justo, ullamcorper
@@ -33,7 +33,7 @@ export function HomePage() {
                 Morbi venenatis
             </h2>
 
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
                 Morbi venenatis, felis ut cursus volutpat, dolor tortor pulvinar
                 nisl, ac scelerisque quam tortor sit amet ante. Aliquam feugiat
                 nisl arcu, sit amet tincidunt erat tempus ut. Quisque laoreet

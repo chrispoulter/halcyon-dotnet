@@ -26,7 +26,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+                <ThemeProvider>
                     <RouterProvider router={router} />
                     <Toaster invert />
                 </ThemeProvider>
