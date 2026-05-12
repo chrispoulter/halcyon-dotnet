@@ -5,9 +5,11 @@
 **/.gitignore
 **/.gitattributes
 **/.vscode
+**/.claude
 **/dist
 **/docker-compose*
 **/Dockerfile
 **/node_modules
 **/LICENSE
 **/README.md
+**/TODO.md
