@@ -40,17 +40,17 @@ export function ProfilePage() {
                 <dt className="text-sm leading-none font-medium">
                     Email Address
                 </dt>
-                <dd className="text-muted-foreground truncate text-sm">
+                <dd className="truncate text-sm text-muted-foreground">
                     {profile.emailAddress}
                 </dd>
                 <dt className="text-sm leading-none font-medium">Name</dt>
-                <dd className="text-muted-foreground truncate text-sm">
+                <dd className="truncate text-sm text-muted-foreground">
                     {profile.firstName} {profile.lastName}
                 </dd>
                 <dt className="text-sm leading-none font-medium">
                     Date Of Birth
                 </dt>
-                <dd className="text-muted-foreground truncate text-sm">
+                <dd className="truncate text-sm text-muted-foreground">
                     {toDisplay(profile.dateOfBirth)}
                 </dd>
             </dl>

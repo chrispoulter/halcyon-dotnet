@@ -9,7 +9,7 @@ export function Footer() {
                     &copy;{' '}
                     <a
                         href="http://www.chrispoulter.com"
-                        className="text-primary font-medium underline underline-offset-4"
+                        className="font-medium text-primary underline underline-offset-4"
                     >
                         Chris Poulter
                     </a>{' '}

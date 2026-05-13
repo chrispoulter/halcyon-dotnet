@@ -25,7 +25,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
-                <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+                <ThemeProvider>
                     <ErrorBoundary
                         fallback={
                             <div className="flex min-h-screen items-center justify-center p-8 text-center">
