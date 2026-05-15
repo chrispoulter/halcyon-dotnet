@@ -3,16 +3,13 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
-import { useGetUser } from '@/features/users/hooks/use-get-user';
-import { useUpdateUser } from '@/features/users/hooks/use-update-user';
-import {
-    UpdateUserForm,
-    type UpdateUserFormValues,
-} from '@/features/users/update-user/update-user-form';
-import { DeleteUserButton } from '@/features/users/update-user/delete-user-button';
-import { LockUserButton } from '@/features/users/update-user/lock-user-button';
-import { UnlockUserButton } from '@/features/users/update-user/unlock-user-button';
-import { UpdateUserLoading } from '@/features/users/update-user/update-user-loading';
+import { useGetUser } from '../hooks/use-get-user';
+import { useUpdateUser } from '../hooks/use-update-user';
+import { UpdateUserForm, type UpdateUserFormValues } from './update-user-form';
+import { DeleteUserButton } from './delete-user-button';
+import { LockUserButton } from './lock-user-button';
+import { UnlockUserButton } from './unlock-user-button';
+import { UpdateUserLoading } from './update-user-loading';
 
 type UpdateUserPageParams = { id: string };
 

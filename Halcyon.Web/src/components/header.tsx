@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
-import { ModeToggle } from '@/components/mode-toggle';
-import { MainNav } from '@/components/main-nav';
-import { UserNav } from '@/components/user-nav';
+import { ModeToggle } from './mode-toggle';
+import { MainNav } from './main-nav';
+import { UserNav } from './user-nav';
 
 export function Header() {
     return (

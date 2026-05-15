@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router';
-import { useAuth } from '@/components/auth-provider';
 import type { Role } from '@/lib/session';
 import { ForbiddenPage } from '@/forbidden-page';
+import { useAuth } from './auth-provider';
 
 type ProtectedRouteProps = {
     roles?: Role[];

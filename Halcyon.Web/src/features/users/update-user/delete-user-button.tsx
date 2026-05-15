@@ -12,8 +12,8 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LoadingButton } from '@/components/loading-button';
-import type { GetUserResponse } from '@/features/users/hooks/use-get-user';
-import { useDeleteUser } from '@/features/users/hooks/use-delete-user';
+import type { GetUserResponse } from '../hooks/use-get-user';
+import { useDeleteUser } from '../hooks/use-delete-user';
 
 type DeleteUserButtonProps = {
     user: GetUserResponse;

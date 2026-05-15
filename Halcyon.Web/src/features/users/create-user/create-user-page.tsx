@@ -2,11 +2,8 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
-import {
-    CreateUserForm,
-    type CreateUserFormValues,
-} from '@/features/users/create-user/create-user-form';
-import { useCreateUser } from '@/features/users/hooks/use-create-user';
+import { useCreateUser } from '../hooks/use-create-user';
+import { CreateUserForm, type CreateUserFormValues } from './create-user-form';
 
 export function CreateUserPage() {
     const navigate = useNavigate();

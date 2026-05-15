@@ -12,17 +12,14 @@ import {
 import { Metadata } from '@/components/metadata';
 import { Pager } from '@/components/pager';
 import { QueryError } from '@/components/query-error';
-import {
-    useSearchUsers,
-    type UserSort,
-} from '@/features/users/hooks/use-search-users';
-import { SearchUsersLoading } from '@/features/users/search-users/search-users-loading';
+import { useSearchUsers, type UserSort } from '../hooks/use-search-users';
+import { SearchUsersLoading } from './search-users-loading';
 import {
     SearchUsersForm,
     type SearchUsersFormValues,
-} from '@/features/users/search-users/search-users-form';
-import { SortUsersDropdown } from '@/features/users/search-users/sort-users-dropdown';
-import { UserCard } from '@/features/users/search-users/user-card';
+} from './search-users-form';
+import { SortUsersDropdown } from './sort-users-dropdown';
+import { UserCard } from './user-card';
 
 const PAGE_SIZE = 5;
 

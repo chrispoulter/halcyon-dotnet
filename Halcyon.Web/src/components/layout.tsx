@@ -1,8 +1,8 @@
 import { Outlet, useLocation } from 'react-router';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
 import { ErrorPage } from '@/error-page';
+import { Header } from './header';
+import { Footer } from './footer';
 
 export function Layout() {
     const { pathname } = useLocation();

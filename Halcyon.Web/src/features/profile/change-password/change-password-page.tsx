@@ -2,11 +2,11 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
+import { useChangePassword } from '../hooks/use-change-password';
 import {
     ChangePasswordForm,
     type ChangePasswordFormValues,
-} from '@/features/profile/change-password/change-password-form';
-import { useChangePassword } from '@/features/profile/hooks/use-change-password';
+} from './change-password-form';
 
 export function ChangePasswordPage() {
     const navigate = useNavigate();

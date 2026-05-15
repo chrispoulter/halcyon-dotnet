@@ -2,11 +2,8 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
 import { Metadata } from '@/components/metadata';
-import { useLogin } from '@/features/account/hooks/use-login';
-import {
-    LoginForm,
-    type LoginFormValues,
-} from '@/features/account/login/login-form';
+import { useLogin } from '../hooks/use-login';
+import { LoginForm, type LoginFormValues } from './login-form';
 
 export function LoginPage() {
     const navigate = useNavigate();

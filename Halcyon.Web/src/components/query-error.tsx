@@ -1,8 +1,8 @@
 import { HTTPError } from 'ky';
-import { LogoutRedirect } from '@/components/logout-redirect';
 import { ErrorPage } from '@/error-page';
 import { ForbiddenPage } from '@/forbidden-page';
 import { NotFoundPage } from '@/not-found-page';
+import { LogoutRedirect } from './logout-redirect';
 
 type QueryErrorProps = { error: Error | null };
 

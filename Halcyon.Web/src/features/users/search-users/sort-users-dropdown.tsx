@@ -1,5 +1,4 @@
 import { ArrowDownWideNarrow } from 'lucide-react';
-import type { UserSort } from '@/features/users/hooks/use-search-users';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -7,6 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { UserSort } from '../hooks/use-search-users';
 
 type SortUsersDropdownOption = { value: UserSort; label: string };
 
