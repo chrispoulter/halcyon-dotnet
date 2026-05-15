@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useAuth } from '@/components/auth-provider';
 import { LoadingButton } from '@/components/loading-button';
-import { useDeleteAccount } from '@/features/profile/hooks/use-delete-account';
+import { useDeleteAccount } from '../hooks/use-delete-account';
 
 type DeleteAccountButtonProps = {
     disabled?: boolean;

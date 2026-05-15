@@ -2,10 +2,10 @@ import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
-import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
-import { DeleteAccountButton } from '@/features/profile/profile/delete-account-button';
-import { ProfileLoading } from '@/features/profile/profile/profile-loading';
 import { toDisplay } from '@/lib/dates';
+import { useGetProfile } from '../hooks/use-get-profile';
+import { DeleteAccountButton } from './delete-account-button';
+import { ProfileLoading } from './profile-loading';
 
 export function ProfilePage() {
     const {

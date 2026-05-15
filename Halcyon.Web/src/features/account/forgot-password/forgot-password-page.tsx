@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Metadata } from '@/components/metadata';
+import { useForgotPassword } from '../hooks/use-forgot-password';
 import {
     ForgotPasswordForm,
     type ForgotPasswordFormValues,
-} from '@/features/account/forgot-password/forgot-password-form';
-import { useForgotPassword } from '@/features/account/hooks/use-forgot-password';
+} from './forgot-password-form';
 
 export function ForgotPasswordPage() {
     const navigate = useNavigate();

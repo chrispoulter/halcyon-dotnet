@@ -3,13 +3,13 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
+import { useGetProfile } from '../hooks/use-get-profile';
+import { useUpdateProfile } from '../hooks/use-update-profile';
 import {
     UpdateProfileForm,
     type UpdateProfileFormValues,
-} from '@/features/profile/update-profile/update-profile-form';
-import { UpdateProfileLoading } from '@/features/profile/update-profile/update-profile-loading';
-import { useGetProfile } from '@/features/profile/hooks/use-get-profile';
-import { useUpdateProfile } from '@/features/profile/hooks/use-update-profile';
+} from './update-profile-form';
+import { UpdateProfileLoading } from './update-profile-loading';
 
 export function UpdateProfilePage() {
     const navigate = useNavigate();

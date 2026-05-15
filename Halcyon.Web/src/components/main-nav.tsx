@@ -10,8 +10,8 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from '@/components/ui/drawer';
-import { useAuth } from '@/components/auth-provider';
 import { type Role, isUserAdministrator } from '@/lib/session';
+import { useAuth } from './auth-provider';
 
 type MainNavRoute = { href: string; label: string; roles?: Role[] };
 

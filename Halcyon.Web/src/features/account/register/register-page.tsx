@@ -1,11 +1,8 @@
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Metadata } from '@/components/metadata';
-import { useRegister } from '@/features/account/hooks/use-register';
-import {
-    RegisterForm,
-    type RegisterFormValues,
-} from '@/features/account/register/register-form';
+import { useRegister } from '../hooks/use-register';
+import { RegisterForm, type RegisterFormValues } from './register-form';
 
 export function RegisterPage() {
     const navigate = useNavigate();

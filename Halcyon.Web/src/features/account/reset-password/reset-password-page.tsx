@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 import { Metadata } from '@/components/metadata';
-import { useResetPassword } from '@/features/account/hooks/use-reset-password';
+import { useResetPassword } from '../hooks/use-reset-password';
 import {
     ResetPasswordForm,
     type ResetPasswordFormValues,
-} from '@/features/account/reset-password/reset-password-form';
+} from './reset-password-form';
 
 type ResetPasswordPageParams = { token: string };
 
