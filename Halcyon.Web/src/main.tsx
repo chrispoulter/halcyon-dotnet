@@ -37,9 +37,9 @@ createRoot(document.getElementById('root')!).render(
                             <App />
                         </AuthProvider>
                     </ErrorBoundary>
+                    <Toaster invert />
                 </ThemeProvider>
             </BrowserRouter>
-            <Toaster invert />
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     </StrictMode>
