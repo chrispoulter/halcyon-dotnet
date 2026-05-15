@@ -4,11 +4,12 @@
     "**/.idea": true,
     "**/bin": true,
     "**/obj": true,
-    "**/node_modules": true
+    "**/node_modules": true,
+    "**/*.lscache": true
   },
   "files.associations": {
     "*.css": "tailwindcss"
   },
-  "aspire.enableAspireDashboardAutoLaunch": false,
+  "aspire.enableAspireDashboardAutoLaunch": "off",
   "csharpier.enableDiagnostics": false
 }

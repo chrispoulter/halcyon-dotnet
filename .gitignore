@@ -368,3 +368,4 @@ FodyWeavers.xsd
 aspire-output
 appSettings.*.json
 .env*
+*.lscache
