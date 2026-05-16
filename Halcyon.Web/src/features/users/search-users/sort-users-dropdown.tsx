@@ -6,7 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { UserSort } from '../hooks/use-search-users';
+import type { UserSort } from '../users-queries';
 
 type SortUsersDropdownOption = { value: UserSort; label: string };
 

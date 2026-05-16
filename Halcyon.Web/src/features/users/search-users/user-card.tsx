@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { roleOptions } from '@/lib/session';
-import type { SearchUsersResponse } from '../hooks/use-search-users';
+import type { SearchUsersResponse } from '../users-queries';
 
 type UserCardProps = {
     user: SearchUsersResponse['items'][number];

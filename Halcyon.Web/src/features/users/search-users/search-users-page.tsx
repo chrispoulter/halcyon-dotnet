@@ -12,7 +12,7 @@ import {
 import { Metadata } from '@/components/metadata';
 import { Pager } from '@/components/pager';
 import { QueryError } from '@/components/query-error';
-import { useSearchUsers, type UserSort } from '../hooks/use-search-users';
+import { useSearchUsers, type UserSort } from '../users-queries';
 import { SearchUsersLoading } from './search-users-loading';
 import {
     SearchUsersForm,

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
 import { toDisplay } from '@/lib/dates';
-import { useGetProfile } from '../hooks/use-get-profile';
+import { useGetProfile } from '../profile-queries';
 import { DeleteAccountButton } from './delete-account-button';
 import { ProfileLoading } from './profile-loading';
 

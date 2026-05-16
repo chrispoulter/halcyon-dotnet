@@ -3,8 +3,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
 import { QueryError } from '@/components/query-error';
-import { useGetProfile } from '../hooks/use-get-profile';
-import { useUpdateProfile } from '../hooks/use-update-profile';
+import { useGetProfile, useUpdateProfile } from '../profile-queries';
 import {
     UpdateProfileForm,
     type UpdateProfileFormValues,

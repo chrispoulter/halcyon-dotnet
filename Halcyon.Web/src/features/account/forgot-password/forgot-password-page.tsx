@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Metadata } from '@/components/metadata';
-import { useForgotPassword } from '../hooks/use-forgot-password';
+import { useForgotPassword } from '../account-queries';
 import {
     ForgotPasswordForm,
     type ForgotPasswordFormValues,

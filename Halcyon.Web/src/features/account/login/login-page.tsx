@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
 import { Metadata } from '@/components/metadata';
-import { useLogin } from '../hooks/use-login';
+import { useLogin } from '../account-queries';
 import { LoginForm, type LoginFormValues } from './login-form';
 
 export function LoginPage() {

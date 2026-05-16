@@ -5,7 +5,7 @@ import { DateField } from '@/components/form/date-field';
 import { TextField } from '@/components/form/text-field';
 import { LoadingButton } from '@/components/loading-button';
 import { isInPast } from '@/lib/dates';
-import type { GetProfileResponse } from '../hooks/use-get-profile';
+import type { GetProfileResponse } from '../profile-queries';
 
 const schema = z.object({
     emailAddress: z.email('Email Address must be a valid email'),

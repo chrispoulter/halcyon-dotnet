@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Metadata } from '@/components/metadata';
-import { useCreateUser } from '../hooks/use-create-user';
+import { useCreateUser } from '../users-queries';
 import { CreateUserForm, type CreateUserFormValues } from './create-user-form';
 
 export function CreateUserPage() {

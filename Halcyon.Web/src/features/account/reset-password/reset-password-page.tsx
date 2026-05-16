@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 import { Metadata } from '@/components/metadata';
-import { useResetPassword } from '../hooks/use-reset-password';
+import { useResetPassword } from '../account-queries';
 import {
     ResetPasswordForm,
     type ResetPasswordFormValues,

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Metadata } from '@/components/metadata';
-import { useRegister } from '../hooks/use-register';
+import { useRegister } from '../account-queries';
 import { RegisterForm, type RegisterFormValues } from './register-form';
 
 export function RegisterPage() {
