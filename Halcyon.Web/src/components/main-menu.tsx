@@ -10,10 +10,12 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from '@/components/ui/drawer';
-import { isUserAdministrator } from '@/lib/session';
+import { isUserAdministrator, type Role } from '@/lib/session';
 import { useAuth } from './auth-provider';
 
-const navItems = [
+type NavItem = { href: string; label: string; roles?: Role[] };
+
+const navItems: NavItem[] = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     {
