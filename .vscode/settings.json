@@ -10,6 +10,6 @@
   "files.associations": {
     "*.css": "tailwindcss"
   },
-  "aspire.enableAspireDashboardAutoLaunch": "off",
+  "aspire.enableAspireDashboardAutoLaunch": "notification",
   "csharpier.enableDiagnostics": false
 }
