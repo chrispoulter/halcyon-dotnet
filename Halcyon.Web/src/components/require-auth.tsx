@@ -3,11 +3,11 @@ import type { Role } from '@/lib/session';
 import { ForbiddenPage } from '@/forbidden-page';
 import { useAuth } from './auth-provider';
 
-type ProtectedRouteProps = {
+type RequireAuthProps = {
     roles?: Role[];
 };
 
-export function ProtectedRoute({ roles }: ProtectedRouteProps) {
+export function RequireAuth({ roles }: RequireAuthProps) {
     const { user } = useAuth();
 
     if (!user) {

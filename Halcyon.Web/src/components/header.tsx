@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { ModeToggle } from './mode-toggle';
-import { MainNav } from './main-nav';
-import { UserNav } from './user-nav';
+import { MainMenu } from './main-menu';
+import { UserMenu } from './user-menu';
 
 export function Header() {
     return (
@@ -17,9 +17,9 @@ export function Header() {
                 </div>
 
                 <div className="ml-auto flex items-center gap-2">
-                    <MainNav />
+                    <MainMenu />
                     <ModeToggle />
-                    <UserNav />
+                    <UserMenu />
                 </div>
             </div>
         </header>

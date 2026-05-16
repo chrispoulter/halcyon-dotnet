@@ -10,12 +10,12 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from '@/components/ui/drawer';
-import { type Role, isUserAdministrator } from '@/lib/session';
+import { isUserAdministrator, type Role } from '@/lib/session';
 import { useAuth } from './auth-provider';
 
-type MainNavRoute = { href: string; label: string; roles?: Role[] };
+type NavItem = { href: string; label: string; roles?: Role[] };
 
-const routes: MainNavRoute[] = [
+const navItems: NavItem[] = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     {
@@ -25,12 +25,12 @@ const routes: MainNavRoute[] = [
     },
 ];
 
-export function MainNav() {
+export function MainMenu() {
     const [open, setOpen] = useState(false);
 
     const { user } = useAuth();
 
-    const routeLinks = routes
+    const navLinks = navItems
         .filter(
             ({ roles }) =>
                 !roles || roles.some((value) => user?.roles?.includes(value))
@@ -45,7 +45,7 @@ export function MainNav() {
 
     return (
         <>
-            <nav className="hidden gap-2 sm:flex">{routeLinks}</nav>
+            <nav className="hidden gap-2 sm:flex">{navLinks}</nav>
             <Drawer open={open} onOpenChange={setOpen}>
                 <DrawerTrigger asChild>
                     <Button variant="outline" size="icon" className="sm:hidden">
@@ -60,7 +60,7 @@ export function MainNav() {
                             <DrawerDescription>Main Menu</DrawerDescription>
                         </DrawerHeader>
                         <nav className="flex flex-col items-stretch justify-center gap-2 p-4">
-                            {routeLinks}
+                            {navLinks}
                         </nav>
                     </div>
                 </DrawerContent>
