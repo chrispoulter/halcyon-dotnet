@@ -13,7 +13,7 @@ import {
 import { roleOptions } from '@/lib/session';
 import { useAuth } from './auth-provider';
 
-export function UserNav() {
+export function UserMenu() {
     const navigate = useNavigate();
 
     const { user, clearAuth } = useAuth();
