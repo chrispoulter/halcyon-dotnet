@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router';
 import { ErrorBoundary } from 'react-error-boundary';
-import { ErrorPage } from '@/error-page';
+import { ErrorPage } from '@/pages/error-page';
 import { Header } from './header';
 import { Footer } from './footer';
 

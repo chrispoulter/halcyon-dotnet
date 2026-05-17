@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router';
 import { RootLayout } from '@/components/root-layout';
-import { NotFoundPage } from '@/not-found-page';
-import { HomePage } from '@/home-page';
+import { NotFoundPage } from '@/pages/not-found-page';
+import { HomePage } from '@/pages/home-page';
 
 import { accountRoutes } from '@/features/account/account-routes';
 import { profileRoutes } from '@/features/profile/profile-routes';

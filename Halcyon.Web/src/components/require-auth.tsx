@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
 import type { Role } from '@/lib/session';
-import { ForbiddenPage } from '@/forbidden-page';
+import { ForbiddenPage } from '@/pages/forbidden-page';
 import { useAuth } from './auth-provider';
 
 type RequireAuthProps = {

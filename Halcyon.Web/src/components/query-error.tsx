@@ -1,7 +1,7 @@
 import { HTTPError } from 'ky';
-import { ErrorPage } from '@/error-page';
-import { ForbiddenPage } from '@/forbidden-page';
-import { NotFoundPage } from '@/not-found-page';
+import { ErrorPage } from '@/pages/error-page';
+import { ForbiddenPage } from '@/pages/forbidden-page';
+import { NotFoundPage } from '@/pages/not-found-page';
 import { LogoutRedirect } from './logout-redirect';
 
 type QueryErrorProps = { error: Error | null };
