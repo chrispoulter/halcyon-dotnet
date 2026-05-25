@@ -2,4 +2,13 @@
   <url>
     <loc>https://halcyon.example.com</loc>
   </url>
+  <url>
+    <loc>https://halcyon.example.com/account/register</loc>
+  </url>
+  <url>
+    <loc>https://halcyon.example.com/account/login</loc>
+  </url>
+  <url>
+    <loc>https://halcyon.example.com/account/forgot-password</loc>
+  </url>
 </urlset>
