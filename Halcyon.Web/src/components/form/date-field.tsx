@@ -17,13 +17,13 @@ import {
 import { isInPast, toDateOnly, toDisplay } from '@/lib/dates';
 import { cn } from '@/lib/utils';
 
-type DateFieldProps<T extends FieldValues> = {
+interface DateFieldProps<T extends FieldValues> {
     control: Control<T>;
     name: FieldPath<T>;
     label: string;
     required?: boolean;
     disabled?: boolean;
-};
+}
 
 export function DateField<T extends FieldValues>({
     control,

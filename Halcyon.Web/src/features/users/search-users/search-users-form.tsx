@@ -15,11 +15,11 @@ const schema = z.object({
 
 export type SearchUsersFormValues = z.infer<typeof schema>;
 
-type SearchUsersFormProps = {
+interface SearchUsersFormProps {
     search?: string;
     onSubmit: (values: SearchUsersFormValues) => void;
     disabled?: boolean;
-};
+}
 
 export function SearchUsersForm({
     search = '',

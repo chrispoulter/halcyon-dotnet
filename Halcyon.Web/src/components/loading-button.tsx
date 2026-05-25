@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
-type LoadingButtonProps = { loading?: boolean } & React.ComponentProps<
-    typeof Button
->;
+interface LoadingButtonProps extends React.ComponentProps<typeof Button> {
+    loading?: boolean;
+}
 
 export function LoadingButton({
     loading,

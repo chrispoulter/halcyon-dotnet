@@ -8,7 +8,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { UserSort } from '../users-queries';
 
-type SortUsersDropdownOption = { value: UserSort; label: string };
+interface SortUsersDropdownOption {
+    value: UserSort;
+    label: string;
+}
 
 const sortOptions: SortUsersDropdownOption[] = [
     {
@@ -29,11 +32,11 @@ const sortOptions: SortUsersDropdownOption[] = [
     },
 ];
 
-type SortUsersDropdownProps = {
+interface SortUsersDropdownProps {
     sort?: UserSort;
     onChange: (sort: UserSort) => void;
     disabled?: boolean;
-};
+}
 
 export function SortUsersDropdown({
     sort,

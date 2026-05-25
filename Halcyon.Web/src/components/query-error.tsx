@@ -4,7 +4,9 @@ import { ForbiddenPage } from '@/pages/forbidden-page';
 import { NotFoundPage } from '@/pages/not-found-page';
 import { LogoutRedirect } from './logout-redirect';
 
-type QueryErrorProps = { error: Error | null };
+interface QueryErrorProps {
+    error: Error | null;
+}
 
 export function QueryError({ error }: QueryErrorProps) {
     if (error instanceof HTTPError) {

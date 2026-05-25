@@ -22,10 +22,10 @@ const schema = z
 
 export type ResetPasswordFormValues = z.infer<typeof schema>;
 
-type ResetPasswordFormProps = {
+interface ResetPasswordFormProps {
     loading?: boolean;
     onSubmit: (values: ResetPasswordFormValues) => void;
-};
+}
 
 export function ResetPasswordForm({
     loading,

@@ -13,7 +13,11 @@ import {
 import { isUserAdministrator, type Role } from '@/lib/session';
 import { useAuth } from './auth-provider';
 
-type NavItem = { href: string; label: string; roles?: Role[] };
+interface NavItem {
+    href: string;
+    label: string;
+    roles?: Role[];
+}
 
 const navItems: NavItem[] = [
     { href: '/', label: 'Home' },

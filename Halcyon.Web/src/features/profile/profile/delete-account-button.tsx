@@ -15,10 +15,10 @@ import { useAuth } from '@/components/auth-provider';
 import { LoadingButton } from '@/components/loading-button';
 import { useDeleteAccount } from '../profile-queries';
 
-type DeleteAccountButtonProps = {
+interface DeleteAccountButtonProps {
     disabled?: boolean;
     className?: string;
-};
+}
 
 export function DeleteAccountButton({
     disabled,

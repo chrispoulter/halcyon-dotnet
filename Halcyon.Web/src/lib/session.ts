@@ -24,9 +24,9 @@ export const roleOptions: Record<Role, { title: string; description: string }> =
         },
     };
 
-export type SessionPayload = {
+export interface SessionPayload {
     email: string;
     given_name: string;
     family_name: string;
     roles?: Role[];
-};
+}

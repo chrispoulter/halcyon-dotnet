@@ -1,9 +1,9 @@
 import ky, { HTTPError } from 'ky';
 import { config } from './config';
 
-type ProblemDetails = {
+interface ProblemDetails {
     title: string;
-};
+}
 
 export const apiClient = ky.create({
     prefix: config.VITE_API_URL,

@@ -3,9 +3,9 @@ import type { Role } from '@/lib/session';
 import { ForbiddenPage } from '@/pages/forbidden-page';
 import { useAuth } from './auth-provider';
 
-type RequireAuthProps = {
+interface RequireAuthProps {
     roles?: Role[];
-};
+}
 
 export function RequireAuth({ roles }: RequireAuthProps) {
     const { user } = useAuth();

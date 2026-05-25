@@ -10,10 +10,10 @@ const schema = z.object({
 
 export type ForgotPasswordFormValues = z.infer<typeof schema>;
 
-type ForgotPasswordFormProps = {
+interface ForgotPasswordFormProps {
     loading?: boolean;
     onSubmit: (values: ForgotPasswordFormValues) => void;
-};
+}
 
 export function ForgotPasswordForm({
     loading,

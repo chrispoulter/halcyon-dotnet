@@ -14,11 +14,11 @@ import {
 import { LoadingButton } from '@/components/loading-button';
 import { useDeleteUser, type GetUserResponse } from '../users-queries';
 
-type DeleteUserButtonProps = {
+interface DeleteUserButtonProps {
     user: GetUserResponse;
     disabled?: boolean;
     className?: string;
-};
+}
 
 export function DeleteUserButton({
     user,

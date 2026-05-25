@@ -13,10 +13,10 @@ const schema = z.object({
 
 export type LoginFormValues = z.infer<typeof schema>;
 
-type LoginFormProps = {
+interface LoginFormProps {
     loading?: boolean;
     onSubmit: (values: LoginFormValues) => void;
-};
+}
 
 export function LoginForm({ loading, onSubmit }: LoginFormProps) {
     const form = useForm<LoginFormValues>({

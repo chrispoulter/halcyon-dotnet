@@ -15,7 +15,7 @@ export const userKeys = {
     detail: (id: string) => ['user', id] as const,
 };
 
-export type GetUserResponse = {
+export interface GetUserResponse {
     id: string;
     emailAddress: string;
     firstName: string;
@@ -23,7 +23,7 @@ export type GetUserResponse = {
     dateOfBirth: string;
     isLockedOut?: boolean;
     roles?: Role[];
-};
+}
 
 export const useGetUser = (id: string) => {
     const { accessToken } = useAuth();
@@ -55,7 +55,7 @@ type SearchUsersRequest = {
     size: number;
 };
 
-export type SearchUsersResponse = {
+export interface SearchUsersResponse {
     items: {
         id: string;
         emailAddress: string;
@@ -66,7 +66,7 @@ export type SearchUsersResponse = {
     }[];
     hasNextPage: boolean;
     hasPreviousPage: boolean;
-};
+}
 
 export const useSearchUsers = (request: SearchUsersRequest) => {
     const { accessToken } = useAuth();
@@ -87,18 +87,18 @@ export const useSearchUsers = (request: SearchUsersRequest) => {
     });
 };
 
-type CreateUserRequest = {
+interface CreateUserRequest {
     emailAddress: string;
     password: string;
     firstName: string;
     lastName: string;
     dateOfBirth: string;
     roles?: Role[];
-};
+}
 
-type CreateUserResponse = {
+interface CreateUserResponse {
     id: string;
-};
+}
 
 export const useCreateUser = () => {
     const { accessToken } = useAuth();
@@ -120,17 +120,17 @@ export const useCreateUser = () => {
     });
 };
 
-type UpdateUserRequest = {
+interface UpdateUserRequest {
     emailAddress: string;
     firstName: string;
     lastName: string;
     dateOfBirth: string;
     roles?: Role[];
-};
+}
 
-type UpdateUserResponse = {
+interface UpdateUserResponse {
     id: string;
-};
+}
 
 export const useUpdateUser = (id: string) => {
     const { accessToken } = useAuth();
@@ -157,9 +157,9 @@ export const useUpdateUser = (id: string) => {
     });
 };
 
-type DeleteUserResponse = {
+interface DeleteUserResponse {
     id: string;
-};
+}
 
 export const useDeleteUser = (id: string) => {
     const { accessToken } = useAuth();
@@ -191,9 +191,9 @@ export const useDeleteUser = (id: string) => {
     });
 };
 
-type LockUserResponse = {
+interface LockUserResponse {
     id: string;
-};
+}
 
 export const useLockUser = (id: string) => {
     const { accessToken } = useAuth();
@@ -219,9 +219,9 @@ export const useLockUser = (id: string) => {
     });
 };
 
-type UnlockUserResponse = {
+interface UnlockUserResponse {
     id: string;
-};
+}
 
 export const useUnlockUser = (id: string) => {
     const { accessToken } = useAuth();

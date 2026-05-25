@@ -7,13 +7,13 @@ export const profileKeys = {
     all: ['profile'] as const,
 };
 
-export type GetProfileResponse = {
+export interface GetProfileResponse {
     id: string;
     emailAddress: string;
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-};
+}
 
 export const useGetProfile = () => {
     const { accessToken } = useAuth();
@@ -32,14 +32,16 @@ export const useGetProfile = () => {
     });
 };
 
-type UpdateProfileRequest = {
+interface UpdateProfileRequest {
     emailAddress: string;
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-};
+}
 
-type UpdateProfileResponse = { id: string };
+interface UpdateProfileResponse {
+    id: string;
+}
 
 export const useUpdateProfile = () => {
     const { accessToken } = useAuth();
@@ -66,12 +68,14 @@ export const useUpdateProfile = () => {
     });
 };
 
-type ChangePasswordRequest = {
+interface ChangePasswordRequest {
     currentPassword: string;
     newPassword: string;
-};
+}
 
-type ChangePasswordResponse = { id: string };
+interface ChangePasswordResponse {
+    id: string;
+}
 
 export const useChangePassword = () => {
     const { accessToken } = useAuth();
@@ -98,7 +102,9 @@ export const useChangePassword = () => {
     });
 };
 
-type DeleteAccountResponse = { id: string };
+interface DeleteAccountResponse {
+    id: string;
+}
 
 export const useDeleteAccount = () => {
     const { accessToken } = useAuth();

@@ -3,16 +3,16 @@ import { useQueryClient } from '@tanstack/react-query';
 import { decodeJwt } from 'jose';
 import type { SessionPayload } from '@/lib/session';
 
-type AuthProviderProps = {
+interface AuthProviderProps {
     children: React.ReactNode;
-};
+}
 
-type AuthProviderState = {
+interface AuthProviderState {
     accessToken: string | null;
     user?: SessionPayload;
     setAuth: (accessToken: string) => void;
     clearAuth: () => void;
-};
+}
 
 const STORAGE_KEY = 'accessToken';
 

@@ -35,10 +35,10 @@ const schema = z
 
 export type RegisterFormValues = z.infer<typeof schema>;
 
-type RegisterFormProps = {
+interface RegisterFormProps {
     loading?: boolean;
     onSubmit: (values: RegisterFormValues) => void;
-};
+}
 
 export function RegisterForm({ loading, onSubmit }: RegisterFormProps) {
     const form = useForm<RegisterFormValues>({

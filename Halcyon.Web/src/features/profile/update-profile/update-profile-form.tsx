@@ -24,13 +24,13 @@ const schema = z.object({
 
 export type UpdateProfileFormValues = z.infer<typeof schema>;
 
-type UpdateProfileFormProps = {
+interface UpdateProfileFormProps {
     profile: GetProfileResponse;
     onSubmit: (values: UpdateProfileFormValues) => void;
     loading?: boolean;
     disabled?: boolean;
     children?: React.ReactNode;
-};
+}
 
 export function UpdateProfileForm({
     profile,

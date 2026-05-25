@@ -3,14 +3,14 @@ import { apiClient } from '@/lib/api-client';
 import { profileKeys } from '../profile/profile-queries';
 import { userKeys } from '../users/users-queries';
 
-type LoginRequest = {
+interface LoginRequest {
     emailAddress: string;
     password: string;
-};
+}
 
-type LoginResponse = {
+interface LoginResponse {
     accessToken: string;
-};
+}
 
 export const useLogin = () =>
     useMutation({
@@ -20,17 +20,17 @@ export const useLogin = () =>
                 .json<LoginResponse>(),
     });
 
-type RegisterRequest = {
+interface RegisterRequest {
     emailAddress: string;
     password: string;
     firstName: string;
     lastName: string;
     dateOfBirth: string;
-};
+}
 
-type RegisterResponse = {
+interface RegisterResponse {
     id: string;
-};
+}
 
 export const useRegister = () => {
     const queryClient = useQueryClient();
@@ -45,7 +45,9 @@ export const useRegister = () => {
     });
 };
 
-type ForgotPasswordRequest = { emailAddress: string };
+interface ForgotPasswordRequest {
+    emailAddress: string;
+}
 
 export const useForgotPassword = () =>
     useMutation({
@@ -53,15 +55,15 @@ export const useForgotPassword = () =>
             apiClient.put('account/forgot-password', { json: request }).json(),
     });
 
-type ResetPasswordRequest = {
+interface ResetPasswordRequest {
     token: string;
     emailAddress: string;
     newPassword: string;
-};
+}
 
-type ResetPasswordResponse = {
+interface ResetPasswordResponse {
     id: string;
-};
+}
 
 export const useResetPassword = () => {
     const queryClient = useQueryClient();

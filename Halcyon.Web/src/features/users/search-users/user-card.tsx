@@ -3,9 +3,9 @@ import { Badge } from '@/components/ui/badge';
 import { roleOptions } from '@/lib/session';
 import type { SearchUsersResponse } from '../users-queries';
 
-type UserCardProps = {
+interface UserCardProps {
     user: SearchUsersResponse['items'][number];
-};
+}
 
 export function UserCard({ user }: UserCardProps) {
     return (

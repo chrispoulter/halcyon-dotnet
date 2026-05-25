@@ -13,12 +13,12 @@ import {
 } from '@/components/ui/field';
 import { Switch } from '@/components/ui/switch';
 
-type SwitchFieldProps<T extends FieldValues> = {
+interface SwitchFieldProps<T extends FieldValues> {
     control: Control<T>;
     name: FieldPath<T>;
     disabled?: boolean;
     options: Record<string, { title: string; description: string }>;
-};
+}
 
 export function SwitchField<T extends FieldValues>({
     control,

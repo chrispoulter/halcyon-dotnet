@@ -13,11 +13,11 @@ import {
 import { LoadingButton } from '@/components/loading-button';
 import { useLockUser, type GetUserResponse } from '../users-queries';
 
-type LockUserButtonProps = {
+interface LockUserButtonProps {
     user: GetUserResponse;
     disabled?: boolean;
     className?: string;
-};
+}
 
 export function LockUserButton({
     user,
