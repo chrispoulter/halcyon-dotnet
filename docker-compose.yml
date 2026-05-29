@@ -1,5 +1,3 @@
-name: halcyon
-
 services:
   halcyon-dotnet-web:
     image: halcyon-dotnet-web:latest
@@ -23,7 +21,7 @@ services:
       ASPNETCORE_URLS: https://+:8081;http://+:8080
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
       ASPNETCORE_Kestrel__Certificates__Default__Password: password
-      ConnectionStrings__Database: Host=host.docker.internal;Port=5432;Database=halcyon-dotnet;Username=postgres;Password=password
+      ConnectionStrings__Database: Host=host.docker.internal;Port=5432;Database=halcyon_dotnet;Username=postgres;Password=password
       ConnectionStrings__Mail: Endpoint=smtp://host.docker.internal:1025
       Email__SiteUrl: http://localhost:5173
       Email__NoReplyAddress: noreply@example.com
@@ -44,14 +42,15 @@ services:
     image: postgres:17.6
     user: postgres
     environment:
+      POSTGRES_DB: halcyon_dotnet
       POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     restart: always
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: [ "CMD", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -64,11 +63,9 @@ services:
       - 1025:1025
       - 8025:8025
     volumes:
-      - mailpit:/data
+      - mailpit_data:/data
     restart: always
 
 volumes:
-  postgres:
-    name: halcyon-postgres
-  mailpit:
-    name: halcyon-mailpit
+  postgres_data:
+  mailpit_data:

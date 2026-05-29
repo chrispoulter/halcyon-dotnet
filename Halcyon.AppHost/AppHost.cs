@@ -7,7 +7,7 @@ var postgres = builder
     .WithDataVolume(isReadOnly: false)
     .WithLifetime(ContainerLifetime.Persistent);
 
-var database = postgres.AddDatabase("database", databaseName: "halcyon-dotnet");
+var database = postgres.AddDatabase("database", databaseName: "halcyon_dotnet");
 
 var mailpit = builder
     .AddMailPit("mail", httpPort: 8025, smtpPort: 1025)

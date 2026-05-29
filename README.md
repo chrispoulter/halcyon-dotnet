@@ -45,7 +45,7 @@ In the `Halcyon.Api` directory of the project, create a new `appsettings.Develop
 ```
 {
   "ConnectionStrings": {
-    "Database": "Host=localhost;Port=5432;Database=halcyon-dotnet;Username=postgres;Password=password",
+    "Database": "Host=localhost;Port=5432;Database=halcyon_dotnet;Username=postgres;Password=password",
     "Mail": "Endpoint=smtp://localhost:1025"
   },
   "Email": {
