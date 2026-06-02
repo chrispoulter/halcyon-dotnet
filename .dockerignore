@@ -10,6 +10,7 @@
 **/.vs
 **/.vscode
 **/*.*proj.user
+**/aspire.config.json
 **/azure.yaml
 **/bin
 **/docker-compose*
