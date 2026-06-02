@@ -39,7 +39,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:17.6
+    image: postgres:18.3
     user: postgres
     environment:
       POSTGRES_DB: halcyon_dotnet
