@@ -43,10 +43,7 @@ export const useGetUser = (id: string) => {
 };
 
 export type UserSort =
-    | 'EMAIL_ADDRESS_ASC'
-    | 'EMAIL_ADDRESS_DESC'
-    | 'NAME_ASC'
-    | 'NAME_DESC';
+    'EMAIL_ADDRESS_ASC' | 'EMAIL_ADDRESS_DESC' | 'NAME_ASC' | 'NAME_DESC';
 
 type SearchUsersRequest = {
     search?: string;
