@@ -31,6 +31,7 @@ services:
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error
       OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
       OTEL_SERVICE_NAME: halcyon-dotnet-api
+      OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
     ports:
       - 5257:8080
       - 7257:8081
