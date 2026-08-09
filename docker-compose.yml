@@ -77,8 +77,9 @@ services:
       DASHBOARD__FRONTEND__AUTHMODE: Unsecured
       DASHBOARD__OTLP__AUTHMODE: Unsecured
     ports:
-      - 18888:18888
-      - 18889:18889
+      - 18888:18888 
+      - 4317:18889 
+      - 4318:18890
     restart: always
 
 volumes:
