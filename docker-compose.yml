@@ -32,6 +32,7 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
       OTEL_SERVICE_NAME: halcyon-dotnet-api
       OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
+      # OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=super_secret_otlp_api_key_that_should_be_changed
     ports:
       - 5257:8080
       - 7257:8081
@@ -76,6 +77,10 @@ services:
     environment:
       DASHBOARD__FRONTEND__AUTHMODE: Unsecured
       DASHBOARD__OTLP__AUTHMODE: Unsecured
+      # DASHBOARD__FRONTEND__AUTHMODE: BrowserToken
+      # DASHBOARD__FRONTEND__BROWSERTOKEN: super_secret_dashboard_token_that_should_be_changed
+      # DASHBOARD__OTLP__AUTHMODE: ApiKey
+      # DASHBOARD__OTLP__PRIMARYAPIKEY: super_secret_otlp_api_key_that_should_be_changed
     ports:
       - 18888:18888 
       - 4317:18889 
