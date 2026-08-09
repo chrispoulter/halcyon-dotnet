@@ -29,6 +29,8 @@ services:
       Seed__Users__0__EmailAddress: system.administrator@example.com
       Seed__Users__0__Password: super_secret_password_that_should_be_changed
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      OTEL_SERVICE_NAME: halcyon-dotnet-api
     ports:
       - 5257:8080
       - 7257:8081
@@ -37,6 +39,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      aspire-dashboard:
+        condition: service_started
 
   postgres:
     image: postgres:18.3
@@ -64,6 +68,16 @@ services:
       - 8025:8025
     volumes:
       - mailpit_data:/data
+    restart: always
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    environment:
+      DASHBOARD__FRONTEND__AUTHMODE: Unsecured
+      DASHBOARD__OTLP__AUTHMODE: Unsecured
+    ports:
+      - 18888:18888
+      - 18889:18889
     restart: always
 
 volumes:
