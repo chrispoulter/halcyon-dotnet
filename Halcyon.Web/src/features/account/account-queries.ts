@@ -52,7 +52,9 @@ interface ForgotPasswordRequest {
 export const useForgotPassword = () =>
     useMutation({
         mutationFn: (request: ForgotPasswordRequest) =>
-            apiClient.put('account/forgot-password', { json: request }).json(),
+            apiClient
+                .put('account/forgot-password', { json: request })
+                .then(() => undefined),
     });
 
 interface ResetPasswordRequest {
