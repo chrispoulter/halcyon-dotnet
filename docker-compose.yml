@@ -29,10 +29,9 @@ services:
       Seed__Users__0__EmailAddress: system.administrator@example.com
       Seed__Users__0__Password: super_secret_password_that_should_be_changed
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
       OTEL_SERVICE_NAME: halcyon-dotnet-api
       OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
-      # OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=super_secret_otlp_api_key_that_should_be_changed
     ports:
       - 5257:8080
       - 7257:8081
@@ -41,7 +40,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      aspire-dashboard:
+      grafana-otel-lgtm:
         condition: service_started
 
   postgres:
@@ -72,21 +71,17 @@ services:
       - mailpit_data:/data
     restart: always
 
-  aspire-dashboard:
-    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
-    environment:
-      DASHBOARD__FRONTEND__AUTHMODE: Unsecured
-      DASHBOARD__OTLP__AUTHMODE: Unsecured
-      # DASHBOARD__FRONTEND__AUTHMODE: BrowserToken
-      # DASHBOARD__FRONTEND__BROWSERTOKEN: super_secret_dashboard_token_that_should_be_changed
-      # DASHBOARD__OTLP__AUTHMODE: ApiKey
-      # DASHBOARD__OTLP__PRIMARYAPIKEY: super_secret_otlp_api_key_that_should_be_changed
+  grafana-otel-lgtm:
+    image: grafana/otel-lgtm:latest
     ports:
-      - 18888:18888 
-      - 4317:18889 
-      - 4318:18890
+      - 3000:3000
+      - 4317:4317
+      - 4318:4318
+    volumes:
+      - grafana_lgtm_data:/data
     restart: always
 
 volumes:
   postgres_data:
   mailpit_data:
+  grafana_lgtm_data:
