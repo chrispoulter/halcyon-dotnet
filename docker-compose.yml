@@ -29,17 +29,14 @@ services:
       Seed__Users__0__EmailAddress: system.administrator@example.com
       Seed__Users__0__Password: super_secret_password_that_should_be_changed
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error
-      # OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
-      # OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=super_secret_otlp_api_key_that_should_be_changed
-      
-      # OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
-
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://seq:5341/ingest/otlp
-      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-      # OTEL_EXPORTER_OTLP_HEADERS: x-seq-apikey=super_secret_seq_api_key_that_should_be_changed
-
       OTEL_SERVICE_NAME: halcyon-dotnet-api
       OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      # # OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=super_secret_otlp_api_key_that_should_be_changed
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://seq:5341/ingest/otlp
+      # OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      # # OTEL_EXPORTER_OTLP_HEADERS: x-seq-apikey=super_secret_seq_api_key_that_should_be_changed
     ports:
       - 5257:8080
       - 7257:8081
@@ -48,8 +45,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      seq:
+      # aspire-dashboard:
+      #   condition: service_started
+      grafana-otel-lgtm:
         condition: service_started
+      # seq:
+      #   condition: service_started
 
   postgres:
     image: postgres:18.3
@@ -94,32 +95,32 @@ services:
   #     - 4318:18890
   #   restart: always
 
-  # grafana-otel-lgtm:
-  #   image: grafana/otel-lgtm:latest
-  #   ports:
-  #     - 3000:3000
-  #     - 4317:4317
-  #     - 4318:4318
-  #   volumes:
-  #     - grafana_lgtm_data:/data
-  #   restart: always
-
-  seq:
-    image: datalust/seq:latest
-    environment:
-      ACCEPT_EULA: Y
-      SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
-      # SEQ_FIRSTRUN_ADMINPASSWORD: super_secret_password_that_should_be_changed
-      # SEQ_FIRSTRUN_REQUIREAUTHENTICATIONFORHTTPINGESTION: "true"
+  grafana-otel-lgtm:
+    image: grafana/otel-lgtm:latest
     ports:
-      - 8080:80
-      - 5341:5341
+      - 3000:3000
+      - 4317:4317
+      - 4318:4318
     volumes:
-      - seq_data:/data
+      - grafana_lgtm_data:/data
     restart: always
+
+  # seq:
+  #   image: datalust/seq:latest
+  #   environment:
+  #     ACCEPT_EULA: Y
+  #     SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
+  #     # SEQ_FIRSTRUN_ADMINPASSWORD: super_secret_password_that_should_be_changed
+  #     # SEQ_FIRSTRUN_REQUIREAUTHENTICATIONFORHTTPINGESTION: "true"
+  #   ports:
+  #     - 8080:80
+  #     - 5341:5341
+  #   volumes:
+  #     - seq_data:/data
+  #   restart: always
 
 volumes:
   postgres_data:
   mailpit_data:
-  # grafana_lgtm_data:
-  seq_data:
+  grafana_lgtm_data:
+  # seq_data:
