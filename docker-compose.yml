@@ -36,6 +36,7 @@ services:
 
       OTEL_EXPORTER_OTLP_ENDPOINT: http://seq:5341/ingest/otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      # OTEL_EXPORTER_OTLP_HEADERS: x-seq-apikey=super_secret_seq_api_key_that_should_be_changed
 
       OTEL_SERVICE_NAME: halcyon-dotnet-api
       OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
@@ -108,6 +109,8 @@ services:
     environment:
       ACCEPT_EULA: Y
       SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
+      # SEQ_FIRSTRUN_ADMINPASSWORD: super_secret_password_that_should_be_changed
+      # SEQ_FIRSTRUN_REQUIREAUTHENTICATIONFORHTTPINGESTION: "true"
     ports:
       - 8080:80
       - 5341:5341
