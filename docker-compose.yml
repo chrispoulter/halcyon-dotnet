@@ -29,7 +29,14 @@ services:
       Seed__Users__0__EmailAddress: system.administrator@example.com
       Seed__Users__0__Password: super_secret_password_that_should_be_changed
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      # OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=super_secret_otlp_api_key_that_should_be_changed
+      
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
+
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://seq:5341/ingest/otlp
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+
       OTEL_SERVICE_NAME: halcyon-dotnet-api
       OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
     ports:
@@ -40,7 +47,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      grafana-otel-lgtm:
+      seq:
         condition: service_started
 
   postgres:
@@ -71,17 +78,45 @@ services:
       - mailpit_data:/data
     restart: always
 
-  grafana-otel-lgtm:
-    image: grafana/otel-lgtm:latest
+  # aspire-dashboard:
+  #   image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+  #   environment:
+  #     DASHBOARD__FRONTEND__AUTHMODE: Unsecured
+  #     DASHBOARD__OTLP__AUTHMODE: Unsecured
+  #     # DASHBOARD__FRONTEND__AUTHMODE: BrowserToken
+  #     # DASHBOARD__FRONTEND__BROWSERTOKEN: super_secret_dashboard_token_that_should_be_changed
+  #     # DASHBOARD__OTLP__AUTHMODE: ApiKey
+  #     # DASHBOARD__OTLP__PRIMARYAPIKEY: super_secret_otlp_api_key_that_should_be_changed
+  #   ports:
+  #     - 18888:18888 
+  #     - 4317:18889 
+  #     - 4318:18890
+  #   restart: always
+
+  # grafana-otel-lgtm:
+  #   image: grafana/otel-lgtm:latest
+  #   ports:
+  #     - 3000:3000
+  #     - 4317:4317
+  #     - 4318:4318
+  #   volumes:
+  #     - grafana_lgtm_data:/data
+  #   restart: always
+
+  seq:
+    image: datalust/seq:latest
+    environment:
+      ACCEPT_EULA: Y
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
     ports:
-      - 3000:3000
-      - 4317:4317
-      - 4318:4318
+      - 8080:80
+      - 5341:5341
     volumes:
-      - grafana_lgtm_data:/data
+      - seq_data:/data
     restart: always
 
 volumes:
   postgres_data:
   mailpit_data:
-  grafana_lgtm_data:
+  # grafana_lgtm_data:
+  seq_data:
