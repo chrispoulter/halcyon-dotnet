@@ -31,8 +31,8 @@ services:
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error
       OTEL_SERVICE_NAME: halcyon-dotnet-api
       OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
-      # OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
       # OTEL_EXPORTER_OTLP_ENDPOINT: http://seq:5341/ingest/otlp
       # OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     ports:
@@ -43,10 +43,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      # aspire-dashboard:
-      #   condition: service_started
-      grafana-otel-lgtm:
+      aspire-dashboard:
         condition: service_started
+      # grafana-otel-lgtm:
+      #   condition: service_started
       # seq:
       #   condition: service_started
 
@@ -78,26 +78,26 @@ services:
       - mailpit_data:/data
     restart: always
 
-  # aspire-dashboard:
-  #   image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
-  #   environment:
-  #     DASHBOARD__FRONTEND__AUTHMODE: Unsecured
-  #     DASHBOARD__OTLP__AUTHMODE: Unsecured
-  #   ports:
-  #     - 18888:18888 
-  #     - 4317:18889 
-  #     - 4318:18890
-  #   restart: always
-
-  grafana-otel-lgtm:
-    image: grafana/otel-lgtm:latest
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    environment:
+      DASHBOARD__FRONTEND__AUTHMODE: Unsecured
+      DASHBOARD__OTLP__AUTHMODE: Unsecured
     ports:
-      - 3000:3000
-      - 4317:4317
-      - 4318:4318
-    volumes:
-      - grafana_lgtm_data:/data
+      - 18888:18888 
+      - 4317:18889 
+      - 4318:18890
     restart: always
+
+  # grafana-otel-lgtm:
+  #   image: grafana/otel-lgtm:latest
+  #   ports:
+  #     - 3000:3000
+  #     - 4317:4317
+  #     - 4318:4318
+  #   volumes:
+  #     - grafana_lgtm_data:/data
+  #   restart: always
 
   # seq:
   #   image: datalust/seq:latest
@@ -114,5 +114,5 @@ services:
 volumes:
   postgres_data:
   mailpit_data:
-  grafana_lgtm_data:
+  # grafana_lgtm_data:
   # seq_data:
