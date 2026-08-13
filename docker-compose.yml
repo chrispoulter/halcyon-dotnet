@@ -103,7 +103,7 @@ services:
   #   image: datalust/seq:latest
   #   environment:
   #     ACCEPT_EULA: Y
-  #     SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
+  #     SEQ_FIRSTRUN_NOAUTHENTICATION: true
   #   ports:
   #     - 8080:80
   #     - 5341:5341
