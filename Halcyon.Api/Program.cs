@@ -4,6 +4,7 @@ using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Database;
 using Halcyon.Api.Common.Email;
 using Halcyon.Api.Common.Infrastructure;
+using Halcyon.Api.Common.Telemetry;
 using Halcyon.Api.Data;
 
 var assembly = Assembly.GetExecutingAssembly();
@@ -25,6 +26,7 @@ builder.Services.AddProblemDetails();
 builder.ConfigureJsonOptions();
 builder.AddAuthentication();
 builder.AddSecurityServices();
+builder.AddTelemetryServices();
 builder.AddCors();
 builder.AddOpenApi(assembly);
 

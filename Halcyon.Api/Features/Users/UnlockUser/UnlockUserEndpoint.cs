@@ -1,5 +1,6 @@
 ﻿using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
+using Halcyon.Api.Common.Telemetry;
 using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ public class UnlockUserEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         Guid id,
         HalcyonDbContext dbContext,
+        AppMetrics appMetrics,
         CancellationToken cancellationToken = default
     )
     {
@@ -36,6 +38,8 @@ public class UnlockUserEndpoint : IEndpoint
         user.IsLockedOut = false;
 
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        appMetrics.RecordAccountLockoutChange("unlocked");
 
         return Results.Ok(new UnlockUserResponse(user.Id));
     }

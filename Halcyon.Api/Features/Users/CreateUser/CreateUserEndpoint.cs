@@ -1,5 +1,6 @@
 ﻿using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
+using Halcyon.Api.Common.Telemetry;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Halcyon.Api.Data.Users;
@@ -24,6 +25,7 @@ public class CreateUserEndpoint : IEndpoint
         CreateUserRequest request,
         HalcyonDbContext dbContext,
         IHashService hashService,
+        AppMetrics appMetrics,
         CancellationToken cancellationToken = default
     )
     {
@@ -55,6 +57,8 @@ public class CreateUserEndpoint : IEndpoint
         dbContext.Users.Add(user);
 
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        appMetrics.RecordUserRegistration("admin");
 
         return Results.Ok(new CreateUserResponse(user.Id));
     }

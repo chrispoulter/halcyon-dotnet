@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 namespace Microsoft.Extensions.Hosting;
@@ -55,9 +57,17 @@ public static class Extensions
 
         builder
             .Services.AddOpenTelemetry()
+            .ConfigureResource(resource =>
+            {
+                resource.AddService(
+                    serviceName: builder.Environment.ApplicationName,
+                    serviceVersion: "1.0.0"
+                );
+            })
             .WithMetrics(metrics =>
             {
                 metrics
+                    .AddMeter(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation();
@@ -67,11 +77,25 @@ public static class Extensions
                 tracing
                     .AddSource(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation(tracing =>
+                    {
                         // Exclude health check requests from tracing
                         tracing.Filter = context =>
                             !context.Request.Path.StartsWithSegments(HealthEndpointPath)
-                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
-                    )
+                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath);
+
+                        // Tag the request span with the authenticated user's ID, if any
+                        tracing.EnrichWithHttpResponse = (activity, httpResponse) =>
+                        {
+                            var userId = httpResponse.HttpContext.User.FindFirstValue(
+                                ClaimTypes.NameIdentifier
+                            );
+
+                            if (userId is not null)
+                            {
+                                activity.SetTag("enduser.id", userId);
+                            }
+                        };
+                    })
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation();
