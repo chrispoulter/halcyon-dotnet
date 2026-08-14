@@ -45,10 +45,9 @@ public class ForgotPasswordEndpoint : IEndpoint
             await dbContext.SaveChangesAsync(cancellationToken);
 
             await emailService.SendTemplateEmailAsync(
-                type: "password-reset",
                 toAddress: user.EmailAddress,
                 subject: "Reset Password // Halcyon",
-                templateResourceName: "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
+                template: "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
                 model: new { PasswordResetToken = passwordResetToken },
                 cancellationToken: cancellationToken
             );

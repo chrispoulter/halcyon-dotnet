@@ -10,16 +10,15 @@ public class EmailService(IServiceProvider serviceProvider, AppMetrics appMetric
     private static readonly ActivitySource ActivitySource = new(AppMetrics.MeterName);
 
     public async Task<bool> SendTemplateEmailAsync(
-        string type,
         string toAddress,
         string subject,
-        string templateResourceName,
+        string template,
         object model,
         CancellationToken cancellationToken = default
     )
     {
         using var activity = ActivitySource.StartActivity("email.send", ActivityKind.Client);
-        activity?.SetTag("email.type", type);
+        activity?.SetTag("email.template", template);
 
         var startTimestamp = Stopwatch.GetTimestamp();
 
@@ -28,13 +27,13 @@ public class EmailService(IServiceProvider serviceProvider, AppMetrics appMetric
         var sendResponse = await fluentEmail
             .To(toAddress)
             .Subject(subject)
-            .UsingTemplateFromEmbedded(templateResourceName, model, Assembly.GetExecutingAssembly())
+            .UsingTemplateFromEmbedded(template, model, Assembly.GetExecutingAssembly())
             .SendAsync(cancellationToken);
 
         var durationSeconds = Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds;
 
-        appMetrics.RecordEmailSent(type, sendResponse.Successful);
-        appMetrics.RecordEmailSendDuration(durationSeconds, type, sendResponse.Successful);
+        appMetrics.RecordEmailSent(template, sendResponse.Successful);
+        appMetrics.RecordEmailSendDuration(durationSeconds, template, sendResponse.Successful);
 
         if (!sendResponse.Successful)
         {

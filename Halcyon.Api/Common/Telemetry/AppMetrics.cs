@@ -60,17 +60,17 @@ public sealed class AppMetrics
     public void RecordAccountLockoutChange(string action) =>
         _accountLockoutChanges.Add(1, new KeyValuePair<string, object?>("action", action));
 
-    public void RecordEmailSent(string type, bool successful) =>
+    public void RecordEmailSent(string template, bool successful) =>
         _emailsSent.Add(
             1,
-            new KeyValuePair<string, object?>("type", type),
+            new KeyValuePair<string, object?>("template", template),
             new KeyValuePair<string, object?>("result", successful ? "success" : "failure")
         );
 
-    public void RecordEmailSendDuration(double durationSeconds, string type, bool successful) =>
+    public void RecordEmailSendDuration(double durationSeconds, string template, bool successful) =>
         _emailSendDuration.Record(
             durationSeconds,
-            new KeyValuePair<string, object?>("type", type),
+            new KeyValuePair<string, object?>("template", template),
             new KeyValuePair<string, object?>("result", successful ? "success" : "failure")
         );
 
