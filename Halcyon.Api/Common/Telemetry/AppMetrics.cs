@@ -11,7 +11,6 @@ public sealed class AppMetrics
     private readonly Counter<long> _emailsSent;
     private readonly Counter<long> _userRegistrations;
     private readonly Histogram<double> _emailSendDuration;
-    private readonly Histogram<double> _userSearchDuration;
 
     public AppMetrics(IMeterFactory meterFactory)
     {
@@ -46,12 +45,6 @@ public sealed class AppMetrics
             unit: "s",
             description: "Duration of the email send operation, in seconds, tagged by type and result."
         );
-
-        _userSearchDuration = meter.CreateHistogram<double>(
-            name: "users.search.duration",
-            unit: "s",
-            description: "Duration of the user search request, in seconds, tagged by whether a search term was supplied."
-        );
     }
 
     public void RecordLoginAttempt(string result) =>
@@ -76,10 +69,4 @@ public sealed class AppMetrics
 
     public void RecordUserRegistration(string source) =>
         _userRegistrations.Add(1, new KeyValuePair<string, object?>("source", source));
-
-    public void RecordUserSearchDuration(double durationSeconds, bool hasSearchTerm) =>
-        _userSearchDuration.Record(
-            durationSeconds,
-            new KeyValuePair<string, object?>("has_search_term", hasSearchTerm)
-        );
 }

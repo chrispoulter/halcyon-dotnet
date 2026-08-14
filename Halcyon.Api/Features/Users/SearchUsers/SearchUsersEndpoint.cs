@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using Halcyon.Api.Common.Authentication;
+﻿using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
-using Halcyon.Api.Common.Telemetry;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +24,9 @@ public class SearchUsersEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         [AsParameters] SearchUsersRequest request,
         HalcyonDbContext dbContext,
-        AppMetrics appMetrics,
         CancellationToken cancellationToken = default
     )
     {
-        var startTimestamp = Stopwatch.GetTimestamp();
-
         var query = dbContext.Users.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrEmpty(request.Search))
@@ -83,11 +78,6 @@ public class SearchUsersEndpoint : IEndpoint
         var pageCount = (count + size - 1) / size;
         var hasNextPage = page < pageCount;
         var hasPreviousPage = page > 1 && page <= pageCount;
-
-        appMetrics.RecordUserSearchDuration(
-            Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds,
-            hasSearchTerm: !string.IsNullOrEmpty(request.Search)
-        );
 
         return Results.Ok(new SearchUsersResponse(users, hasNextPage, hasPreviousPage));
     }
