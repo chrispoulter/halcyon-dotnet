@@ -10,6 +10,7 @@ public sealed class AppMetrics
     private readonly Counter<long> _accountLockoutChanges;
     private readonly Counter<long> _emailsSent;
     private readonly Counter<long> _userRegistrations;
+    private readonly Histogram<double> _emailSendDuration;
     private readonly Histogram<double> _userSearchDuration;
 
     public AppMetrics(IMeterFactory meterFactory)
@@ -40,6 +41,12 @@ public sealed class AppMetrics
             description: "Number of new user accounts created, tagged by source."
         );
 
+        _emailSendDuration = meter.CreateHistogram<double>(
+            name: "email.send.duration",
+            unit: "s",
+            description: "Duration of the email send operation, in seconds, tagged by type and result."
+        );
+
         _userSearchDuration = meter.CreateHistogram<double>(
             name: "users.search.duration",
             unit: "s",
@@ -56,6 +63,13 @@ public sealed class AppMetrics
     public void RecordEmailSent(string type, bool successful) =>
         _emailsSent.Add(
             1,
+            new KeyValuePair<string, object?>("type", type),
+            new KeyValuePair<string, object?>("result", successful ? "success" : "failure")
+        );
+
+    public void RecordEmailSendDuration(double durationSeconds, string type, bool successful) =>
+        _emailSendDuration.Record(
+            durationSeconds,
             new KeyValuePair<string, object?>("type", type),
             new KeyValuePair<string, object?>("result", successful ? "success" : "failure")
         );

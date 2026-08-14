@@ -46,6 +46,8 @@ public static class FluentEmailExtensions
                 }
             );
 
+        builder.Services.AddSingleton<IEmailService, EmailService>();
+
         return builder;
     }
 }
