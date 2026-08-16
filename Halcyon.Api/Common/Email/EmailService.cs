@@ -5,8 +5,7 @@ using Halcyon.Api.Common.Telemetry;
 
 namespace Halcyon.Api.Common.Email;
 
-public class EmailService(IServiceProvider serviceProvider, EmailMetrics emailMetrics)
-    : IEmailService
+public class EmailService(IFluentEmail fluentEmail, EmailMetrics emailMetrics) : IEmailService
 {
     private static readonly ActivitySource ActivitySource = new(AppMetrics.MeterName);
 
@@ -22,8 +21,6 @@ public class EmailService(IServiceProvider serviceProvider, EmailMetrics emailMe
         activity?.SetTag("email.template", template);
 
         var startTimestamp = Stopwatch.GetTimestamp();
-
-        var fluentEmail = serviceProvider.GetRequiredService<IFluentEmail>();
 
         var sendResponse = await fluentEmail
             .To(toAddress)
