@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.AddNpgsqlDbContext<HalcyonDbContext>(connectionName: "Database");
-builder.AddFluentEmail(connectionName: "Mail");
+builder.AddEmailServices(connectionName: "Mail");
 
 var seedConfig = builder.Configuration.GetSection(SeedSettings.SectionName);
 builder.Services.Configure<SeedSettings>(seedConfig);

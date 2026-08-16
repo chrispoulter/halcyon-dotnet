@@ -3,9 +3,9 @@ using MailKit.Security;
 
 namespace Halcyon.Api.Common.Email;
 
-public static class FluentEmailExtensions
+public static class EmailExtensions
 {
-    public static IHostApplicationBuilder AddFluentEmail(
+    public static IHostApplicationBuilder AddEmailServices(
         this IHostApplicationBuilder builder,
         string connectionName
     )
@@ -47,6 +47,7 @@ public static class FluentEmailExtensions
             );
 
         builder.Services.AddSingleton<IEmailService, EmailService>();
+        builder.Services.AddSingleton<EmailMetrics>();
 
         return builder;
     }
