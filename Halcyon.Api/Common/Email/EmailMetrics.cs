@@ -5,7 +5,7 @@ namespace Halcyon.Api.Common.Email;
 
 public class EmailMetrics
 {
-    public const string MeterName = "Halcyon.Email";
+    public const string MeterName = "Halcyon.Api.Common.Email";
 
     private readonly Histogram<double> _emailSendDuration;
 
