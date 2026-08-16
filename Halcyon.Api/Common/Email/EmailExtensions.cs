@@ -46,7 +46,7 @@ public static class EmailExtensions
                 }
             );
 
-        builder.Services.AddSingleton<IEmailService, EmailService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddSingleton<EmailMetrics>();
 
         return builder;
