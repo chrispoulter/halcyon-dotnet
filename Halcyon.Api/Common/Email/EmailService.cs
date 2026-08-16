@@ -5,7 +5,8 @@ using Halcyon.Api.Common.Telemetry;
 
 namespace Halcyon.Api.Common.Email;
 
-public class EmailService(IServiceProvider serviceProvider, EmailMetrics emailMetrics) : IEmailService
+public class EmailService(IServiceProvider serviceProvider, EmailMetrics emailMetrics)
+    : IEmailService
 {
     private static readonly ActivitySource ActivitySource = new(AppMetrics.MeterName);
 
@@ -32,7 +33,6 @@ public class EmailService(IServiceProvider serviceProvider, EmailMetrics emailMe
 
         var durationSeconds = Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds;
 
-        emailMetrics.RecordEmailSent(template, sendResponse.Successful);
         emailMetrics.RecordEmailSendDuration(durationSeconds, template, sendResponse.Successful);
 
         if (!sendResponse.Successful)
