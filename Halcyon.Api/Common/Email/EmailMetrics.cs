@@ -3,8 +3,10 @@ using Halcyon.Api.Common.Telemetry;
 
 namespace Halcyon.Api.Common.Email;
 
-public sealed class EmailMetrics
+public class EmailMetrics
 {
+    public const string MeterName = "Halcyon.Email";
+
     private readonly Histogram<double> _emailSendDuration;
 
     public EmailMetrics(IMeterFactory meterFactory)

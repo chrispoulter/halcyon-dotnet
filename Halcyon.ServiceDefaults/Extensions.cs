@@ -67,7 +67,8 @@ public static class Extensions
             .WithMetrics(metrics =>
             {
                 metrics
-                    .AddMeter(builder.Environment.ApplicationName)
+                    .AddMeter("Halcyon.Api")
+                    .AddMeter("Halcyon.Email")
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation();
@@ -75,7 +76,8 @@ public static class Extensions
             .WithTracing(tracing =>
             {
                 tracing
-                    .AddSource(builder.Environment.ApplicationName)
+                    .AddSource("Halcyon.Api")
+                    .AddSource("Halcyon.Email")
                     .AddAspNetCoreInstrumentation(tracing =>
                     {
                         // Exclude health check requests from tracing

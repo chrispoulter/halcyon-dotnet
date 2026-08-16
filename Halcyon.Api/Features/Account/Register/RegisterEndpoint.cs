@@ -1,6 +1,5 @@
 ﻿using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
-using Halcyon.Api.Common.Telemetry;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
 using Halcyon.Api.Data.Users;
@@ -24,7 +23,6 @@ public class RegisterEndpoint : IEndpoint
         RegisterRequest request,
         HalcyonDbContext dbContext,
         IHashService hashService,
-        AppMetrics appMetrics,
         CancellationToken cancellationToken = default
     )
     {
@@ -55,8 +53,6 @@ public class RegisterEndpoint : IEndpoint
         dbContext.Users.Add(user);
 
         await dbContext.SaveChangesAsync(cancellationToken);
-
-        appMetrics.RecordUserRegistration("self-service");
 
         return Results.Ok(new RegisterResponse(user.Id));
     }

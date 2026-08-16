@@ -1,6 +1,5 @@
 ﻿using Halcyon.Api.Common.Authentication;
 using Halcyon.Api.Common.Infrastructure;
-using Halcyon.Api.Common.Telemetry;
 using Halcyon.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +21,6 @@ public class LockUserEndpoint : IEndpoint
         Guid id,
         CurrentUser currentUser,
         HalcyonDbContext dbContext,
-        AppMetrics appMetrics,
         CancellationToken cancellationToken = default
     )
     {
@@ -47,8 +45,6 @@ public class LockUserEndpoint : IEndpoint
         user.IsLockedOut = true;
 
         await dbContext.SaveChangesAsync(cancellationToken);
-
-        appMetrics.RecordAccountLockoutChange("locked");
 
         return Results.Ok(new LockUserResponse(user.Id));
     }
