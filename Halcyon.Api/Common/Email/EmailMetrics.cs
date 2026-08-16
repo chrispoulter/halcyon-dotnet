@@ -1,5 +1,4 @@
 using System.Diagnostics.Metrics;
-using Halcyon.Api.Common.Telemetry;
 
 namespace Halcyon.Api.Common.Email;
 
@@ -11,7 +10,7 @@ public class EmailMetrics
 
     public EmailMetrics(IMeterFactory meterFactory)
     {
-        var meter = meterFactory.Create(AppMetrics.MeterName);
+        var meter = meterFactory.Create(MeterName);
 
         _emailSendDuration = meter.CreateHistogram<double>(
             name: "email.send.duration",
