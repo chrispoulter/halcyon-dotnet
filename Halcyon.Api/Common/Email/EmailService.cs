@@ -4,11 +4,7 @@ using FluentEmail.Core;
 
 namespace Halcyon.Api.Common.Email;
 
-public class EmailService(
-    IFluentEmail fluentEmail,
-    EmailMetrics emailMetrics,
-    ILogger<EmailService> logger
-) : IEmailService
+public class EmailService(IFluentEmail fluentEmail, EmailMetrics emailMetrics) : IEmailService
 {
     private static readonly ActivitySource ActivitySource = new(EmailMetrics.MeterName);
 
@@ -24,6 +20,7 @@ public class EmailService(
         activity?.SetTag("email.template", template);
 
         var startTimestamp = Stopwatch.GetTimestamp();
+        var successful = false;
 
         try
         {
@@ -33,51 +30,27 @@ public class EmailService(
                 .UsingTemplateFromEmbedded(template, model, Assembly.GetExecutingAssembly())
                 .SendAsync(cancellationToken);
 
-            var durationSeconds = Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds;
-
-            emailMetrics.RecordEmailSendDuration(
-                durationSeconds,
-                template,
-                sendResponse.Successful
-            );
-
             if (!sendResponse.Successful)
             {
                 var errorMessage = string.Join("; ", sendResponse.ErrorMessages);
 
-                activity?.SetStatus(ActivityStatusCode.Error, errorMessage);
-
-                logger.LogWarning(
-                    "Email send reported failure for template {Template} to {ToAddress}: {ErrorMessage}",
-                    template,
-                    toAddress,
-                    errorMessage
+                throw new Exception(
+                    $"Failed to send email to {toAddress} with template {template}: {errorMessage}"
                 );
             }
 
-            return sendResponse.Successful;
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            throw;
+            successful = true;
+            return successful;
         }
         catch (Exception ex)
         {
-            var durationSeconds = Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds;
-
-            emailMetrics.RecordEmailSendDuration(durationSeconds, template, successful: false);
-
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-
-            logger.LogError(
-                ex,
-                "Exception occurred while sending email for template {Template} to {ToAddress}",
-                template,
-                toAddress
-            );
-
-            return false;
+            throw;
+        }
+        finally
+        {
+            var durationSeconds = Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds;
+            emailMetrics.RecordEmailSendDuration(durationSeconds, template, successful);
         }
     }
 }
