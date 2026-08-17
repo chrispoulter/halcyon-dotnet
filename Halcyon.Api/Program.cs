@@ -8,10 +8,11 @@ using Halcyon.Api.Common.Telemetry;
 using Halcyon.Api.Data;
 
 var assembly = Assembly.GetExecutingAssembly();
+var serviceVersion = assembly.GetSemVerShortSha();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
+builder.AddServiceDefaults(serviceVersion);
 
 builder.AddNpgsqlDbContext<HalcyonDbContext>(connectionName: "Database");
 builder.AddEmailServices(connectionName: "Mail");
@@ -28,7 +29,7 @@ builder.AddAuthentication();
 builder.AddSecurityServices();
 builder.AddTelemetryServices();
 builder.AddCors();
-builder.AddOpenApi(assembly);
+builder.AddOpenApi(serviceVersion);
 
 var app = builder.Build();
 
@@ -37,7 +38,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapOpenApiWithUI(assembly);
+app.MapOpenApiWithUI();
 app.MapEndpoints(assembly);
 app.MapDefaultEndpoints();
 

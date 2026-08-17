@@ -19,10 +19,13 @@ public static class Extensions
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";
 
-    public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder)
+    public static TBuilder AddServiceDefaults<TBuilder>(
+        this TBuilder builder,
+        string? serviceVersion
+    )
         where TBuilder : IHostApplicationBuilder
     {
-        builder.ConfigureOpenTelemetry();
+        builder.ConfigureOpenTelemetry(serviceVersion);
 
         builder.AddDefaultHealthChecks();
 
@@ -46,7 +49,10 @@ public static class Extensions
         return builder;
     }
 
-    public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder)
+    public static TBuilder ConfigureOpenTelemetry<TBuilder>(
+        this TBuilder builder,
+        string? serviceVersion
+    )
         where TBuilder : IHostApplicationBuilder
     {
         builder.Logging.AddOpenTelemetry(logging =>
@@ -60,8 +66,9 @@ public static class Extensions
             .ConfigureResource(resource =>
             {
                 resource.AddService(
-                    serviceName: builder.Environment.ApplicationName,
-                    serviceVersion: "1.0.0"
+                    serviceName: builder.Configuration["OTEL_SERVICE_NAME"]
+                        ?? builder.Environment.ApplicationName,
+                    serviceVersion
                 );
             })
             .WithMetrics(metrics =>
