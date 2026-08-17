@@ -33,8 +33,6 @@ services:
       OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
       OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
       # OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
-      # OTEL_EXPORTER_OTLP_ENDPOINT: http://seq:5341/ingest/otlp
-      # OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     ports:
       - 5257:8080
       - 7257:8081
@@ -46,8 +44,6 @@ services:
       aspire-dashboard:
         condition: service_started
       # grafana-otel-lgtm:
-      #   condition: service_started
-      # seq:
       #   condition: service_started
 
   postgres:
@@ -99,20 +95,7 @@ services:
   #     - grafana_lgtm_data:/data
   #   restart: always
 
-  # seq:
-  #   image: datalust/seq:latest
-  #   environment:
-  #     ACCEPT_EULA: Y
-  #     SEQ_FIRSTRUN_NOAUTHENTICATION: true
-  #   ports:
-  #     - 8080:80
-  #     - 5341:5341
-  #   volumes:
-  #     - seq_data:/data
-  #   restart: always
-
 volumes:
   postgres_data:
   mailpit_data:
   # grafana_lgtm_data:
-  # seq_data:
