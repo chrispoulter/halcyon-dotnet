@@ -8,7 +8,7 @@ public class EmailService(IFluentEmail fluentEmail, EmailMetrics emailMetrics) :
 {
     private static readonly ActivitySource ActivitySource = new(EmailMetrics.MeterName);
 
-    public async Task<bool> SendTemplateEmailAsync(
+    public async Task SendTemplateEmailAsync(
         string toAddress,
         string subject,
         string template,
@@ -40,7 +40,6 @@ public class EmailService(IFluentEmail fluentEmail, EmailMetrics emailMetrics) :
             }
 
             successful = true;
-            return successful;
         }
         catch (Exception ex)
         {
