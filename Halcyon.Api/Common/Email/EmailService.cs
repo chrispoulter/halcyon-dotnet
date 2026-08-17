@@ -35,7 +35,7 @@ public class EmailService(IFluentEmail fluentEmail, EmailMetrics emailMetrics) :
                 var errorMessage = string.Join("; ", sendResponse.ErrorMessages);
 
                 throw new Exception(
-                    $"Failed to send email to {toAddress} with template {template}: {errorMessage}"
+                    $"Failed to send email with template {template}: {errorMessage}"
                 );
             }
 
