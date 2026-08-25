@@ -49,7 +49,7 @@ public class ForgotPasswordEndpoint : IEndpoint
                 subject: "Reset Password // Halcyon",
                 template: "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
                 model: new { PasswordResetToken = passwordResetToken },
-                cancellationToken: cancellationToken
+                cancellationToken
             );
         }
 
