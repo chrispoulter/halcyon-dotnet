@@ -10,7 +10,7 @@ public static class OpenApiExtensions
 {
     public static IHostApplicationBuilder AddOpenApi(
         this IHostApplicationBuilder builder,
-        Assembly assembly
+        string? serviceVersion
     )
     {
         builder.Services.AddOpenApi(
@@ -20,10 +20,8 @@ public static class OpenApiExtensions
                 options.AddDocumentTransformer(
                     (document, context, cancellationToken) =>
                     {
-                        var version = assembly.GetSemVerShortSha();
-
                         document.Info ??= new OpenApiInfo();
-                        document.Info.Version = version ?? document.Info.Version;
+                        document.Info.Version = serviceVersion ?? document.Info.Version;
 
                         return Task.CompletedTask;
                     }
@@ -82,7 +80,7 @@ public static class OpenApiExtensions
         return builder;
     }
 
-    public static WebApplication MapOpenApiWithUI(this WebApplication app, Assembly assembly)
+    public static WebApplication MapOpenApiWithUI(this WebApplication app)
     {
         app.MapOpenApi();
 
@@ -90,7 +88,7 @@ public static class OpenApiExtensions
             "/",
             options =>
             {
-                options.Title = assembly.GetName().Name;
+                options.Title = app.Environment.ApplicationName;
             }
         );
 

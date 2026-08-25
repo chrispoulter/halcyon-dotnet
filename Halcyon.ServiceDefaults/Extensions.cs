@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -5,22 +6,26 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 namespace Microsoft.Extensions.Hosting;
 
-// Adds common .NET Aspire services: service discovery, resilience, health checks, and OpenTelemetry.
+// Adds common Aspire services: service discovery, resilience, health checks, and OpenTelemetry.
 // This project should be referenced by each service project in your solution.
-// To learn more about using this project, see https://aka.ms/dotnet/aspire/service-defaults
+// To learn more about using this project, see https://aka.ms/aspire/service-defaults
 public static class Extensions
 {
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";
 
-    public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder)
+    public static TBuilder AddServiceDefaults<TBuilder>(
+        this TBuilder builder,
+        string? serviceVersion
+    )
         where TBuilder : IHostApplicationBuilder
     {
-        builder.ConfigureOpenTelemetry();
+        builder.ConfigureOpenTelemetry(serviceVersion);
 
         builder.AddDefaultHealthChecks();
 
@@ -44,7 +49,10 @@ public static class Extensions
         return builder;
     }
 
-    public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder)
+    public static TBuilder ConfigureOpenTelemetry<TBuilder>(
+        this TBuilder builder,
+        string? serviceVersion
+    )
         where TBuilder : IHostApplicationBuilder
     {
         builder.Logging.AddOpenTelemetry(logging =>
@@ -55,9 +63,19 @@ public static class Extensions
 
         builder
             .Services.AddOpenTelemetry()
+            .ConfigureResource(resource =>
+            {
+                resource.AddService(
+                    serviceName: builder.Configuration["OTEL_SERVICE_NAME"]
+                        ?? builder.Environment.ApplicationName,
+                    serviceVersion
+                );
+            })
             .WithMetrics(metrics =>
             {
                 metrics
+                    .AddMeter("Halcyon.Api")
+                    .AddMeter("Halcyon.Api.Common.Email")
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation();
@@ -65,13 +83,28 @@ public static class Extensions
             .WithTracing(tracing =>
             {
                 tracing
-                    .AddSource(builder.Environment.ApplicationName)
+                    .AddSource("Halcyon.Api")
+                    .AddSource("Halcyon.Api.Common.Email")
                     .AddAspNetCoreInstrumentation(tracing =>
+                    {
                         // Exclude health check requests from tracing
                         tracing.Filter = context =>
                             !context.Request.Path.StartsWithSegments(HealthEndpointPath)
-                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
-                    )
+                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath);
+
+                        // Tag the request span with the authenticated user's ID, if any
+                        tracing.EnrichWithHttpResponse = (activity, httpResponse) =>
+                        {
+                            var userId = httpResponse.HttpContext.User.FindFirstValue(
+                                ClaimTypes.NameIdentifier
+                            );
+
+                            if (userId is not null)
+                            {
+                                activity.SetTag("enduser.id", userId);
+                            }
+                        };
+                    })
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation();
@@ -118,9 +151,9 @@ public static class Extensions
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
         // Adding health checks endpoints to applications in non-development environments has security implications.
-        // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
-        //if (app.Environment.IsDevelopment())
-        //{
+        // See https://aka.ms/aspire/healthchecks for details before enabling these endpoints in non-development environments.
+        // if (app.Environment.IsDevelopment())
+        // {
         // All health checks must pass for app to be considered ready to accept traffic after starting
         app.MapHealthChecks(HealthEndpointPath);
 
@@ -129,7 +162,7 @@ public static class Extensions
             AlivenessEndpointPath,
             new HealthCheckOptions { Predicate = r => r.Tags.Contains("live") }
         );
-        //}
+        // }
 
         return app;
     }

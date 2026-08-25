@@ -29,6 +29,10 @@ services:
       Seed__Users__0__EmailAddress: system.administrator@example.com
       Seed__Users__0__Password: super_secret_password_that_should_be_changed
       Logging__LogLevel__Microsoft.AspNetCore.DataProtection: Error
+      OTEL_SERVICE_NAME: halcyon-dotnet-api
+      OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-otel-lgtm:4317
     ports:
       - 5257:8080
       - 7257:8081
@@ -37,6 +41,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      aspire-dashboard:
+        condition: service_started
+      # grafana-otel-lgtm:
+      #   condition: service_started
 
   postgres:
     image: postgres:18.3
@@ -66,6 +74,28 @@ services:
       - mailpit_data:/data
     restart: always
 
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    environment:
+      DASHBOARD__FRONTEND__AUTHMODE: Unsecured
+      DASHBOARD__OTLP__AUTHMODE: Unsecured
+    ports:
+      - 18888:18888
+      - 4317:18889
+      - 4318:18890
+    restart: always
+
+  # grafana-otel-lgtm:
+  #   image: grafana/otel-lgtm:latest
+  #   ports:
+  #     - 3000:3000
+  #     - 4317:4317
+  #     - 4318:4318
+  #   volumes:
+  #     - grafana_lgtm_data:/data
+  #   restart: always
+
 volumes:
   postgres_data:
   mailpit_data:
+  # grafana_lgtm_data:

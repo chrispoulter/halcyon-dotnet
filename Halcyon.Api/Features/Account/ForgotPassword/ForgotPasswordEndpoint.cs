@@ -1,7 +1,6 @@
-﻿using System.Reflection;
-using System.Security.Cryptography;
-using FluentEmail.Core;
+﻿using System.Security.Cryptography;
 using Halcyon.Api.Common.Authentication;
+using Halcyon.Api.Common.Email;
 using Halcyon.Api.Common.Infrastructure;
 using Halcyon.Api.Common.Validation;
 using Halcyon.Api.Data;
@@ -24,7 +23,7 @@ public class ForgotPasswordEndpoint : IEndpoint
         ForgotPasswordRequest request,
         HalcyonDbContext dbContext,
         IHashService hashService,
-        IFluentEmail fluentEmail,
+        IEmailService emailService,
         CancellationToken cancellationToken = default
     )
     {
@@ -45,17 +44,13 @@ public class ForgotPasswordEndpoint : IEndpoint
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            var assembly = Assembly.GetExecutingAssembly();
-
-            await fluentEmail
-                .To(user.EmailAddress)
-                .Subject("Reset Password // Halcyon")
-                .UsingTemplateFromEmbedded(
-                    "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
-                    new { PasswordResetToken = passwordResetToken },
-                    assembly
-                )
-                .SendAsync(cancellationToken);
+            await emailService.SendTemplateEmailAsync(
+                toAddress: user.EmailAddress,
+                subject: "Reset Password // Halcyon",
+                template: "Halcyon.Api.Features.Account.ForgotPassword.ResetPasswordEmail.html",
+                model: new { PasswordResetToken = passwordResetToken },
+                cancellationToken
+            );
         }
 
         return Results.Ok();
